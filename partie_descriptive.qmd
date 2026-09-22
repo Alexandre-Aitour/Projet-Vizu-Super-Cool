@@ -6,7 +6,10 @@ editor: visual
 
 ```{r}
 library(tidyverse)
+library(FactoMineR)
+library(factoextra)
 ```
+
 
 
 
@@ -17,6 +20,7 @@ conso <- read.csv("mozza_consumers_liking.csv")
 
 jury <- read.csv("mozza_panel_descriptors.csv")
 ```
+
 
 
 # Partie conso
@@ -126,8 +130,6 @@ p <- ggplot(dist_notes, aes(x = Note, y = pct, fill = Dimension)) +
   )
 
 p
-
-
 ```
 
 ```{r}
@@ -184,6 +186,7 @@ ggplot(moyennes_produit, aes(x = Dimension, y = moyenne, fill = Dimension)) +
     legend.position = "bottom"
   )
 ```
+
 
 # Partie jury
 
@@ -258,6 +261,7 @@ ggplot(synth_descripteurs,
   )
 ```
 
+
 Une dizaine de descripteurs (`seepage`, `cardboardy`, `Moisturerelease`, `visualroughness`, `cheese2`, `soureddairy`, `awareherbs`...) séparent nettement les 8 bâtonnets, avec un CV supérieur à 30 %. À l'inverse, `Cohesiveness`, `chewstoswallow`, `toothpack`, `Cohesivenessmass`, `Oilyfilm`, `Hardness`, `heatedoil`, `astringent`, `heatedoil2` ou `salt` varient très peu d'un produit à l'autre (CV \< 5 %) : le jury les note quasiment pareil pour tous les produits, ils n'apportent donc que peu d'information pour différencier les bâtonnets.
 
 ```{r}
@@ -281,3 +285,4 @@ synth_descripteurs %>%
   )
 ```
 
+# AFM
