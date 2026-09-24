@@ -1,42 +1,85 @@
 ---
 title: "Partie_visu_projet"
-format: html
+format:
+  html:
+    toc: true
+    toc-depth: 3
+    theme: cosmo
+    code-fold: show
 editor: visual
 ---
 
-```{r}
+```{r setup, message=FALSE, warning=FALSE}
+############################################
+# Importation des bibliothèques
+############################################
 library(tidyverse)
+library(FactoMineR)
+library(SensoMineR)
+library(factoextra)
+library(Factoshiny)
+library(bslib)
+library(DT)
+library(plotly)
+library(patchwork)
+library(scales)
 ```
 
+ HEAD
+
+# Importation et inspection des données
+
+```{r import-donnees, message=FALSE, warning=FALSE}
+############################################
+#>>>>>>> 1200c8885136ccd7755fc994981930f197164b5a
 # Importation des données
+############################################
+chemin_cons <- if (file.exists("data/mozza_consumers_liking.csv")) "data/mozza_consumers_liking.csv" else "mozza_consumers_liking.csv"
+chemin_panel <- if (file.exists("data/mozza_panel_descriptors.csv")) "data/mozza_panel_descriptors.csv" else "mozza_panel_descriptors.csv"
 
-```{r}
-conso <- read.csv("mozza_consumers_liking.csv")
+dta_cons <- read.csv2(chemin_cons, stringsAsFactors = TRUE, sep = ",", dec = ".") %>%
+  mutate(Prod.ID = as.factor(Prod.ID))
 
-jury <- read.csv("mozza_panel_descriptors.csv")
+dta_panel <- read.csv2(chemin_panel, stringsAsFactors = TRUE, sep = ",", dec = ".") %>%
+  mutate(Prod.ID = as.factor(Prod.ID))
+
+# Alias pour compatibilité
+conso <- dta_cons
+jury <- dta_panel
+consumers <- read_csv(chemin_cons, show_col_types = FALSE)
 ```
 
+ HEAD
 # Partie conso
 
-```{r}
+## Inspection des structures et résumés
+
+```{r inspection-donnees}
+############################################
+# Inspections de données
+############################################
+#>>>>>>> 1200c8885136ccd7755fc994981930f197164b5a
+
+# Détails des variables des données 
+str(dta_cons)
+str(dta_panel)
+
+# Résumé des données 
+summary(dta_cons)
+summary(dta_panel)
+```
+
+# Partie consommateurs (Liking)
+
+## Distribution globale des notes de liking
+
+```{r dist-liking-globale, fig.width=10, fig.height=6}
 # ==============================================================
 # Distribution des notes de liking (échelle 1-9)
 # Jeu de données : Fried Mozzarella Cheese Sticks (Sensometric Society)
-# Fichier attendu : mozza_consumers_liking.csv
-#   colonnes : Panelist, Prod ID, Overall, Appearance, Flavor, Texture
 # ==============================================================
 
-library(readr)
-library(dplyr)
-library(tidyr)
-library(ggplot2)
-library(scales)
-
-# 1. Import -------------------------------------------------------
-consumers <- read_csv("mozza_consumers_liking.csv")
-
-# 2. Passage en format long (une ligne = 1 note donnée par 1 consommateur
-#    sur 1 produit, pour 1 des 4 dimensions) ------------------------
+# Passage en format long
 liking_long <- consumers %>%
   select(Panelist, `Prod ID`, Overall, Appearance, Flavor, Texture) %>%
   pivot_longer(
@@ -53,10 +96,7 @@ liking_long <- consumers %>%
     Note = factor(Note, levels = 1:9)
   )
 
-# 3. Distribution en pourcentage, par dimension et par note ---------
-#    complete() force le produit cartésien Dimension x Note (1:9) pour garder
-#    les notes jamais données (0%) plutôt que de les faire disparaître du
-#    graphique -- count(.drop = FALSE) seul ne le garantit pas avec 2 facteurs
+# Distribution en pourcentage, par dimension et par note
 dist_notes <- liking_long %>%
   count(Dimension, Note, name = "n") %>%
   complete(Dimension, Note, fill = list(n = 0)) %>%
@@ -64,14 +104,13 @@ dist_notes <- liking_long %>%
   mutate(pct = n / sum(n)) %>%
   ungroup()
 
-# 4. Moyenne par dimension, pour la ligne repère ---------------------
+# Moyenne par dimension, pour la ligne repère
 moyennes <- liking_long %>%
   mutate(Note_num = as.numeric(as.character(Note))) %>%
   group_by(Dimension) %>%
   summarise(moyenne = mean(Note_num), .groups = "drop")
 
-# 5. Une couleur par dimension (identité, pas de légende nécessaire
-#    puisque chaque facette porte déjà son titre) ---------------------
+# Palette par dimension
 palette_dim <- c(
   "Appréciation globale" = "#2a78d6",
   "Apparence"             = "#1baf7a",
@@ -79,7 +118,7 @@ palette_dim <- c(
   "Texture"               = "#4a3aa7"
 )
 
-# 6. Graphique ----------------------------------------------------------
+# Graphique
 p <- ggplot(dist_notes, aes(x = Note, y = pct, fill = Dimension)) +
   geom_col(width = 0.72, show.legend = FALSE) +
   geom_vline(
@@ -102,10 +141,10 @@ p <- ggplot(dist_notes, aes(x = Note, y = pct, fill = Dimension)) +
   ) +
   labs(
     title = "Distribution des notes de liking (échelle 1-9)",
-    subtitle = "161 consommateurs x 8 batonnets de mozzarella panee ",
-    x = "Note (1 = je deteste -- 9 = j'adore)",
+    subtitle = "161 consommateurs x 8 bâtonnets de mozzarella panée",
+    x = "Note (1 = je déteste -- 9 = j'adore)",
     y = NULL,
-    caption = "Source : jeu de donnees Fried Mozzarella Cheese Sticks, Sensometric Society"
+    caption = "Source : jeu de données Fried Mozzarella Cheese Sticks, Sensometric Society"
   ) +
   theme_minimal(base_size = 12) +
   theme(
@@ -123,12 +162,11 @@ p <- ggplot(dist_notes, aes(x = Note, y = pct, fill = Dimension)) +
   )
 
 p
-
-
 ```
 
-```{r}
+## Appréciation moyenne par produit
 
+```{r moyennes-produit, fig.width=11, fig.height=5}
 moyennes_produit <- consumers %>%
   group_by(`Prod ID`) %>%
   summarise(
@@ -182,28 +220,69 @@ ggplot(moyennes_produit, aes(x = Dimension, y = moyenne, fill = Dimension)) +
   )
 ```
 
-# Partie jury
+## Distribution détaillée par produit (Boxplots)
 
-```{r}
+```{r boxplots-produits, fig.width=10, fig.height=8}
+############################################
+# Visualisation des données (Boxplots)
+############################################
+var_plot <- colnames(dta_cons[, 3:6])
+
+plots_box <- list()
+for(var in var_plot){
+  p_box <- ggplot(dta_cons, aes(x = Prod.ID, y = .data[[var]], color = Prod.ID, fill = Prod.ID)) + 
+    geom_boxplot(alpha = 0.3, show.legend = FALSE) + 
+    theme_minimal() + 
+    labs(
+      title = paste("Distribution de :", var),
+      y = var, 
+      x = "Produit"
+    )
+  plots_box[[var]] <- p_box
+}
+
+# Affichage sous forme de grille 2x2 avec patchwork
+(plots_box[[1]] + plots_box[[2]]) / (plots_box[[3]] + plots_box[[4]])
+```
+
+## Tests statistiques (ANOVA et comparaisons de moyennes)
+
+```{r anova-posthoc}
+############################################
+# Tests statistiques (ANOVA & post-hoc)
+############################################
+
+for(var in var_plot){
+  cat("\n=============================================\n")
+  cat(" ANOVA pour la variable :", var, "\n")
+  cat("=============================================\n")
+  
+  # écriture de la formule
+  form <- as.formula(paste(var, "~ Prod.ID"))
+
+  # construction du modèle 
+  res <- LinearModel(form, data = dta_cons)
+
+  # affichage de la sortie du modèle
+  print(res)
+
+  # test post-hoc
+  cat("\n--- Test de comparaison des moyennes (meansComp) ---\n")
+  print(meansComp(res, ~ Prod.ID))
+}
+```
+
+# Partie jury (Panel descriptif)
+
+## Pouvoir discriminant des 37 descripteurs du jury
+
+```{r pouvoir-discriminant, fig.width=9, fig.height=8}
 # ==============================================================
-# Etendue et pouvoir discriminant des 37 descripteurs du jury
+# Étendue et pouvoir discriminant des 37 descripteurs du jury
 # Fichier : mozza_panel_descriptors.csv (8 produits x 37 descripteurs)
-#
-# Les descripteurs sont sur des echelles tres differentes (ex. 0-2.5
-# pour seepage, 20-24 pour chewstoswallow) : comparer leurs etendues
-# brutes n'a pas de sens. On calcule donc, pour chaque descripteur,
-# des indices de dispersion RELATIFS a sa propre moyenne (coefficient
-# de variation et etendue rapportee a la moyenne), qui permettent de
-# les comparer entre eux sur une meme echelle.
 # ==============================================================
 
-library(dplyr)
-library(tidyr)
-library(ggplot2)
-library(forcats)
-library(scales)
-
-# 1. Table de synthese : un descripteur par ligne ---------------------
+# 1. Table de synthèse : un descripteur par ligne
 synth_descripteurs <- jury %>%
   select(-Prod.ID) %>%
   pivot_longer(everything(), names_to = "descripteur", values_to = "valeur") %>%
@@ -219,10 +298,8 @@ synth_descripteurs <- jury %>%
   ) %>%
   arrange(desc(cv_pct))
 
-# 2. Visu : CV% trie du plus stable au plus discriminant ---------------
-#    (lollipop horizontal : 37 categories restent lisibles ainsi,
-#    contrairement a 37 boxplots ou histogrammes juxtaposes)
-seuil_cv <- 10  # en dessous, le descripteur varie tres peu entre produits
+# 2. Lollipop horizontal : CV% trié du plus stable au plus discriminant
+seuil_cv <- 10  # seuil indicatif
 
 ggplot(synth_descripteurs,
        aes(x = fct_reorder(descripteur, cv_pct), y = cv_pct)) +
@@ -237,10 +314,10 @@ ggplot(synth_descripteurs,
   coord_flip() +
   scale_colour_gradient(low = "#c9d9f2", high = "#1f4e9c", guide = "none") +
   scale_y_continuous(labels = label_percent(scale = 1, accuracy = 1),
-                      expand = expansion(mult = c(0, 0.08))) +
+                     expand = expansion(mult = c(0, 0.08))) +
   labs(
     title = "Pouvoir discriminant des 37 descripteurs du jury",
-    subtitle = "Coefficient de variation (ecart-type / moyenne) entre les 8 produits, du plus stable au plus discriminant",
+    subtitle = "Coefficient de variation (écart-type / moyenne) entre les 8 produits",
     x = NULL, y = "Coefficient de variation",
     caption = "Source : mozza_panel_descriptors.csv -- 8 produits x 37 descripteurs"
   ) +
@@ -257,11 +334,10 @@ ggplot(synth_descripteurs,
 
 Une dizaine de descripteurs (`seepage`, `cardboardy`, `Moisturerelease`, `visualroughness`, `cheese2`, `soureddairy`, `awareherbs`...) séparent nettement les 8 bâtonnets, avec un CV supérieur à 30 %. À l'inverse, `Cohesiveness`, `chewstoswallow`, `toothpack`, `Cohesivenessmass`, `Oilyfilm`, `Hardness`, `heatedoil`, `astringent`, `heatedoil2` ou `salt` varient très peu d'un produit à l'autre (CV \< 5 %) : le jury les note quasiment pareil pour tous les produits, ils n'apportent donc que peu d'information pour différencier les bâtonnets.
 
-```{r}
-# 3. Table detaillee (min, max, etendue, CV%) -- complement au graphique
-#    pour retrouver les valeurs exactes de chaque descripteur
-library(DT)
+## Tableau récapitulatif des descripteurs
 
+```{r table-descripteurs}
+# 3. Table détaillée (min, max, étendue, CV%) interactive
 synth_descripteurs %>%
   mutate(across(where(is.numeric), ~ round(.x, 2))) %>%
   datatable(
@@ -277,3 +353,124 @@ synth_descripteurs %>%
     backgroundPosition = "left"
   )
 ```
+HEAD
+
+
+## ACP sur le panel jury
+
+```{r acp-jury, fig.width=9, fig.height=6}
+############################################
+# ACP sur le panel du jury
+############################################
+
+# Identifiant du produit en nom de ligne
+panel_pca <- dta_panel %>% column_to_rownames("Prod.ID")
+
+# Réalisation de l'ACP (centrée et réduite)
+res_pca <- PCA(panel_pca, scale.unit = TRUE, graph = FALSE)
+
+# Graphe des individus
+fviz_pca_ind(res_pca, repel = TRUE, title = "ACP Jury - Graphe des individus (produits)")
+
+# Graphe des variables
+fviz_pca_var(res_pca, repel = TRUE, title = "ACP Jury - Cercle des corrélations")
+```
+
+# Analyse Factorielle Multiple (AFM)
+
+## Préparation des données pour l'AFM
+
+On calcule les moyennes des 4 dimensions d'appréciation consommateurs par produit, puis on fusionne ces moyennes avec les 37 descripteurs du jury.
+
+```{r prep-afm}
+# Moyennes consommateurs par produit
+dta_cons_m <- dta_cons %>%
+  group_by(Prod.ID) %>%
+  summarise(
+    cons_overall    = mean(Overall, na.rm = TRUE),
+    cons_texture    = mean(Texture, na.rm = TRUE),
+    cons_appearance = mean(Appearance, na.rm = TRUE),
+    cons_flavor     = mean(Flavor, na.rm = TRUE)
+  )
+
+# Fusion avec le panel jury
+dta_afm <- inner_join(dta_cons_m, dta_panel, by = "Prod.ID") %>%
+  column_to_rownames("Prod.ID")
+```
+
+## AFM 1 : Décomposition par sens (modalités sensorielles)
+
+Dans cette première AFM, les consommateurs sont placés en variables supplémentaires (`num.group.sup = 1`), et les descripteurs du jury sont partitionnés en 3 groupes sensoriels :
+- **Visuel** (6 variables)
+- **Saveur** (16 variables)
+- **Texture** (15 variables)
+
+```{r afm-sens, fig.width=9, fig.height=7}
+############################################
+# AFM ~ descripteurs par sens
+############################################
+
+res_afm <- MFA(
+  dta_afm, 
+  group = c(4, 6, 16, 15),
+  type = c("c", "s", "s", "s"),
+  name.group = c("Consommateurs", "Visuel", "Saveur", "Texture"),
+  num.group.sup = 1,
+  graph = FALSE
+)
+
+# Matrice des coefficients RV
+cat("=== Lien entre les sens et les consommateurs (Coefficients RV) ===\n")
+print(round(res_afm$group$RV, 3))
+
+# Graphe des individus (avec points moyens et partiels)
+plot(res_afm, choix = "ind", ind.moy = FALSE, habillage = "group", partial = "all")
+
+# Graphe des groupes
+fviz_mfa_var(res_afm, "group")
+
+# Cercle des corrélations (15 variables les plus contributrices)
+fviz_mfa_var(res_afm, "quanti.var", repel = TRUE, select.var = list(contrib = 15))
+
+# Graphe des axes partiels
+plot(res_afm, choix = "axes", habillage = "group")
+```
+
+## AFM 2 : Analyse globale Jury vs Consommateurs
+
+Dans cette seconde AFM, l'analyse oppose globalement le groupe des notes **Consommateurs** (4 variables) au groupe complet du **Jury** (37 variables).
+
+```{r afm-jury, fig.width=9, fig.height=7}
+############################################
+# AFM ~ jury global vs consommateurs
+############################################
+
+res_afm_jury <- MFA(
+  dta_afm, 
+  group = c(4, 37),
+  type = c("s", "s"),
+  name.group = c("Consommateurs", "Jury"),
+  graph = FALSE
+)
+
+# Coefficients RV et Lg
+cat("=== Lien global entre Jury et Consommateurs ===\n")
+cat("--- Coefficients RV ---\n")
+print(round(res_afm_jury$group$RV, 3))
+
+cat("\n--- Coefficients Lg ---\n")
+print(round(res_afm_jury$group$Lg, 3))
+
+# Graphe des individus (partiels)
+plot(res_afm_jury, choix = "ind", ind.moy = FALSE, habillage = "group", partial = "all")
+
+# Graphe des groupes
+fviz_mfa_var(res_afm_jury, "group")
+
+# Cercle des corrélations des variables quantitatives
+fviz_mfa_var(res_afm_jury, "quanti.var", repel = TRUE, select.var = list(contrib = 15))
+
+# Graphe des axes partiels
+plot(res_afm_jury, choix = "axes", habillage = "group")
+```
+1200c8885136ccd7755fc994981930f197164b5a
