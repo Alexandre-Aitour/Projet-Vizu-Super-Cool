@@ -8,8 +8,6 @@ editor: visual
 library(tidyverse)
 ```
 
-
-
 # Importation des données
 
 ```{r}
@@ -17,7 +15,6 @@ conso <- read.csv("mozza_consumers_liking.csv")
 
 jury <- read.csv("mozza_panel_descriptors.csv")
 ```
-
 
 # Partie conso
 
@@ -280,4 +277,3 @@ synth_descripteurs %>%
     backgroundPosition = "left"
   )
 ```
-
