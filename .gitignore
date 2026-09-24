@@ -1,0 +1,17 @@
+# Données
+data/
+*.csv
+*.tsv
+*.xlsx
+*.rds
+*.RData
+
+# Fichiers et dossiers générés Quarto / R Markdown
+partie_descriptive_files/
+*_files/
+.quarto/
+
+# Fichiers temporaires R / RStudio / VS Code
+.Rhistory
+.Rproj.user/
+.DS_Store
