@@ -1,0 +1,1615 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.10.18">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Partie_visu_projet</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="partie_descriptive_files/libs/clipboard/clipboard.min.js"></script>
+<script src="partie_descriptive_files/libs/quarto-html/quarto.js" type="module"></script>
+<script src="partie_descriptive_files/libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="partie_descriptive_files/libs/quarto-html/popper.min.js"></script>
+<script src="partie_descriptive_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="partie_descriptive_files/libs/quarto-html/anchor.min.js"></script>
+<link href="partie_descriptive_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="partie_descriptive_files/libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="partie_descriptive_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="partie_descriptive_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="partie_descriptive_files/libs/bootstrap/bootstrap-c2e55264ed47ce3b2e0326a2269f9400.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="partie_descriptive_files/libs/htmltools-fill-0.5.9/fill.css" rel="stylesheet">
+<script src="partie_descriptive_files/libs/htmlwidgets-1.6.4/htmlwidgets.js"></script>
+<link href="partie_descriptive_files/libs/datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet">
+<script src="partie_descriptive_files/libs/datatables-binding-0.34.0/datatables.js"></script>
+<script src="partie_descriptive_files/libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<link href="partie_descriptive_files/libs/dt-core-1.13.6/css/jquery.dataTables.min.css" rel="stylesheet">
+<link href="partie_descriptive_files/libs/dt-core-1.13.6/css/jquery.dataTables.extra.css" rel="stylesheet">
+<script src="partie_descriptive_files/libs/dt-core-1.13.6/js/jquery.dataTables.min.js"></script>
+<link href="partie_descriptive_files/libs/crosstalk-1.2.2/css/crosstalk.min.css" rel="stylesheet">
+<script src="partie_descriptive_files/libs/crosstalk-1.2.2/js/crosstalk.min.js"></script>
+
+
+</head>
+
+<body class="quarto-light">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+<div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+  <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#importation-et-inspection-des-données" id="toc-importation-et-inspection-des-données" class="nav-link active" data-scroll-target="#importation-et-inspection-des-données">Importation et inspection des données</a>
+  <ul class="collapse">
+  <li><a href="#inspection-des-structures-et-résumés" id="toc-inspection-des-structures-et-résumés" class="nav-link" data-scroll-target="#inspection-des-structures-et-résumés">Inspection des structures et résumés</a></li>
+  </ul></li>
+  <li><a href="#partie-consommateurs-liking" id="toc-partie-consommateurs-liking" class="nav-link" data-scroll-target="#partie-consommateurs-liking">Partie consommateurs (Liking)</a>
+  <ul class="collapse">
+  <li><a href="#distribution-globale-des-notes-de-liking" id="toc-distribution-globale-des-notes-de-liking" class="nav-link" data-scroll-target="#distribution-globale-des-notes-de-liking">Distribution globale des notes de liking</a></li>
+  <li><a href="#appréciation-moyenne-par-produit" id="toc-appréciation-moyenne-par-produit" class="nav-link" data-scroll-target="#appréciation-moyenne-par-produit">Appréciation moyenne par produit</a></li>
+  <li><a href="#distribution-détaillée-par-produit-boxplots" id="toc-distribution-détaillée-par-produit-boxplots" class="nav-link" data-scroll-target="#distribution-détaillée-par-produit-boxplots">Distribution détaillée par produit (Boxplots)</a></li>
+  <li><a href="#tests-statistiques-anova-et-comparaisons-de-moyennes" id="toc-tests-statistiques-anova-et-comparaisons-de-moyennes" class="nav-link" data-scroll-target="#tests-statistiques-anova-et-comparaisons-de-moyennes">Tests statistiques (ANOVA et comparaisons de moyennes)</a></li>
+  </ul></li>
+  <li><a href="#partie-jury-panel-descriptif" id="toc-partie-jury-panel-descriptif" class="nav-link" data-scroll-target="#partie-jury-panel-descriptif">Partie jury (Panel descriptif)</a>
+  <ul class="collapse">
+  <li><a href="#pouvoir-discriminant-des-37-descripteurs-du-jury" id="toc-pouvoir-discriminant-des-37-descripteurs-du-jury" class="nav-link" data-scroll-target="#pouvoir-discriminant-des-37-descripteurs-du-jury">Pouvoir discriminant des 37 descripteurs du jury</a></li>
+  <li><a href="#tableau-récapitulatif-des-descripteurs" id="toc-tableau-récapitulatif-des-descripteurs" class="nav-link" data-scroll-target="#tableau-récapitulatif-des-descripteurs">Tableau récapitulatif des descripteurs</a></li>
+  <li><a href="#acp-sur-le-panel-jury" id="toc-acp-sur-le-panel-jury" class="nav-link" data-scroll-target="#acp-sur-le-panel-jury">ACP sur le panel jury</a></li>
+  </ul></li>
+  <li><a href="#analyse-factorielle-multiple-afm" id="toc-analyse-factorielle-multiple-afm" class="nav-link" data-scroll-target="#analyse-factorielle-multiple-afm">Analyse Factorielle Multiple (AFM)</a>
+  <ul class="collapse">
+  <li><a href="#préparation-des-données-pour-lafm" id="toc-préparation-des-données-pour-lafm" class="nav-link" data-scroll-target="#préparation-des-données-pour-lafm">Préparation des données pour l’AFM</a></li>
+  <li><a href="#afm-1-décomposition-par-sens-modalités-sensorielles" id="toc-afm-1-décomposition-par-sens-modalités-sensorielles" class="nav-link" data-scroll-target="#afm-1-décomposition-par-sens-modalités-sensorielles">AFM 1 : Décomposition par sens (modalités sensorielles)</a></li>
+  <li><a href="#afm-2-analyse-globale-jury-vs-consommateurs" id="toc-afm-2-analyse-globale-jury-vs-consommateurs" class="nav-link" data-scroll-target="#afm-2-analyse-globale-jury-vs-consommateurs">AFM 2 : Analyse globale Jury vs Consommateurs</a></li>
+  </ul></li>
+  </ul>
+</nav>
+</div>
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Partie_visu_projet</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div class="cell">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="do">############################################</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Importation des bibliothèques</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="do">############################################</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(FactoMineR)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(SensoMineR)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(factoextra)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(Factoshiny)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(bslib)</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(DT)</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(plotly)</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(patchwork)</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(scales)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+<section id="importation-et-inspection-des-données" class="level1">
+<h1>Importation et inspection des données</h1>
+<div class="cell">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="do">############################################</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Importation des données</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="do">############################################</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>chemin_cons <span class="ot">&lt;-</span> <span class="cf">if</span> (<span class="fu">file.exists</span>(<span class="st">"data/mozza_consumers_liking.csv"</span>)) <span class="st">"data/mozza_consumers_liking.csv"</span> <span class="cf">else</span> <span class="st">"mozza_consumers_liking.csv"</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>chemin_panel <span class="ot">&lt;-</span> <span class="cf">if</span> (<span class="fu">file.exists</span>(<span class="st">"data/mozza_panel_descriptors.csv"</span>)) <span class="st">"data/mozza_panel_descriptors.csv"</span> <span class="cf">else</span> <span class="st">"mozza_panel_descriptors.csv"</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>dta_cons <span class="ot">&lt;-</span> <span class="fu">read.csv2</span>(chemin_cons, <span class="at">stringsAsFactors =</span> <span class="cn">TRUE</span>, <span class="at">sep =</span> <span class="st">","</span>, <span class="at">dec =</span> <span class="st">"."</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Prod.ID =</span> <span class="fu">as.factor</span>(Prod.ID))</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>dta_panel <span class="ot">&lt;-</span> <span class="fu">read.csv2</span>(chemin_panel, <span class="at">stringsAsFactors =</span> <span class="cn">TRUE</span>, <span class="at">sep =</span> <span class="st">","</span>, <span class="at">dec =</span> <span class="st">"."</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Prod.ID =</span> <span class="fu">as.factor</span>(Prod.ID))</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Alias pour compatibilité</span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>conso <span class="ot">&lt;-</span> dta_cons</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>jury <span class="ot">&lt;-</span> dta_panel</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>consumers <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(chemin_cons, <span class="at">show_col_types =</span> <span class="cn">FALSE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+<section id="inspection-des-structures-et-résumés" class="level2">
+<h2 class="anchored" data-anchor-id="inspection-des-structures-et-résumés">Inspection des structures et résumés</h2>
+<div class="cell">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="do">############################################</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Inspections de données</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="do">############################################</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Détails des variables des données </span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(dta_cons)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>'data.frame':   1284 obs. of  6 variables:
+ $ Panelist  : int  1 1 1 1 1 1 1 1 2 2 ...
+ $ Prod.ID   : Factor w/ 8 levels "196","239","354",..: 1 2 3 4 5 6 7 8 1 2 ...
+ $ Overall   : int  9 7 9 3 8 7 6 9 8 7 ...
+ $ Appearance: int  9 9 8 8 9 9 4 8 8 7 ...
+ $ Flavor    : int  9 6 8 2 7 7 3 9 7 7 ...
+ $ Texture   : int  9 7 7 3 9 8 3 8 8 7 ...</code></pre>
+</div>
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(dta_panel)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>'data.frame':   8 obs. of  38 variables:
+ $ Prod.ID          : Factor w/ 8 levels "196","239","354",..: 1 2 3 4 5 6 7 8
+ $ shapeintegrity   : num  10.5 10 5 7.5 3.5 8.5 12 6
+ $ uniformitycoating: num  8 7.5 5.5 5 5.5 6 8 6.5
+ $ seepage          : num  1.8 1.5 1.5 1 2.5 2 0 0
+ $ awareherbs       : num  2.5 8 6 3.5 6 9.5 6 10
+ $ degreebrown      : num  12.5 9 6.5 9 7 4 11.5 7.5
+ $ visualroughness  : num  9 4.5 2.5 12 3.5 5 7.5 8.5
+ $ salt             : num  12.6 11.4 13.3 12.6 12.8 ...
+ $ sour             : num  1.694 0.887 1.175 1.144 1.131 ...
+ $ GreenHerb        : num  2.76 3.39 2.56 4.69 2.66 ...
+ $ oniongarlic      : num  2.26 2.12 2.15 2.23 2.24 ...
+ $ toastedgrain     : num  3.12 3.01 2.19 2.41 2.42 ...
+ $ rawgrain         : num  2.97 3.34 3.42 3.44 3.44 ...
+ $ mozzarella       : num  3.38 3.34 3.94 2.89 3.63 ...
+ $ heatedoil        : num  3.91 3.85 3.89 4 3.76 ...
+ $ cardboardy       : num  0.506 0.188 0.562 1.337 0.25 ...
+ $ soureddairy      : num  0.456 0.531 0.713 1.081 0.531 ...
+ $ astringent       : num  3.47 3.39 3.59 3.78 3.58 ...
+ $ greenherb2       : num  1.7 2.12 1.96 3.16 1.23 ...
+ $ rawdoughy2       : num  1.99 2.3 2.59 2.4 2.39 ...
+ $ salt2            : num  7.31 6.86 7.98 7.39 7.47 ...
+ $ heatedoil2       : num  2.25 2.26 2.4 2.38 2.19 ...
+ $ cheese2          : num  0.3 0.506 0.581 0.25 0.95 ...
+ $ AmountParticles  : num  7.68 7.69 5.44 7.13 6.22 ...
+ $ OilyGreasylips   : num  9.3 9.82 7.88 10.88 9.38 ...
+ $ roughness        : num  10.58 11.21 9.62 11.71 10.96 ...
+ $ Hardness         : num  5.22 5.67 5.56 5.2 5.84 ...
+ $ Cohesiveness     : num  7.17 7.04 7.1 7.17 7.37 ...
+ $ Crispiness       : num  3.91 4.82 4.73 5.09 5.26 ...
+ $ Moisturerelease  : num  1.4 1.06 4.42 3.38 1.9 ...
+ $ Cohesivenessmass : num  9.06 8.44 9.26 8.95 8.53 ...
+ $ roughnessmass    : num  5.14 5.87 5.58 5.59 5.61 ...
+ $ moistureabsorp   : num  8.52 8.67 7.55 8.29 8.19 ...
+ $ chewstoswallow   : num  22.2 22.4 22.8 23 23.8 ...
+ $ pertisencecrisp  : num  6.33 7.83 7.58 6.67 7.42 ...
+ $ Oilyfilm         : num  4.7 4.83 4.65 5.14 4.63 ...
+ $ looseparticles   : num  3.73 3.69 3.5 3.9 3.45 ...
+ $ toothpack        : num  2.97 2.75 2.84 2.9 2.71 ...</code></pre>
+</div>
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Résumé des données </span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(dta_cons)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>    Panelist         Prod.ID       Overall        Appearance        Flavor     
+ Min.   :  1.00   196    :161   Min.   :1.000   Min.   :1.000   Min.   :1.000  
+ 1st Qu.: 44.00   577    :161   1st Qu.:5.000   1st Qu.:6.000   1st Qu.:4.000  
+ Median : 84.00   772    :161   Median :7.000   Median :7.000   Median :7.000  
+ Mean   : 83.39   852    :161   Mean   :6.262   Mean   :6.769   Mean   :6.144  
+ 3rd Qu.:124.00   239    :160   3rd Qu.:8.000   3rd Qu.:8.000   3rd Qu.:8.000  
+ Max.   :165.00   354    :160   Max.   :9.000   Max.   :9.000   Max.   :9.000  
+                  (Other):320                                                  
+    Texture     
+ Min.   :1.000  
+ 1st Qu.:5.000  
+ Median :7.000  
+ Mean   :6.163  
+ 3rd Qu.:8.000  
+ Max.   :9.000  
+                </code></pre>
+</div>
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(dta_panel)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>    Prod.ID  shapeintegrity   uniformitycoating    seepage     
+ 196    :1   Min.   : 3.500   Min.   :5.000     Min.   :0.000  
+ 239    :1   1st Qu.: 5.750   1st Qu.:5.500     1st Qu.:0.750  
+ 354    :1   Median : 8.000   Median :6.250     Median :1.500  
+ 427    :1   Mean   : 7.875   Mean   :6.500     Mean   :1.288  
+ 577    :1   3rd Qu.:10.125   3rd Qu.:7.625     3rd Qu.:1.850  
+ 638    :1   Max.   :12.000   Max.   :8.000     Max.   :2.500  
+ (Other):2                                                     
+   awareherbs      degreebrown     visualroughness       salt      
+ Min.   : 2.500   Min.   : 4.000   Min.   : 2.500   Min.   :11.42  
+ 1st Qu.: 5.375   1st Qu.: 6.875   1st Qu.: 4.250   1st Qu.:12.02  
+ Median : 6.000   Median : 8.250   Median : 6.250   Median :12.55  
+ Mean   : 6.438   Mean   : 8.375   Mean   : 6.562   Mean   :12.37  
+ 3rd Qu.: 8.375   3rd Qu.: 9.625   3rd Qu.: 8.625   3rd Qu.:12.68  
+ Max.   :10.000   Max.   :12.500   Max.   :12.000   Max.   :13.26  
+                                                                   
+      sour          GreenHerb      oniongarlic     toastedgrain  
+ Min.   :0.8562   Min.   :2.263   Min.   :1.363   Min.   :2.194  
+ 1st Qu.:1.0422   1st Qu.:2.531   1st Qu.:2.002   1st Qu.:2.422  
+ Median :1.1250   Median :2.709   Median :2.189   Median :2.772  
+ Mean   :1.1375   Mean   :3.004   Mean   :2.060   Mean   :2.747  
+ 3rd Qu.:1.1516   3rd Qu.:3.294   3rd Qu.:2.244   3rd Qu.:3.034  
+ Max.   :1.6938   Max.   :4.688   Max.   :2.480   Max.   :3.275  
+                                                                 
+    rawgrain       mozzarella      heatedoil       cardboardy    
+ Min.   :2.750   Min.   :2.550   Min.   :3.756   Min.   :0.1875  
+ 1st Qu.:3.006   1st Qu.:3.231   1st Qu.:3.830   1st Qu.:0.2500  
+ Median :3.225   Median :3.388   Median :3.897   Median :0.5188  
+ Mean   :3.186   Mean   :3.331   Mean   :3.928   Mean   :0.5469  
+ 3rd Qu.:3.423   3rd Qu.:3.547   3rd Qu.:3.986   3rd Qu.:0.6094  
+ Max.   :3.444   Max.   :3.938   Max.   :4.269   Max.   :1.3375  
+                                                                 
+  soureddairy       astringent      greenherb2       rawdoughy2   
+ Min.   :0.1562   Min.   :3.394   Min.   :0.9938   Min.   :1.988  
+ 1st Qu.:0.5125   1st Qu.:3.453   1st Qu.:1.4082   1st Qu.:2.225  
+ Median :0.6219   Median :3.581   Median :1.8281   Median :2.337  
+ Mean   :0.6562   Mean   :3.581   Mean   :1.8533   Mean   :2.293  
+ 3rd Qu.:0.8828   3rd Qu.:3.709   3rd Qu.:2.1437   3rd Qu.:2.395  
+ Max.   :1.0813   Max.   :3.781   Max.   :3.1562   Max.   :2.587  
+                                                                  
+     salt2         heatedoil2       cheese2       AmountParticles
+ Min.   :6.753   Min.   :2.194   Min.   :0.2500   Min.   :5.442  
+ 1st Qu.:7.198   1st Qu.:2.259   1st Qu.:0.2922   1st Qu.:6.904  
+ Median :7.388   Median :2.322   Median :0.5219   Median :7.579  
+ Mean   :7.347   Mean   :2.334   Mean   :0.5062   Mean   :7.210  
+ 3rd Qu.:7.513   3rd Qu.:2.413   3rd Qu.:0.6000   3rd Qu.:7.706  
+ Max.   :7.981   Max.   :2.475   Max.   :0.9500   Max.   :8.292  
+                                                                 
+ OilyGreasylips     roughness         Hardness      Cohesiveness  
+ Min.   : 7.875   Min.   : 9.625   Min.   :5.200   Min.   :7.042  
+ 1st Qu.: 9.363   1st Qu.:10.865   1st Qu.:5.298   1st Qu.:7.098  
+ Median : 9.613   Median :11.075   Median :5.508   Median :7.146  
+ Mean   : 9.716   Mean   :11.072   Mean   :5.480   Mean   :7.197  
+ 3rd Qu.:10.433   3rd Qu.:11.333   3rd Qu.:5.594   3rd Qu.:7.223  
+ Max.   :10.875   Max.   :12.342   Max.   :5.842   Max.   :7.508  
+                                                                  
+   Crispiness    Moisturerelease  Cohesivenessmass roughnessmass  
+ Min.   :3.908   Min.   :0.8333   Min.   :8.350    Min.   :5.142  
+ 1st Qu.:4.696   1st Qu.:1.3146   1st Qu.:8.504    1st Qu.:5.590  
+ Median :4.929   Median :1.7000   Median :8.808    Median :5.737  
+ Mean   :4.901   Mean   :2.2752   Mean   :8.775    Mean   :5.726  
+ 3rd Qu.:5.133   3rd Qu.:3.4608   3rd Qu.:8.977    3rd Qu.:5.910  
+ Max.   :5.775   Max.   :4.4167   Max.   :9.258    Max.   :6.108  
+                                                                  
+ moistureabsorp  chewstoswallow  pertisencecrisp    Oilyfilm    
+ Min.   :7.550   Min.   :22.17   Min.   :6.333   Min.   :4.633  
+ 1st Qu.:8.267   1st Qu.:22.42   1st Qu.:7.229   1st Qu.:4.650  
+ Median :8.392   Median :22.71   Median :7.625   Median :4.733  
+ Mean   :8.384   Mean   :22.79   Mean   :7.521   Mean   :4.801  
+ 3rd Qu.:8.554   3rd Qu.:23.04   3rd Qu.:7.958   3rd Qu.:4.883  
+ Max.   :9.075   Max.   :23.75   Max.   :8.333   Max.   :5.142  
+                                                                
+ looseparticles    toothpack    
+ Min.   :3.450   Min.   :2.708  
+ 1st Qu.:3.644   1st Qu.:2.721  
+ Median :3.817   Median :2.767  
+ Mean   :3.770   Mean   :2.798  
+ 3rd Qu.:3.954   3rd Qu.:2.856  
+ Max.   :3.967   Max.   :2.967  
+                                </code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="partie-consommateurs-liking" class="level1">
+<h1>Partie consommateurs (Liking)</h1>
+<section id="distribution-globale-des-notes-de-liking" class="level2">
+<h2 class="anchored" data-anchor-id="distribution-globale-des-notes-de-liking">Distribution globale des notes de liking</h2>
+<div class="cell">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ==============================================================</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Distribution des notes de liking (échelle 1-9)</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Jeu de données : Fried Mozzarella Cheese Sticks (Sensometric Society)</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="co"># ==============================================================</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Passage en format long</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>liking_long <span class="ot">&lt;-</span> consumers <span class="sc">%&gt;%</span></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(Panelist, <span class="st">`</span><span class="at">Prod ID</span><span class="st">`</span>, Overall, Appearance, Flavor, Texture) <span class="sc">%&gt;%</span></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(</span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">cols =</span> <span class="fu">c</span>(Overall, Appearance, Flavor, Texture),</span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_to =</span> <span class="st">"Dimension"</span>,</span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">values_to =</span> <span class="st">"Note"</span></span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">Dimension =</span> <span class="fu">factor</span>(</span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a>      Dimension,</span>
+<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a>      <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"Overall"</span>, <span class="st">"Appearance"</span>, <span class="st">"Flavor"</span>, <span class="st">"Texture"</span>),</span>
+<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a>      <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"Appréciation globale"</span>, <span class="st">"Apparence"</span>, <span class="st">"Saveur"</span>, <span class="st">"Texture"</span>)</span>
+<span id="cb11-19"><a href="#cb11-19" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb11-20"><a href="#cb11-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">Note =</span> <span class="fu">factor</span>(Note, <span class="at">levels =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">9</span>)</span>
+<span id="cb11-21"><a href="#cb11-21" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb11-22"><a href="#cb11-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-23"><a href="#cb11-23" aria-hidden="true" tabindex="-1"></a><span class="co"># Distribution en pourcentage, par dimension et par note</span></span>
+<span id="cb11-24"><a href="#cb11-24" aria-hidden="true" tabindex="-1"></a>dist_notes <span class="ot">&lt;-</span> liking_long <span class="sc">%&gt;%</span></span>
+<span id="cb11-25"><a href="#cb11-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(Dimension, Note, <span class="at">name =</span> <span class="st">"n"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb11-26"><a href="#cb11-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">complete</span>(Dimension, Note, <span class="at">fill =</span> <span class="fu">list</span>(<span class="at">n =</span> <span class="dv">0</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb11-27"><a href="#cb11-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Dimension) <span class="sc">%&gt;%</span></span>
+<span id="cb11-28"><a href="#cb11-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">pct =</span> n <span class="sc">/</span> <span class="fu">sum</span>(n)) <span class="sc">%&gt;%</span></span>
+<span id="cb11-29"><a href="#cb11-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>()</span>
+<span id="cb11-30"><a href="#cb11-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-31"><a href="#cb11-31" aria-hidden="true" tabindex="-1"></a><span class="co"># Moyenne par dimension, pour la ligne repère</span></span>
+<span id="cb11-32"><a href="#cb11-32" aria-hidden="true" tabindex="-1"></a>moyennes <span class="ot">&lt;-</span> liking_long <span class="sc">%&gt;%</span></span>
+<span id="cb11-33"><a href="#cb11-33" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Note_num =</span> <span class="fu">as.numeric</span>(<span class="fu">as.character</span>(Note))) <span class="sc">%&gt;%</span></span>
+<span id="cb11-34"><a href="#cb11-34" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Dimension) <span class="sc">%&gt;%</span></span>
+<span id="cb11-35"><a href="#cb11-35" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">moyenne =</span> <span class="fu">mean</span>(Note_num), <span class="at">.groups =</span> <span class="st">"drop"</span>)</span>
+<span id="cb11-36"><a href="#cb11-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-37"><a href="#cb11-37" aria-hidden="true" tabindex="-1"></a><span class="co"># Palette par dimension</span></span>
+<span id="cb11-38"><a href="#cb11-38" aria-hidden="true" tabindex="-1"></a>palette_dim <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb11-39"><a href="#cb11-39" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Appréciation globale"</span> <span class="ot">=</span> <span class="st">"#2a78d6"</span>,</span>
+<span id="cb11-40"><a href="#cb11-40" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Apparence"</span>             <span class="ot">=</span> <span class="st">"#1baf7a"</span>,</span>
+<span id="cb11-41"><a href="#cb11-41" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Saveur"</span>               <span class="ot">=</span> <span class="st">"#e34948"</span>,</span>
+<span id="cb11-42"><a href="#cb11-42" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Texture"</span>               <span class="ot">=</span> <span class="st">"#4a3aa7"</span></span>
+<span id="cb11-43"><a href="#cb11-43" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb11-44"><a href="#cb11-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-45"><a href="#cb11-45" aria-hidden="true" tabindex="-1"></a><span class="co"># Graphique</span></span>
+<span id="cb11-46"><a href="#cb11-46" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(dist_notes, <span class="fu">aes</span>(<span class="at">x =</span> Note, <span class="at">y =</span> pct, <span class="at">fill =</span> Dimension)) <span class="sc">+</span></span>
+<span id="cb11-47"><a href="#cb11-47" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="at">width =</span> <span class="fl">0.72</span>, <span class="at">show.legend =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb11-48"><a href="#cb11-48" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(</span>
+<span id="cb11-49"><a href="#cb11-49" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> moyennes,</span>
+<span id="cb11-50"><a href="#cb11-50" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">xintercept =</span> moyenne),</span>
+<span id="cb11-51"><a href="#cb11-51" aria-hidden="true" tabindex="-1"></a>    <span class="at">linetype =</span> <span class="st">"dashed"</span>, <span class="at">linewidth =</span> <span class="fl">0.6</span>, <span class="at">colour =</span> <span class="st">"grey40"</span></span>
+<span id="cb11-52"><a href="#cb11-52" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb11-53"><a href="#cb11-53" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(</span>
+<span id="cb11-54"><a href="#cb11-54" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> moyennes,</span>
+<span id="cb11-55"><a href="#cb11-55" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">x =</span> moyenne, <span class="at">y =</span> <span class="cn">Inf</span>, <span class="at">label =</span> <span class="fu">paste0</span>(<span class="st">"moy = "</span>, <span class="fu">round</span>(moyenne, <span class="dv">2</span>))),</span>
+<span id="cb11-56"><a href="#cb11-56" aria-hidden="true" tabindex="-1"></a>    <span class="at">inherit.aes =</span> <span class="cn">FALSE</span>, <span class="at">vjust =</span> <span class="fl">1.6</span>, <span class="at">hjust =</span> <span class="sc">-</span><span class="fl">0.08</span>, <span class="at">size =</span> <span class="fl">3.1</span>,</span>
+<span id="cb11-57"><a href="#cb11-57" aria-hidden="true" tabindex="-1"></a>    <span class="at">colour =</span> <span class="st">"grey40"</span>, <span class="at">fontface =</span> <span class="st">"bold"</span></span>
+<span id="cb11-58"><a href="#cb11-58" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb11-59"><a href="#cb11-59" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> Dimension, <span class="at">nrow =</span> <span class="dv">2</span>, <span class="at">scales =</span> <span class="st">"free_x"</span>) <span class="sc">+</span></span>
+<span id="cb11-60"><a href="#cb11-60" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> palette_dim) <span class="sc">+</span></span>
+<span id="cb11-61"><a href="#cb11-61" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_discrete</span>(<span class="at">drop =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb11-62"><a href="#cb11-62" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(</span>
+<span id="cb11-63"><a href="#cb11-63" aria-hidden="true" tabindex="-1"></a>    <span class="at">labels =</span> <span class="fu">percent_format</span>(<span class="at">accuracy =</span> <span class="dv">1</span>),</span>
+<span id="cb11-64"><a href="#cb11-64" aria-hidden="true" tabindex="-1"></a>    <span class="at">expand =</span> <span class="fu">expansion</span>(<span class="at">mult =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="fl">0.18</span>))</span>
+<span id="cb11-65"><a href="#cb11-65" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb11-66"><a href="#cb11-66" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb11-67"><a href="#cb11-67" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Distribution des notes de liking (échelle 1-9)"</span>,</span>
+<span id="cb11-68"><a href="#cb11-68" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="st">"161 consommateurs x 8 bâtonnets de mozzarella panée"</span>,</span>
+<span id="cb11-69"><a href="#cb11-69" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Note (1 = je déteste -- 9 = j'adore)"</span>,</span>
+<span id="cb11-70"><a href="#cb11-70" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="cn">NULL</span>,</span>
+<span id="cb11-71"><a href="#cb11-71" aria-hidden="true" tabindex="-1"></a>    <span class="at">caption =</span> <span class="st">"Source : jeu de données Fried Mozzarella Cheese Sticks, Sensometric Society"</span></span>
+<span id="cb11-72"><a href="#cb11-72" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb11-73"><a href="#cb11-73" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">12</span>) <span class="sc">+</span></span>
+<span id="cb11-74"><a href="#cb11-74" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb11-75"><a href="#cb11-75" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">face =</span> <span class="st">"bold"</span>, <span class="at">size =</span> <span class="dv">15</span>),</span>
+<span id="cb11-76"><a href="#cb11-76" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.subtitle =</span> <span class="fu">element_text</span>(<span class="at">colour =</span> <span class="st">"grey40"</span>, <span class="at">size =</span> <span class="dv">10</span>, <span class="at">margin =</span> <span class="fu">margin</span>(<span class="at">b =</span> <span class="dv">10</span>)),</span>
+<span id="cb11-77"><a href="#cb11-77" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.caption =</span> <span class="fu">element_text</span>(<span class="at">colour =</span> <span class="st">"grey55"</span>, <span class="at">size =</span> <span class="dv">8</span>, <span class="at">hjust =</span> <span class="dv">0</span>),</span>
+<span id="cb11-78"><a href="#cb11-78" aria-hidden="true" tabindex="-1"></a>    <span class="at">strip.text =</span> <span class="fu">element_text</span>(<span class="at">face =</span> <span class="st">"bold"</span>, <span class="at">hjust =</span> <span class="dv">0</span>, <span class="at">size =</span> <span class="dv">11</span>, <span class="at">colour =</span> <span class="st">"grey10"</span>),</span>
+<span id="cb11-79"><a href="#cb11-79" aria-hidden="true" tabindex="-1"></a>    <span class="at">strip.background =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb11-80"><a href="#cb11-80" aria-hidden="true" tabindex="-1"></a>    <span class="at">panel.spacing =</span> <span class="fu">unit</span>(<span class="fl">1.1</span>, <span class="st">"lines"</span>),</span>
+<span id="cb11-81"><a href="#cb11-81" aria-hidden="true" tabindex="-1"></a>    <span class="at">panel.grid.minor =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb11-82"><a href="#cb11-82" aria-hidden="true" tabindex="-1"></a>    <span class="at">panel.grid.major.x =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb11-83"><a href="#cb11-83" aria-hidden="true" tabindex="-1"></a>    <span class="at">panel.grid.major.y =</span> <span class="fu">element_line</span>(<span class="at">colour =</span> <span class="st">"grey90"</span>, <span class="at">linewidth =</span> <span class="fl">0.4</span>),</span>
+<span id="cb11-84"><a href="#cb11-84" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.text =</span> <span class="fu">element_text</span>(<span class="at">colour =</span> <span class="st">"grey45"</span>),</span>
+<span id="cb11-85"><a href="#cb11-85" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.title.x =</span> <span class="fu">element_text</span>(<span class="at">colour =</span> <span class="st">"grey40"</span>, <span class="at">margin =</span> <span class="fu">margin</span>(<span class="at">t =</span> <span class="dv">10</span>))</span>
+<span id="cb11-86"><a href="#cb11-86" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb11-87"><a href="#cb11-87" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-88"><a href="#cb11-88" aria-hidden="true" tabindex="-1"></a>p</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="partie_descriptive_files/figure-html/dist-liking-globale-1.png" class="img-fluid figure-img" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="appréciation-moyenne-par-produit" class="level2">
+<h2 class="anchored" data-anchor-id="appréciation-moyenne-par-produit">Appréciation moyenne par produit</h2>
+<div class="cell">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>moyennes_produit <span class="ot">&lt;-</span> consumers <span class="sc">%&gt;%</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(<span class="st">`</span><span class="at">Prod ID</span><span class="st">`</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">Overall    =</span> <span class="fu">mean</span>(Overall),</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">Appearance =</span> <span class="fu">mean</span>(Appearance),</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">Flavor     =</span> <span class="fu">mean</span>(Flavor),</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">Texture    =</span> <span class="fu">mean</span>(Texture),</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">.groups =</span> <span class="st">"drop"</span></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="fu">c</span>(Overall, Appearance, Flavor, Texture),</span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>               <span class="at">names_to =</span> <span class="st">"Dimension"</span>, <span class="at">values_to =</span> <span class="st">"moyenne"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Dimension =</span> <span class="fu">factor</span>(Dimension,</span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>           <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"Overall"</span>, <span class="st">"Appearance"</span>, <span class="st">"Flavor"</span>, <span class="st">"Texture"</span>),</span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>           <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"Appréciation globale"</span>, <span class="st">"Apparence"</span>, <span class="st">"Flaveur"</span>, <span class="st">"Texture"</span>)))</span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a>ordre_produits <span class="ot">&lt;-</span> moyennes_produit <span class="sc">%&gt;%</span></span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(Dimension <span class="sc">==</span> <span class="st">"Appréciation globale"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(moyenne)) <span class="sc">%&gt;%</span></span>
+<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pull</span>(<span class="st">`</span><span class="at">Prod ID</span><span class="st">`</span>)</span>
+<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a>moyennes_produit <span class="ot">&lt;-</span> moyennes_produit <span class="sc">%&gt;%</span></span>
+<span id="cb12-22"><a href="#cb12-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="st">`</span><span class="at">Prod ID</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">factor</span>(<span class="st">`</span><span class="at">Prod ID</span><span class="st">`</span>, <span class="at">levels =</span> ordre_produits))</span>
+<span id="cb12-23"><a href="#cb12-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-24"><a href="#cb12-24" aria-hidden="true" tabindex="-1"></a>palette_dim <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb12-25"><a href="#cb12-25" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Appréciation globale"</span> <span class="ot">=</span> <span class="st">"#2a78d6"</span>, <span class="st">"Apparence"</span> <span class="ot">=</span> <span class="st">"#1baf7a"</span>,</span>
+<span id="cb12-26"><a href="#cb12-26" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Flaveur"</span> <span class="ot">=</span> <span class="st">"#e34948"</span>, <span class="st">"Texture"</span> <span class="ot">=</span> <span class="st">"#4a3aa7"</span></span>
+<span id="cb12-27"><a href="#cb12-27" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb12-28"><a href="#cb12-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-29"><a href="#cb12-29" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(moyennes_produit, <span class="fu">aes</span>(<span class="at">x =</span> Dimension, <span class="at">y =</span> moyenne, <span class="at">fill =</span> Dimension)) <span class="sc">+</span></span>
+<span id="cb12-30"><a href="#cb12-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="at">width =</span> <span class="fl">0.78</span>) <span class="sc">+</span></span>
+<span id="cb12-31"><a href="#cb12-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(<span class="fu">aes</span>(<span class="at">label =</span> <span class="fu">sprintf</span>(<span class="st">"%.1f"</span>, moyenne)),</span>
+<span id="cb12-32"><a href="#cb12-32" aria-hidden="true" tabindex="-1"></a>            <span class="at">vjust =</span> <span class="sc">-</span><span class="fl">0.5</span>, <span class="at">size =</span> <span class="fl">3.1</span>, <span class="at">colour =</span> <span class="st">"grey10"</span>, <span class="at">fontface =</span> <span class="st">"bold"</span>) <span class="sc">+</span></span>
+<span id="cb12-33"><a href="#cb12-33" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> <span class="st">`</span><span class="at">Prod ID</span><span class="st">`</span>, <span class="at">nrow =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb12-34"><a href="#cb12-34" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> palette_dim, <span class="at">name =</span> <span class="cn">NULL</span>) <span class="sc">+</span></span>
+<span id="cb12-35"><a href="#cb12-35" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">9</span>), <span class="at">expand =</span> <span class="fu">expansion</span>(<span class="at">mult =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="fl">0.10</span>))) <span class="sc">+</span></span>
+<span id="cb12-36"><a href="#cb12-36" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Appréciation moyenne des bâtonnets de mozzarella, par dimension"</span>,</span>
+<span id="cb12-37"><a href="#cb12-37" aria-hidden="true" tabindex="-1"></a>       <span class="at">subtitle =</span> <span class="st">"Moyenne des notes de liking (échelle 1-9) — produits triés du plus au moins apprécié"</span>,</span>
+<span id="cb12-38"><a href="#cb12-38" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="cn">NULL</span>, <span class="at">y =</span> <span class="cn">NULL</span>,</span>
+<span id="cb12-39"><a href="#cb12-39" aria-hidden="true" tabindex="-1"></a>       <span class="at">caption =</span> <span class="st">"Source : Fried Mozzarella Cheese Sticks, Sensometric Society"</span>) <span class="sc">+</span></span>
+<span id="cb12-40"><a href="#cb12-40" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">12</span>) <span class="sc">+</span></span>
+<span id="cb12-41"><a href="#cb12-41" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb12-42"><a href="#cb12-42" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">face =</span> <span class="st">"bold"</span>, <span class="at">size =</span> <span class="dv">15</span>),</span>
+<span id="cb12-43"><a href="#cb12-43" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.subtitle =</span> <span class="fu">element_text</span>(<span class="at">colour =</span> <span class="st">"grey40"</span>, <span class="at">size =</span> <span class="fl">9.5</span>, <span class="at">margin =</span> <span class="fu">margin</span>(<span class="at">b =</span> <span class="dv">10</span>)),</span>
+<span id="cb12-44"><a href="#cb12-44" aria-hidden="true" tabindex="-1"></a>    <span class="at">strip.text =</span> <span class="fu">element_text</span>(<span class="at">face =</span> <span class="st">"bold"</span>, <span class="at">size =</span> <span class="dv">12</span>, <span class="at">colour =</span> <span class="st">"grey10"</span>),</span>
+<span id="cb12-45"><a href="#cb12-45" aria-hidden="true" tabindex="-1"></a>    <span class="at">strip.background =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb12-46"><a href="#cb12-46" aria-hidden="true" tabindex="-1"></a>    <span class="at">panel.spacing =</span> <span class="fu">unit</span>(<span class="fl">0.6</span>, <span class="st">"lines"</span>),</span>
+<span id="cb12-47"><a href="#cb12-47" aria-hidden="true" tabindex="-1"></a>    <span class="at">panel.grid =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb12-48"><a href="#cb12-48" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.text =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb12-49"><a href="#cb12-49" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.ticks =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb12-50"><a href="#cb12-50" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.position =</span> <span class="st">"bottom"</span></span>
+<span id="cb12-51"><a href="#cb12-51" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="partie_descriptive_files/figure-html/moyennes-produit-1.png" class="img-fluid figure-img" width="1056"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="distribution-détaillée-par-produit-boxplots" class="level2">
+<h2 class="anchored" data-anchor-id="distribution-détaillée-par-produit-boxplots">Distribution détaillée par produit (Boxplots)</h2>
+<div class="cell">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="do">############################################</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Visualisation des données (Boxplots)</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="do">############################################</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>var_plot <span class="ot">&lt;-</span> <span class="fu">colnames</span>(dta_cons[, <span class="dv">3</span><span class="sc">:</span><span class="dv">6</span>])</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>plots_box <span class="ot">&lt;-</span> <span class="fu">list</span>()</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(var <span class="cf">in</span> var_plot){</span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>  p_box <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(dta_cons, <span class="fu">aes</span>(<span class="at">x =</span> Prod.ID, <span class="at">y =</span> .data[[var]], <span class="at">color =</span> Prod.ID, <span class="at">fill =</span> Prod.ID)) <span class="sc">+</span> </span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_boxplot</span>(<span class="at">alpha =</span> <span class="fl">0.3</span>, <span class="at">show.legend =</span> <span class="cn">FALSE</span>) <span class="sc">+</span> </span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_minimal</span>() <span class="sc">+</span> </span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(</span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>      <span class="at">title =</span> <span class="fu">paste</span>(<span class="st">"Distribution de :"</span>, var),</span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>      <span class="at">y =</span> var, </span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a>      <span class="at">x =</span> <span class="st">"Produit"</span></span>
+<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a>  plots_box[[var]] <span class="ot">&lt;-</span> p_box</span>
+<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-19"><a href="#cb13-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Affichage sous forme de grille 2x2 avec patchwork</span></span>
+<span id="cb13-20"><a href="#cb13-20" aria-hidden="true" tabindex="-1"></a>(plots_box[[<span class="dv">1</span>]] <span class="sc">+</span> plots_box[[<span class="dv">2</span>]]) <span class="sc">/</span> (plots_box[[<span class="dv">3</span>]] <span class="sc">+</span> plots_box[[<span class="dv">4</span>]])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="partie_descriptive_files/figure-html/boxplots-produits-1.png" class="img-fluid figure-img" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="tests-statistiques-anova-et-comparaisons-de-moyennes" class="level2">
+<h2 class="anchored" data-anchor-id="tests-statistiques-anova-et-comparaisons-de-moyennes">Tests statistiques (ANOVA et comparaisons de moyennes)</h2>
+<div class="cell">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="do">############################################</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Tests statistiques (ANOVA &amp; post-hoc)</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="do">############################################</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(var <span class="cf">in</span> var_plot){</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cat</span>(<span class="st">"</span><span class="sc">\n</span><span class="st">=============================================</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cat</span>(<span class="st">" ANOVA pour la variable :"</span>, var, <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cat</span>(<span class="st">"=============================================</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>  <span class="co"># écriture de la formule</span></span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>  form <span class="ot">&lt;-</span> <span class="fu">as.formula</span>(<span class="fu">paste</span>(var, <span class="st">"~ Prod.ID"</span>))</span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>  <span class="co"># construction du modèle </span></span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a>  res <span class="ot">&lt;-</span> <span class="fu">LinearModel</span>(form, <span class="at">data =</span> dta_cons)</span>
+<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a>  <span class="co"># affichage de la sortie du modèle</span></span>
+<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(res)</span>
+<span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-19"><a href="#cb14-19" aria-hidden="true" tabindex="-1"></a>  <span class="co"># test post-hoc</span></span>
+<span id="cb14-20"><a href="#cb14-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cat</span>(<span class="st">"</span><span class="sc">\n</span><span class="st">--- Test de comparaison des moyennes (meansComp) ---</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb14-21"><a href="#cb14-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(<span class="fu">meansComp</span>(res, <span class="sc">~</span> Prod.ID))</span>
+<span id="cb14-22"><a href="#cb14-22" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+=============================================
+ ANOVA pour la variable : Overall 
+=============================================</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Registered S3 method overwritten by 'car':
+  method           from
+  na.action.merMod lme4</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+LinearModel(formula = form, data = dta_cons)
+
+Residual standard error: 1.85 on 1276 degrees of freedom
+Multiple R-squared:  0.04159 
+F-statistic: 7.911 on 7 and 1276 DF,  p-value: 2.041e-09 
+AIC =  1588    BIC =  1630
+
+Ftest
+              SS   df      MS F value    Pr(&gt;F)
+Prod.ID    189.6    7 27.0851  7.9105 2.041e-09
+Residuals 4369.0 1276  3.4239                  
+
+Ttest
+               Estimate Std. Error  t value  Pr(&gt;|t|)
+(Intercept)    6.262000   0.051640 121.2635 &lt; 2.2e-16
+Prod.ID - 196  0.731789   0.136443   5.3633 9.691e-08
+Prod.ID - 239  0.175500   0.136808   1.2828  0.199788
+Prod.ID - 354  0.131750   0.136808   0.9630  0.335716
+Prod.ID - 427 -0.555750   0.136808  -4.0623 5.156e-05
+Prod.ID - 577  0.197627   0.136443   1.4484  0.147745
+Prod.ID - 638 -0.343250   0.136808  -2.5090  0.012231
+Prod.ID - 772 -0.361379   0.136443  -2.6486  0.008183
+Prod.ID - 852  0.023714   0.136443   0.1738  0.862049
+
+--- Test de comparaison des moyennes (meansComp) ---</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="partie_descriptive_files/figure-html/anova-posthoc-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>$adjMean
+ Prod.ID emmean    SE   df lower.CL upper.CL
+ 196       6.99 0.146 1276     6.71     7.28
+ 239       6.44 0.146 1276     6.15     6.72
+ 354       6.39 0.146 1276     6.11     6.68
+ 427       5.71 0.146 1276     5.42     5.99
+ 577       6.46 0.146 1276     6.17     6.75
+ 638       5.92 0.146 1276     5.63     6.21
+ 772       5.90 0.146 1276     5.61     6.19
+ 852       6.29 0.146 1276     6.00     6.57
+
+Confidence level used: 0.95 
+
+$groupComp
+ 427  772  638  852  354  239  577  196 
+ "a" "ab" "ab" "ab" "bc" "bc" "bc"  "c" 
+
+attr(,"class")
+[1] "meansComp"
+
+=============================================
+ ANOVA pour la variable : Appearance 
+=============================================
+
+Call:
+LinearModel(formula = form, data = dta_cons)
+
+Residual standard error: 1.659 on 1276 degrees of freedom
+Multiple R-squared:  0.04114 
+F-statistic:  7.82 on 7 and 1276 DF,  p-value: 2.69e-09 
+AIC =  1308    BIC =  1349
+
+Ftest
+              SS   df      MS F value   Pr(&gt;F)
+Prod.ID    150.6    7 21.5189  7.8203 2.69e-09
+Residuals 3511.1 1276  2.7517                 
+
+Ttest
+               Estimate Std. Error  t value  Pr(&gt;|t|)
+(Intercept)    6.768964   0.046293 146.2192 &lt; 2.2e-16
+Prod.ID - 196  0.448428   0.122317   3.6661 0.0002564
+Prod.ID - 239  0.099786   0.122644   0.8136 0.4160099
+Prod.ID - 354 -0.225214   0.122644  -1.8363 0.0665427
+Prod.ID - 427 -0.587714   0.122644  -4.7920 1.845e-06
+Prod.ID - 577  0.442217   0.122317   3.6153 0.0003116
+Prod.ID - 638  0.062286   0.122644   0.5079 0.6116360
+Prod.ID - 772 -0.346603   0.122317  -2.8337 0.0046744
+Prod.ID - 852  0.106813   0.122317   0.8732 0.3826924
+
+--- Test de comparaison des moyennes (meansComp) ---</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="partie_descriptive_files/figure-html/anova-posthoc-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>$adjMean
+ Prod.ID emmean    SE   df lower.CL upper.CL
+ 196       7.22 0.131 1276     6.96     7.47
+ 239       6.87 0.131 1276     6.61     7.13
+ 354       6.54 0.131 1276     6.29     6.80
+ 427       6.18 0.131 1276     5.92     6.44
+ 577       7.21 0.131 1276     6.95     7.47
+ 638       6.83 0.131 1276     6.57     7.09
+ 772       6.42 0.131 1276     6.17     6.68
+ 852       6.88 0.131 1276     6.62     7.13
+
+Confidence level used: 0.95 
+
+$groupComp
+ 427  772  354  638  239  852  577  196 
+ "a" "ab" "ab" "bc" "bc" "bc"  "c"  "c" 
+
+attr(,"class")
+[1] "meansComp"
+
+=============================================
+ ANOVA pour la variable : Flavor 
+=============================================
+
+Call:
+LinearModel(formula = form, data = dta_cons)
+
+Residual standard error: 1.985 on 1276 degrees of freedom
+Multiple R-squared:  0.03447 
+F-statistic: 6.508 on 7 and 1276 DF,  p-value: 1.464e-07 
+AIC =  1769    BIC =  1810
+
+Ftest
+              SS   df      MS F value    Pr(&gt;F)
+Prod.ID    179.5    7 25.6475  6.5077 1.464e-07
+Residuals 5028.8 1276  3.9411                  
+
+Ttest
+               Estimate Std. Error  t value  Pr(&gt;|t|)
+(Intercept)    6.143643   0.055402 110.8917 &lt; 2.2e-16
+Prod.ID - 196  0.701077   0.146385   4.7893  1.87e-06
+Prod.ID - 239  0.118857   0.146776   0.8098 0.4182157
+Prod.ID - 354  0.275107   0.146776   1.8743 0.0611132
+Prod.ID - 427 -0.562393   0.146776  -3.8316 0.0001335
+Prod.ID - 577  0.079959   0.146385   0.5462 0.5850053
+Prod.ID - 638 -0.393643   0.146776  -2.6819 0.0074143
+Prod.ID - 772 -0.243022   0.146385  -1.6602 0.0971276
+Prod.ID - 852  0.024059   0.146385   0.1644 0.8694800
+
+--- Test de comparaison des moyennes (meansComp) ---</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="partie_descriptive_files/figure-html/anova-posthoc-3.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>$adjMean
+ Prod.ID emmean    SE   df lower.CL upper.CL
+ 196       6.84 0.156 1276     6.54     7.15
+ 239       6.26 0.157 1276     5.95     6.57
+ 354       6.42 0.157 1276     6.11     6.73
+ 427       5.58 0.157 1276     5.27     5.89
+ 577       6.22 0.156 1276     5.92     6.53
+ 638       5.75 0.157 1276     5.44     6.06
+ 772       5.90 0.156 1276     5.59     6.21
+ 852       6.17 0.156 1276     5.86     6.47
+
+Confidence level used: 0.95 
+
+$groupComp
+  427   638   772   852   577   239   354   196 
+  "a"  "ab"  "ab"  "ab" "abc"  "bc"  "bc"   "c" 
+
+attr(,"class")
+[1] "meansComp"
+
+=============================================
+ ANOVA pour la variable : Texture 
+=============================================
+
+Call:
+LinearModel(formula = form, data = dta_cons)
+
+Residual standard error: 1.862 on 1276 degrees of freedom
+Multiple R-squared:  0.04988 
+F-statistic: 9.571 on 7 and 1276 DF,  p-value: 1.236e-11 
+AIC =  1605    BIC =  1646
+
+Ftest
+              SS   df     MS F value    Pr(&gt;F)
+Prod.ID    232.3    7 33.188  9.5707 1.236e-11
+Residuals 4424.7 1276  3.468                  
+
+Ttest
+               Estimate Std. Error  t value  Pr(&gt;|t|)
+(Intercept)    6.162034   0.051968 118.5740 &lt; 2.2e-16
+Prod.ID - 196  0.539829   0.137310   3.9315 8.897e-05
+Prod.ID - 239  0.237966   0.137677   1.7284 0.0841530
+Prod.ID - 354 -0.018284   0.137677  -0.1328 0.8943690
+Prod.ID - 427 -0.493284   0.137677  -3.5829 0.0003526
+Prod.ID - 577  0.608152   0.137310   4.4290 1.028e-05
+Prod.ID - 638 -0.674534   0.137677  -4.8994 1.085e-06
+Prod.ID - 772 -0.025388   0.137310  -0.1849 0.8533395
+Prod.ID - 852 -0.174457   0.137310  -1.2705 0.2041283
+
+--- Test de comparaison des moyennes (meansComp) ---</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="partie_descriptive_files/figure-html/anova-posthoc-4.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>$adjMean
+ Prod.ID emmean    SE   df lower.CL upper.CL
+ 196       6.70 0.147 1276     6.41     6.99
+ 239       6.40 0.147 1276     6.11     6.69
+ 354       6.14 0.147 1276     5.85     6.43
+ 427       5.67 0.147 1276     5.38     5.96
+ 577       6.77 0.147 1276     6.48     7.06
+ 638       5.49 0.147 1276     5.20     5.78
+ 772       6.14 0.147 1276     5.85     6.42
+ 852       5.99 0.147 1276     5.70     6.28
+
+Confidence level used: 0.95 
+
+$groupComp
+   638    427    852    772    354    239    196    577 
+   "a"   "ab"  "abc"  "bcd" "bcde"  "cde"   "de"    "e" 
+
+attr(,"class")
+[1] "meansComp"</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="partie-jury-panel-descriptif" class="level1">
+<h1>Partie jury (Panel descriptif)</h1>
+<section id="pouvoir-discriminant-des-37-descripteurs-du-jury" class="level2">
+<h2 class="anchored" data-anchor-id="pouvoir-discriminant-des-37-descripteurs-du-jury">Pouvoir discriminant des 37 descripteurs du jury</h2>
+<div class="cell">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ==============================================================</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Étendue et pouvoir discriminant des 37 descripteurs du jury</span></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Fichier : mozza_panel_descriptors.csv (8 produits x 37 descripteurs)</span></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a><span class="co"># ==============================================================</span></span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. Table de synthèse : un descripteur par ligne</span></span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>synth_descripteurs <span class="ot">&lt;-</span> jury <span class="sc">%&gt;%</span></span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>Prod.ID) <span class="sc">%&gt;%</span></span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="fu">everything</span>(), <span class="at">names_to =</span> <span class="st">"descripteur"</span>, <span class="at">values_to =</span> <span class="st">"valeur"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(descripteur) <span class="sc">%&gt;%</span></span>
+<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">min        =</span> <span class="fu">min</span>(valeur),</span>
+<span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">max        =</span> <span class="fu">max</span>(valeur),</span>
+<span id="cb22-14"><a href="#cb22-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">etendue    =</span> max <span class="sc">-</span> min,</span>
+<span id="cb22-15"><a href="#cb22-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">moyenne    =</span> <span class="fu">mean</span>(valeur),</span>
+<span id="cb22-16"><a href="#cb22-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">ecart_type =</span> <span class="fu">sd</span>(valeur),</span>
+<span id="cb22-17"><a href="#cb22-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">cv_pct     =</span> <span class="dv">100</span> <span class="sc">*</span> ecart_type <span class="sc">/</span> moyenne,</span>
+<span id="cb22-18"><a href="#cb22-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">.groups =</span> <span class="st">"drop"</span></span>
+<span id="cb22-19"><a href="#cb22-19" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb22-20"><a href="#cb22-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(cv_pct))</span>
+<span id="cb22-21"><a href="#cb22-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-22"><a href="#cb22-22" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. Lollipop horizontal : CV% trié du plus stable au plus discriminant</span></span>
+<span id="cb22-23"><a href="#cb22-23" aria-hidden="true" tabindex="-1"></a>seuil_cv <span class="ot">&lt;-</span> <span class="dv">10</span>  <span class="co"># seuil indicatif</span></span>
+<span id="cb22-24"><a href="#cb22-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-25"><a href="#cb22-25" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(synth_descripteurs,</span>
+<span id="cb22-26"><a href="#cb22-26" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">fct_reorder</span>(descripteur, cv_pct), <span class="at">y =</span> cv_pct)) <span class="sc">+</span></span>
+<span id="cb22-27"><a href="#cb22-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_segment</span>(<span class="fu">aes</span>(<span class="at">xend =</span> descripteur, <span class="at">y =</span> <span class="dv">0</span>, <span class="at">yend =</span> cv_pct),</span>
+<span id="cb22-28"><a href="#cb22-28" aria-hidden="true" tabindex="-1"></a>               <span class="at">colour =</span> <span class="st">"grey75"</span>, <span class="at">linewidth =</span> <span class="fl">0.6</span>) <span class="sc">+</span></span>
+<span id="cb22-29"><a href="#cb22-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">colour =</span> cv_pct), <span class="at">size =</span> <span class="fl">2.6</span>) <span class="sc">+</span></span>
+<span id="cb22-30"><a href="#cb22-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> seuil_cv, <span class="at">linetype =</span> <span class="st">"dashed"</span>,</span>
+<span id="cb22-31"><a href="#cb22-31" aria-hidden="true" tabindex="-1"></a>             <span class="at">colour =</span> <span class="st">"grey40"</span>, <span class="at">linewidth =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
+<span id="cb22-32"><a href="#cb22-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(<span class="st">"text"</span>, <span class="at">x =</span> <span class="fu">nrow</span>(synth_descripteurs) <span class="sc">-</span> <span class="dv">1</span>, <span class="at">y =</span> seuil_cv,</span>
+<span id="cb22-33"><a href="#cb22-33" aria-hidden="true" tabindex="-1"></a>           <span class="at">label =</span> <span class="fu">paste0</span>(<span class="st">"seuil "</span>, seuil_cv, <span class="st">" %"</span>),</span>
+<span id="cb22-34"><a href="#cb22-34" aria-hidden="true" tabindex="-1"></a>           <span class="at">vjust =</span> <span class="sc">-</span><span class="fl">0.6</span>, <span class="at">hjust =</span> <span class="dv">0</span>, <span class="at">size =</span> <span class="dv">3</span>, <span class="at">colour =</span> <span class="st">"grey40"</span>) <span class="sc">+</span></span>
+<span id="cb22-35"><a href="#cb22-35" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_flip</span>() <span class="sc">+</span></span>
+<span id="cb22-36"><a href="#cb22-36" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_colour_gradient</span>(<span class="at">low =</span> <span class="st">"#c9d9f2"</span>, <span class="at">high =</span> <span class="st">"#1f4e9c"</span>, <span class="at">guide =</span> <span class="st">"none"</span>) <span class="sc">+</span></span>
+<span id="cb22-37"><a href="#cb22-37" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> <span class="fu">label_percent</span>(<span class="at">scale =</span> <span class="dv">1</span>, <span class="at">accuracy =</span> <span class="dv">1</span>),</span>
+<span id="cb22-38"><a href="#cb22-38" aria-hidden="true" tabindex="-1"></a>                     <span class="at">expand =</span> <span class="fu">expansion</span>(<span class="at">mult =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="fl">0.08</span>))) <span class="sc">+</span></span>
+<span id="cb22-39"><a href="#cb22-39" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb22-40"><a href="#cb22-40" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Pouvoir discriminant des 37 descripteurs du jury"</span>,</span>
+<span id="cb22-41"><a href="#cb22-41" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="st">"Coefficient de variation (écart-type / moyenne) entre les 8 produits"</span>,</span>
+<span id="cb22-42"><a href="#cb22-42" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="cn">NULL</span>, <span class="at">y =</span> <span class="st">"Coefficient de variation"</span>,</span>
+<span id="cb22-43"><a href="#cb22-43" aria-hidden="true" tabindex="-1"></a>    <span class="at">caption =</span> <span class="st">"Source : mozza_panel_descriptors.csv -- 8 produits x 37 descripteurs"</span></span>
+<span id="cb22-44"><a href="#cb22-44" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb22-45"><a href="#cb22-45" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">11</span>) <span class="sc">+</span></span>
+<span id="cb22-46"><a href="#cb22-46" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb22-47"><a href="#cb22-47" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">face =</span> <span class="st">"bold"</span>, <span class="at">size =</span> <span class="dv">14</span>),</span>
+<span id="cb22-48"><a href="#cb22-48" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.subtitle =</span> <span class="fu">element_text</span>(<span class="at">colour =</span> <span class="st">"grey40"</span>, <span class="at">size =</span> <span class="fl">9.5</span>, <span class="at">margin =</span> <span class="fu">margin</span>(<span class="at">b =</span> <span class="dv">10</span>)),</span>
+<span id="cb22-49"><a href="#cb22-49" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.caption =</span> <span class="fu">element_text</span>(<span class="at">colour =</span> <span class="st">"grey55"</span>, <span class="at">size =</span> <span class="dv">8</span>, <span class="at">hjust =</span> <span class="dv">0</span>),</span>
+<span id="cb22-50"><a href="#cb22-50" aria-hidden="true" tabindex="-1"></a>    <span class="at">panel.grid.minor =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb22-51"><a href="#cb22-51" aria-hidden="true" tabindex="-1"></a>    <span class="at">panel.grid.major.y =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb22-52"><a href="#cb22-52" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.text.y =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">8</span>, <span class="at">colour =</span> <span class="st">"grey20"</span>)</span>
+<span id="cb22-53"><a href="#cb22-53" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="partie_descriptive_files/figure-html/pouvoir-discriminant-1.png" class="img-fluid figure-img" width="864"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Une dizaine de descripteurs (<code>seepage</code>, <code>cardboardy</code>, <code>Moisturerelease</code>, <code>visualroughness</code>, <code>cheese2</code>, <code>soureddairy</code>, <code>awareherbs</code>…) séparent nettement les 8 bâtonnets, avec un CV supérieur à 30 %. À l’inverse, <code>Cohesiveness</code>, <code>chewstoswallow</code>, <code>toothpack</code>, <code>Cohesivenessmass</code>, <code>Oilyfilm</code>, <code>Hardness</code>, <code>heatedoil</code>, <code>astringent</code>, <code>heatedoil2</code> ou <code>salt</code> varient très peu d’un produit à l’autre (CV &lt; 5 %) : le jury les note quasiment pareil pour tous les produits, ils n’apportent donc que peu d’information pour différencier les bâtonnets.</p>
+</section>
+<section id="tableau-récapitulatif-des-descripteurs" class="level2">
+<h2 class="anchored" data-anchor-id="tableau-récapitulatif-des-descripteurs">Tableau récapitulatif des descripteurs</h2>
+<div class="cell">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 3. Table détaillée (min, max, étendue, CV%) interactive</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>synth_descripteurs <span class="sc">%&gt;%</span></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">where</span>(is.numeric), <span class="sc">~</span> <span class="fu">round</span>(.x, <span class="dv">2</span>))) <span class="sc">%&gt;%</span></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">datatable</span>(</span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">rownames =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">colnames =</span> <span class="fu">c</span>(<span class="st">"Descripteur"</span>, <span class="st">"Min"</span>, <span class="st">"Max"</span>, <span class="st">"Étendue"</span>, <span class="st">"Moyenne"</span>, <span class="st">"Écart-type"</span>, <span class="st">"CV (%)"</span>),</span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">options =</span> <span class="fu">list</span>(<span class="at">pageLength =</span> <span class="dv">10</span>, <span class="at">order =</span> <span class="fu">list</span>(<span class="fu">list</span>(<span class="dv">6</span>, <span class="st">"desc"</span>))),</span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">caption =</span> <span class="st">"Indices de dispersion des 37 descripteurs du jury (8 produits)"</span></span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">formatStyle</span>(</span>
+<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a>    <span class="st">"cv_pct"</span>,</span>
+<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">background =</span> <span class="fu">styleColorBar</span>(<span class="fu">range</span>(synth_descripteurs<span class="sc">$</span>cv_pct), <span class="st">"#c9d9f2"</span>),</span>
+<span id="cb23-13"><a href="#cb23-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">backgroundSize =</span> <span class="st">"80% 70%"</span>, <span class="at">backgroundRepeat =</span> <span class="st">"no-repeat"</span>,</span>
+<span id="cb23-14"><a href="#cb23-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">backgroundPosition =</span> <span class="st">"left"</span></span>
+<span id="cb23-15"><a href="#cb23-15" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div class="datatables html-widget html-fill-item" id="htmlwidget-25665e5132f09f465c5c" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-25665e5132f09f465c5c">{"x":{"filter":"none","vertical":false,"caption":"<caption>Indices de dispersion des 37 descripteurs du jury (8 produits)<\/caption>","data":[["seepage","cardboardy","Moisturerelease","visualroughness","cheese2","soureddairy","awareherbs","shapeintegrity","greenherb2","degreebrown","GreenHerb","sour","uniformitycoating","oniongarlic","toastedgrain","AmountParticles","mozzarella","Crispiness","OilyGreasylips","pertisencecrisp","rawdoughy2","rawgrain","roughness","looseparticles","roughnessmass","salt2","moistureabsorp","salt","heatedoil2","astringent","heatedoil","Hardness","Oilyfilm","Cohesivenessmass","toothpack","chewstoswallow","Cohesiveness"],[0,0.19,0.83,2.5,0.25,0.16,2.5,3.5,0.99,4,2.26,0.86,5,1.36,2.19,5.44,2.55,3.91,7.88,6.33,1.99,2.75,9.619999999999999,3.45,5.14,6.75,7.55,11.42,2.19,3.39,3.76,5.2,4.63,8.35,2.71,22.17,7.04],[2.5,1.34,4.42,12,0.95,1.08,10,12,3.16,12.5,4.69,1.69,8,2.48,3.28,8.289999999999999,3.94,5.78,10.88,8.33,2.59,3.44,12.34,3.97,6.11,7.98,9.07,13.26,2.48,3.78,4.27,5.84,5.14,9.26,2.97,23.75,7.51],[2.5,1.15,3.58,9.5,0.7,0.92,7.5,8.5,2.16,8.5,2.42,0.84,3,1.12,1.08,2.85,1.39,1.87,3,2,0.6,0.6899999999999999,2.72,0.52,0.97,1.23,1.52,1.84,0.28,0.39,0.51,0.64,0.51,0.91,0.26,1.58,0.47],[1.29,0.55,2.28,6.56,0.51,0.66,6.44,7.88,1.85,8.380000000000001,3,1.14,6.5,2.06,2.75,7.21,3.33,4.9,9.720000000000001,7.52,2.29,3.19,11.07,3.77,5.73,7.35,8.380000000000001,12.37,2.33,3.58,3.93,5.48,4.8,8.779999999999999,2.8,22.79,7.2],[0.9,0.37,1.36,3.22,0.24,0.3,2.65,2.92,0.68,2.75,0.78,0.25,1.2,0.37,0.39,0.93,0.43,0.54,0.97,0.72,0.21,0.26,0.79,0.21,0.31,0.4,0.44,0.62,0.1,0.15,0.16,0.23,0.19,0.32,0.1,0.51,0.16],[70.26000000000001,68.20999999999999,59.77,49.11,46.66,45.18,41.19,37.14,36.51,32.82,26.02,22.41,18.39,17.98,14.08,12.95,12.94,11.09,9.949999999999999,9.529999999999999,8.94,8.199999999999999,7.15,5.58,5.44,5.38,5.2,5.05,4.45,4.18,4.13,4.11,3.98,3.64,3.44,2.24,2.21]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>Descripteur<\/th>\n      <th>Min<\/th>\n      <th>Max<\/th>\n      <th>Étendue<\/th>\n      <th>Moyenne<\/th>\n      <th>Écart-type<\/th>\n      <th>CV (%)<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"pageLength":10,"order":[[6,"desc"]],"columnDefs":[{"className":"dt-right","targets":[1,2,3,4,5,6]},{"name":"descripteur","targets":0},{"name":"min","targets":1},{"name":"max","targets":2},{"name":"etendue","targets":3},{"name":"moyenne","targets":4},{"name":"ecart_type","targets":5},{"name":"cv_pct","targets":6}],"autoWidth":false,"orderClasses":false,"rowCallback":"function(row, data, displayNum, displayIndex, dataIndex) {\nvar value=data[6]; $(this.api().cell(row, 6).node()).css({'background':isNaN(parseFloat(value)) || value <= 2.214293 ? '' : 'linear-gradient(90.000000deg, transparent ' + Math.max(70.264131 - value, 0)/68.049837 * 100 + '%, #c9d9f2 ' + Math.max(70.264131 - value, 0)/68.049837 * 100 + '%)','background-size':'80% 70%','background-repeat':'no-repeat','background-position':'left'});\n}"},"selection":{"mode":"multiple","selected":null,"target":"row","selectable":null}},"evals":["options.rowCallback"],"jsHooks":[]}</script>
+</div>
+</div>
+</section>
+<section id="acp-sur-le-panel-jury" class="level2">
+<h2 class="anchored" data-anchor-id="acp-sur-le-panel-jury">ACP sur le panel jury</h2>
+<div class="cell">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="do">############################################</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="co"># ACP sur le panel du jury</span></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="do">############################################</span></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Identifiant du produit en nom de ligne</span></span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>panel_pca <span class="ot">&lt;-</span> dta_panel <span class="sc">%&gt;%</span> <span class="fu">column_to_rownames</span>(<span class="st">"Prod.ID"</span>)</span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Réalisation de l'ACP (centrée et réduite)</span></span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a>res_pca <span class="ot">&lt;-</span> <span class="fu">PCA</span>(panel_pca, <span class="at">scale.unit =</span> <span class="cn">TRUE</span>, <span class="at">graph =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Graphe des individus</span></span>
+<span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a><span class="fu">fviz_pca_ind</span>(res_pca, <span class="at">repel =</span> <span class="cn">TRUE</span>, <span class="at">title =</span> <span class="st">"ACP Jury - Graphe des individus (produits)"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="partie_descriptive_files/figure-html/acp-jury-1.png" class="img-fluid figure-img" width="864"></p>
+</figure>
+</div>
+</div>
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Graphe des variables</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="fu">fviz_pca_var</span>(res_pca, <span class="at">repel =</span> <span class="cn">TRUE</span>, <span class="at">title =</span> <span class="st">"ACP Jury - Cercle des corrélations"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="partie_descriptive_files/figure-html/acp-jury-2.png" class="img-fluid figure-img" width="864"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="analyse-factorielle-multiple-afm" class="level1">
+<h1>Analyse Factorielle Multiple (AFM)</h1>
+<section id="préparation-des-données-pour-lafm" class="level2">
+<h2 class="anchored" data-anchor-id="préparation-des-données-pour-lafm">Préparation des données pour l’AFM</h2>
+<p>On calcule les moyennes des 4 dimensions d’appréciation consommateurs par produit, puis on fusionne ces moyennes avec les 37 descripteurs du jury.</p>
+<div class="cell">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Moyennes consommateurs par produit</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>dta_cons_m <span class="ot">&lt;-</span> dta_cons <span class="sc">%&gt;%</span></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Prod.ID) <span class="sc">%&gt;%</span></span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">cons_overall    =</span> <span class="fu">mean</span>(Overall, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">cons_texture    =</span> <span class="fu">mean</span>(Texture, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">cons_appearance =</span> <span class="fu">mean</span>(Appearance, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">cons_flavor     =</span> <span class="fu">mean</span>(Flavor, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Fusion avec le panel jury</span></span>
+<span id="cb26-12"><a href="#cb26-12" aria-hidden="true" tabindex="-1"></a>dta_afm <span class="ot">&lt;-</span> <span class="fu">inner_join</span>(dta_cons_m, dta_panel, <span class="at">by =</span> <span class="st">"Prod.ID"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb26-13"><a href="#cb26-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">column_to_rownames</span>(<span class="st">"Prod.ID"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+</section>
+<section id="afm-1-décomposition-par-sens-modalités-sensorielles" class="level2">
+<h2 class="anchored" data-anchor-id="afm-1-décomposition-par-sens-modalités-sensorielles">AFM 1 : Décomposition par sens (modalités sensorielles)</h2>
+<p>Dans cette première AFM, les consommateurs sont placés en variables supplémentaires (<code>num.group.sup = 1</code>), et les descripteurs du jury sont partitionnés en 3 groupes sensoriels : - <strong>Visuel</strong> (6 variables) - <strong>Saveur</strong> (16 variables) - <strong>Texture</strong> (15 variables)</p>
+<div class="cell">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="do">############################################</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="co"># AFM ~ descripteurs par sens</span></span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a><span class="do">############################################</span></span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>res_afm <span class="ot">&lt;-</span> <span class="fu">MFA</span>(</span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>  dta_afm, </span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">group =</span> <span class="fu">c</span>(<span class="dv">4</span>, <span class="dv">6</span>, <span class="dv">16</span>, <span class="dv">15</span>),</span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="fu">c</span>(<span class="st">"c"</span>, <span class="st">"s"</span>, <span class="st">"s"</span>, <span class="st">"s"</span>),</span>
+<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">name.group =</span> <span class="fu">c</span>(<span class="st">"Consommateurs"</span>, <span class="st">"Visuel"</span>, <span class="st">"Saveur"</span>, <span class="st">"Texture"</span>),</span>
+<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">num.group.sup =</span> <span class="dv">1</span>,</span>
+<span id="cb27-11"><a href="#cb27-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">graph =</span> <span class="cn">FALSE</span></span>
+<span id="cb27-12"><a href="#cb27-12" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb27-13"><a href="#cb27-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-14"><a href="#cb27-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Matrice des coefficients RV</span></span>
+<span id="cb27-15"><a href="#cb27-15" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"=== Lien entre les sens et les consommateurs (Coefficients RV) ===</span><span class="sc">\n</span><span class="st">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>=== Lien entre les sens et les consommateurs (Coefficients RV) ===</code></pre>
+</div>
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">round</span>(res_afm<span class="sc">$</span>group<span class="sc">$</span>RV, <span class="dv">3</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>              Consommateurs Visuel Saveur Texture   MFA
+Consommateurs         1.000  0.208  0.427   0.281 0.349
+Visuel                0.208  1.000  0.720   0.653 0.879
+Saveur                0.427  0.720  1.000   0.658 0.896
+Texture               0.281  0.653  0.658   1.000 0.881
+MFA                   0.349  0.879  0.896   0.881 1.000</code></pre>
+</div>
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Graphe des individus (avec points moyens et partiels)</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(res_afm, <span class="at">choix =</span> <span class="st">"ind"</span>, <span class="at">ind.moy =</span> <span class="cn">FALSE</span>, <span class="at">habillage =</span> <span class="st">"group"</span>, <span class="at">partial =</span> <span class="st">"all"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="partie_descriptive_files/figure-html/afm-sens-1.png" class="img-fluid figure-img" width="864"></p>
+</figure>
+</div>
+</div>
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Graphe des groupes</span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a><span class="fu">fviz_mfa_var</span>(res_afm, <span class="st">"group"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="partie_descriptive_files/figure-html/afm-sens-2.png" class="img-fluid figure-img" width="864"></p>
+</figure>
+</div>
+</div>
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Cercle des corrélations (15 variables les plus contributrices)</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a><span class="fu">fviz_mfa_var</span>(res_afm, <span class="st">"quanti.var"</span>, <span class="at">repel =</span> <span class="cn">TRUE</span>, <span class="at">select.var =</span> <span class="fu">list</span>(<span class="at">contrib =</span> <span class="dv">15</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="partie_descriptive_files/figure-html/afm-sens-3.png" class="img-fluid figure-img" width="864"></p>
+</figure>
+</div>
+</div>
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Graphe des axes partiels</span></span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(res_afm, <span class="at">choix =</span> <span class="st">"axes"</span>, <span class="at">habillage =</span> <span class="st">"group"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="partie_descriptive_files/figure-html/afm-sens-4.png" class="img-fluid figure-img" width="864"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="afm-2-analyse-globale-jury-vs-consommateurs" class="level2">
+<h2 class="anchored" data-anchor-id="afm-2-analyse-globale-jury-vs-consommateurs">AFM 2 : Analyse globale Jury vs Consommateurs</h2>
+<p>Dans cette seconde AFM, l’analyse oppose globalement le groupe des notes <strong>Consommateurs</strong> (4 variables) au groupe complet du <strong>Jury</strong> (37 variables).</p>
+<div class="cell">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="do">############################################</span></span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a><span class="co"># AFM ~ jury global vs consommateurs</span></span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a><span class="do">############################################</span></span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a>res_afm_jury <span class="ot">&lt;-</span> <span class="fu">MFA</span>(</span>
+<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a>  dta_afm, </span>
+<span id="cb35-7"><a href="#cb35-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">group =</span> <span class="fu">c</span>(<span class="dv">4</span>, <span class="dv">37</span>),</span>
+<span id="cb35-8"><a href="#cb35-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="fu">c</span>(<span class="st">"s"</span>, <span class="st">"s"</span>),</span>
+<span id="cb35-9"><a href="#cb35-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">name.group =</span> <span class="fu">c</span>(<span class="st">"Consommateurs"</span>, <span class="st">"Jury"</span>),</span>
+<span id="cb35-10"><a href="#cb35-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">graph =</span> <span class="cn">FALSE</span></span>
+<span id="cb35-11"><a href="#cb35-11" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb35-12"><a href="#cb35-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-13"><a href="#cb35-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Coefficients RV et Lg</span></span>
+<span id="cb35-14"><a href="#cb35-14" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"=== Lien global entre Jury et Consommateurs ===</span><span class="sc">\n</span><span class="st">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>=== Lien global entre Jury et Consommateurs ===</code></pre>
+</div>
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"--- Coefficients RV ---</span><span class="sc">\n</span><span class="st">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>--- Coefficients RV ---</code></pre>
+</div>
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">round</span>(res_afm_jury<span class="sc">$</span>group<span class="sc">$</span>RV, <span class="dv">3</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>              Consommateurs  Jury   MFA
+Consommateurs         1.000 0.368 0.755
+Jury                  0.368 1.000 0.888
+MFA                   0.755 0.888 1.000</code></pre>
+</div>
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"</span><span class="sc">\n</span><span class="st">--- Coefficients Lg ---</span><span class="sc">\n</span><span class="st">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+--- Coefficients Lg ---</code></pre>
+</div>
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">round</span>(res_afm_jury<span class="sc">$</span>group<span class="sc">$</span>Lg, <span class="dv">3</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>              Consommateurs  Jury   MFA
+Consommateurs         1.018 0.534 1.031
+Jury                  0.534 2.066 1.727
+MFA                   1.031 1.727 1.832</code></pre>
+</div>
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Graphe des individus (partiels)</span></span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(res_afm_jury, <span class="at">choix =</span> <span class="st">"ind"</span>, <span class="at">ind.moy =</span> <span class="cn">FALSE</span>, <span class="at">habillage =</span> <span class="st">"group"</span>, <span class="at">partial =</span> <span class="st">"all"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="partie_descriptive_files/figure-html/afm-jury-1.png" class="img-fluid figure-img" width="864"></p>
+</figure>
+</div>
+</div>
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Graphe des groupes</span></span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a><span class="fu">fviz_mfa_var</span>(res_afm_jury, <span class="st">"group"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="partie_descriptive_files/figure-html/afm-jury-2.png" class="img-fluid figure-img" width="864"></p>
+</figure>
+</div>
+</div>
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Cercle des corrélations des variables quantitatives</span></span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a><span class="fu">fviz_mfa_var</span>(res_afm_jury, <span class="st">"quanti.var"</span>, <span class="at">repel =</span> <span class="cn">TRUE</span>, <span class="at">select.var =</span> <span class="fu">list</span>(<span class="at">contrib =</span> <span class="dv">15</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="partie_descriptive_files/figure-html/afm-jury-3.png" class="img-fluid figure-img" width="864"></p>
+</figure>
+</div>
+</div>
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Graphe des axes partiels</span></span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(res_afm_jury, <span class="at">choix =</span> <span class="st">"axes"</span>, <span class="at">habillage =</span> <span class="st">"group"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="partie_descriptive_files/figure-html/afm-jury-4.png" class="img-fluid figure-img" width="864"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
