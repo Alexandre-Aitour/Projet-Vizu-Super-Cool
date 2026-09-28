@@ -9,14 +9,22 @@ Ce projet explore les relations entre les données hédoniques des consommateurs
 ## 📁 Architecture du Projet
 
 Le projet est structuré de façon simple et modulaire :
-- **Un seul `ui.R`** et **un seul `server.R`** pour l'application Shiny.
-- **Des scripts autonomes par axe d'analyse (`axe_*.R`)** pour permettre à chaque membre de travailler sur sa branche sans provoquer de conflits.
+- **Un `ui.R` et un `server.R` communs** qui ne font que charger les onglets avec `source()` : on n'y touche pas.
+- **Un dossier par onglet (`onglets/<onglet>/`)** avec son `ui_<onglet>.R` et son `server_<onglet>.R` : chacun travaille uniquement dans les fichiers de son onglet.
+- **Les identifiants Shiny sont préfixés par le nom de l'onglet** (`analyse_graphe`, `descriptive_table`…) pour éviter les doublons entre onglets.
+- **Des scripts autonomes par axe d'analyse (`axe_*.R`)** pour tester les calculs hors de l'application.
 
 ```text
 Projet-Vizu-Super-Cool/
 ├── global.R                # Packages et chargement des jeux de données
-├── ui.R                    # Interface utilisateur complète (page_navbar)
-├── server.R                # Logique serveur de l'application Shiny
+├── ui.R                    # UI commune (page_navbar + source des onglets)
+├── server.R                # Serveur commun (source des onglets)
+│
+├── onglets/
+│   ├── accueil/            # ui_accueil.R + server_accueil.R
+│   ├── descriptive/        # ui_descriptive.R + server_descriptive.R (Consommateurs / Jury)
+│   ├── analyse/            # ui_analyse.R + server_analyse.R
+│   └── recherche_opti/     # ui_recherche_opti.R + server_recherche_opti.R
 │
 ├── axe_1_descriptif.R      # Axe 1 : Analyse descriptive, ANOVA, ACP Jury
 ├── axe_2_afm.R             # Axe 2 : Analyse Factorielle Multiple (sens & jury)
