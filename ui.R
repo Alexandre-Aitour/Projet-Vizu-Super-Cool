@@ -1,5 +1,5 @@
 # ==================================================================================================
-# IMPORT DES LIBRAIRIES
+# APPLICATION SHINY : INTERFACE UTILISATEUR (UI)
 # ==================================================================================================
 
 library(shiny)
@@ -7,22 +7,49 @@ library(bslib)
 library(DT)
 library(plotly)
 
-source("ui_accueil.R", local = TRUE)
-
-# ==================================================================================================
-# Interface utlisateur
-# ==================================================================================================
-
-
 ui <- page_navbar(
     id = "onglets",
     title = "🧀 Mozzarella Sensory Analysis",
     theme = bs_theme(bootswatch = "flatly"),
 
     # ==================================================================================================
-    # Onglet 1 : Accueil
+    # Onglet 1 : Page d'accueil
     # ==================================================================================================
-    onglet_accueil,
+    nav_panel(
+        title = "Accueil",
+        value = "accueil",
+        icon = icon("house"),
+
+        div(
+            class = "container py-4 text-center",
+            h1("🧀 Mozzarella Sensory Analysis"),
+            p(
+                class = "lead",
+                "Le profil d'un jury entraîné permet-il de prédire l'appréciation des consommateurs sur 8 mozzarella sticks ?"
+            ),
+            img(src = "MZSTICK.jpg", style = "max-width: 400px; width: 100%; border-radius: 8px;", class = "my-3")
+        ),
+
+        # Boutons de navigation vers les onglets d'analyse
+        layout_column_wrap(
+            width = 1/3,
+            card(
+                card_header(icon("chart-simple"), "Analyse descriptive"),
+                p("Notes des consommateurs et descripteurs du jury."),
+                actionButton("go_descriptive", "Explorer", class = "btn-primary")
+            ),
+            card(
+                card_header(icon("diagram-project"), "AFM"),
+                p("Lien entre le jury et les consommateurs par Analyse Factorielle Multiple."),
+                actionButton("go_afm", "Explorer", class = "btn-primary")
+            ),
+            card(
+                card_header(icon("map"), "Cartographie des préférences"),
+                p("Prédiction de l'appréciation à partir du profil sensoriel."),
+                actionButton("go_carto", "Explorer", class = "btn-primary")
+            )
+        )
+    ),
 
     # ==================================================================================================
     # Onglet 2 : Analyse descriptive (Consommateurs / Jury)
@@ -80,7 +107,7 @@ ui <- page_navbar(
                     choices = c("Par sens" = "sens", "Jury vs Consommateurs" = "jury")
                 )
             ),
-            p("À compléter : graphes de l'AFM.")
+            p("À compléter : graphes et sorties de l'AFM.")
         )
     ),
 
@@ -91,6 +118,6 @@ ui <- page_navbar(
         title = "Cartographie des préférences",
         value = "carto",
         icon = icon("map"),
-        p("À compléter.")
+        p("À compléter : Cartographie des préférences et segmentation.")
     )
 )

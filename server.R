@@ -1,22 +1,21 @@
 # ==================================================================================================
-# Serveur
+# APPLICATION SHINY : LOGIQUE SERVEUR
 # ==================================================================================================
 
+server <- function(input, output, session) {
 
-server <- function(input, output, session){
-    # ==================================================================================================
-    # Page d'accueil : boutons de navigation
-    # ==================================================================================================
-
+    # ==============================================================================================
+    # Onglet 1 : Page d'accueil (boutons de navigation rapide)
+    # ==============================================================================================
     observeEvent(input$go_descriptive, nav_select("onglets", "descriptive"))
     observeEvent(input$go_afm, nav_select("onglets", "afm"))
     observeEvent(input$go_carto, nav_select("onglets", "carto"))
 
-    # ==================================================================================================
-    # Onglet 2 : Rendu des tableaux de données (DT)
-    # ==================================================================================================
+    # ==============================================================================================
+    # Onglet 2 : Analyse descriptive (Consommateurs / Jury)
+    # ==============================================================================================
 
-    # Table des consommateurs 
+    # Table des données consommateurs
     output$dta_conso <- renderDT({
         datatable(
             dta_cons, 
@@ -30,7 +29,7 @@ server <- function(input, output, session){
         )
     })
 
-    # Table des descripteurs
+    # Table des descripteurs du jury
     output$dta_panel <- renderDT({
         dta_round <- dta_panel %>%
             mutate(across(where(is.numeric), ~ round(.x, 2)))
@@ -47,11 +46,7 @@ server <- function(input, output, session){
         )
     })
 
-    # ==================================================================================================
-    # Onglet 2 : Partie Consommateurs
-    # ==================================================================================================
-
-    # On filtre les données en fonction du produit sélectionné 
+    # Filtrage réactif des données consommateurs selon les produits cochés
     dta_cons_filtree <- reactive({
         req(input$prods_choisis)
         dta_cons %>%
@@ -73,7 +68,7 @@ server <- function(input, output, session){
         ggplotly(p)
     })
 
-    # Sortie de l'ANOVA
+    # Sortie de l'ANOVA et comparaisons de moyennes
     output$stat_anova <- renderPrint({
         req(input$dim_choisis)
 
@@ -90,11 +85,11 @@ server <- function(input, output, session){
         print(meansComp(modele, ~ Prod.ID))
     })
 
-    # ==================================================================================================
+    # ==============================================================================================
     # Onglet 3 : Analyse Factorielle Multiple (AFM)
-    # ==================================================================================================
+    # ==============================================================================================
 
-    # Préparation de la table fusionnée
+    # Préparation de la table fusionnée (moyennes consommateurs + notes jury)
     dta_afm_prep <- reactive({
         dta_cons_m <- dta_cons %>%
             group_by(Prod.ID) %>%
@@ -110,11 +105,11 @@ server <- function(input, output, session){
             column_to_rownames("Prod.ID")
     })
 
-    # AFM
+    # Calcul de l'AFM
     res_afm <- reactive({
         dta <- dta_afm_prep()
 
-        if(input$type_afm == "sens"){
+        if(input$type_afm == "sens") {
             MFA(dta, 
                 group = c(4, 6, 16, 15),
                 type = c("c", "s", "s", "s"),
@@ -129,4 +124,10 @@ server <- function(input, output, session){
                 graph = FALSE)
         }
     })
+
+    # ==============================================================================================
+    # Onglet 4 : Cartographie des préférences
+    # ==============================================================================================
+    # (À compléter par le binôme / membre en charge de cet axe)
+
 }
