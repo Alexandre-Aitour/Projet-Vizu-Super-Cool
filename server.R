@@ -5,7 +5,15 @@
 
 server <- function(input, output, session){
     # ==================================================================================================
-    # Onglet 1 : Rendu des tableaux de données (DT)
+    # Page d'accueil : boutons de navigation
+    # ==================================================================================================
+
+    observeEvent(input$go_descriptive, nav_select("onglets", "descriptive"))
+    observeEvent(input$go_afm, nav_select("onglets", "afm"))
+    observeEvent(input$go_carto, nav_select("onglets", "carto"))
+
+    # ==================================================================================================
+    # Onglet 2 : Rendu des tableaux de données (DT)
     # ==================================================================================================
 
     # Table des consommateurs 
@@ -40,7 +48,7 @@ server <- function(input, output, session){
     })
 
     # ==================================================================================================
-    # Onglet 2: Consommateurs
+    # Onglet 2 : Partie Consommateurs
     # ==================================================================================================
 
     # On filtre les données en fonction du produit sélectionné 
