@@ -74,17 +74,27 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="partie_descriptive_files/libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="partie_descriptive_files/libs/bootstrap/bootstrap.min.js"></script>
 <link href="partie_descriptive_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="partie_descriptive_files/libs/bootstrap/bootstrap-c2e55264ed47ce3b2e0326a2269f9400.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="partie_descriptive_files/libs/bootstrap/bootstrap-62e2d20df198e8a01bb734742f2e28cf.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <link href="partie_descriptive_files/libs/htmltools-fill-0.5.9/fill.css" rel="stylesheet">
+
 <script src="partie_descriptive_files/libs/htmlwidgets-1.6.4/htmlwidgets.js"></script>
+
 <link href="partie_descriptive_files/libs/datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet">
+
 <script src="partie_descriptive_files/libs/datatables-binding-0.34.0/datatables.js"></script>
+
 <script src="partie_descriptive_files/libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+
 <link href="partie_descriptive_files/libs/dt-core-1.13.6/css/jquery.dataTables.min.css" rel="stylesheet">
+
 <link href="partie_descriptive_files/libs/dt-core-1.13.6/css/jquery.dataTables.extra.css" rel="stylesheet">
+
 <script src="partie_descriptive_files/libs/dt-core-1.13.6/js/jquery.dataTables.min.js"></script>
+
 <link href="partie_descriptive_files/libs/crosstalk-1.2.2/css/crosstalk.min.css" rel="stylesheet">
+
 <script src="partie_descriptive_files/libs/crosstalk-1.2.2/js/crosstalk.min.js"></script>
+
 
 
 </head>
@@ -162,29 +172,32 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(scales)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
+<p>HEAD</p>
 <section id="importation-et-inspection-des-données" class="level1">
 <h1>Importation et inspection des données</h1>
 <div class="cell">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="do">############################################</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Importation des données</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="do">############################################</span></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>chemin_cons <span class="ot">&lt;-</span> <span class="cf">if</span> (<span class="fu">file.exists</span>(<span class="st">"data/mozza_consumers_liking.csv"</span>)) <span class="st">"data/mozza_consumers_liking.csv"</span> <span class="cf">else</span> <span class="st">"mozza_consumers_liking.csv"</span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>chemin_panel <span class="ot">&lt;-</span> <span class="cf">if</span> (<span class="fu">file.exists</span>(<span class="st">"data/mozza_panel_descriptors.csv"</span>)) <span class="st">"data/mozza_panel_descriptors.csv"</span> <span class="cf">else</span> <span class="st">"mozza_panel_descriptors.csv"</span></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>dta_cons <span class="ot">&lt;-</span> <span class="fu">read.csv2</span>(chemin_cons, <span class="at">stringsAsFactors =</span> <span class="cn">TRUE</span>, <span class="at">sep =</span> <span class="st">","</span>, <span class="at">dec =</span> <span class="st">"."</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Prod.ID =</span> <span class="fu">as.factor</span>(Prod.ID))</span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>dta_panel <span class="ot">&lt;-</span> <span class="fu">read.csv2</span>(chemin_panel, <span class="at">stringsAsFactors =</span> <span class="cn">TRUE</span>, <span class="at">sep =</span> <span class="st">","</span>, <span class="at">dec =</span> <span class="st">"."</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Prod.ID =</span> <span class="fu">as.factor</span>(Prod.ID))</span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Alias pour compatibilité</span></span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>conso <span class="ot">&lt;-</span> dta_cons</span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>jury <span class="ot">&lt;-</span> dta_panel</span>
-<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>consumers <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(chemin_cons, <span class="at">show_col_types =</span> <span class="cn">FALSE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;&gt;&gt;&gt;&gt;&gt;&gt; 1200c8885136ccd7755fc994981930f197164b5a</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Importation des données</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="do">############################################</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>chemin_cons <span class="ot">&lt;-</span> <span class="cf">if</span> (<span class="fu">file.exists</span>(<span class="st">"data/mozza_consumers_liking.csv"</span>)) <span class="st">"data/mozza_consumers_liking.csv"</span> <span class="cf">else</span> <span class="st">"mozza_consumers_liking.csv"</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>chemin_panel <span class="ot">&lt;-</span> <span class="cf">if</span> (<span class="fu">file.exists</span>(<span class="st">"data/mozza_panel_descriptors.csv"</span>)) <span class="st">"data/mozza_panel_descriptors.csv"</span> <span class="cf">else</span> <span class="st">"mozza_panel_descriptors.csv"</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>dta_cons <span class="ot">&lt;-</span> <span class="fu">read.csv2</span>(chemin_cons, <span class="at">stringsAsFactors =</span> <span class="cn">TRUE</span>, <span class="at">sep =</span> <span class="st">","</span>, <span class="at">dec =</span> <span class="st">"."</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Prod.ID =</span> <span class="fu">as.factor</span>(Prod.ID))</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>dta_panel <span class="ot">&lt;-</span> <span class="fu">read.csv2</span>(chemin_panel, <span class="at">stringsAsFactors =</span> <span class="cn">TRUE</span>, <span class="at">sep =</span> <span class="st">","</span>, <span class="at">dec =</span> <span class="st">"."</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Prod.ID =</span> <span class="fu">as.factor</span>(Prod.ID))</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Alias pour compatibilité</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>conso <span class="ot">&lt;-</span> dta_cons</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>jury <span class="ot">&lt;-</span> dta_panel</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>consumers <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(chemin_cons, <span class="at">show_col_types =</span> <span class="cn">FALSE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
+<p>HEAD # Partie conso</p>
 <section id="inspection-des-structures-et-résumés" class="level2">
 <h2 class="anchored" data-anchor-id="inspection-des-structures-et-résumés">Inspection des structures et résumés</h2>
 <div class="cell">
@@ -193,9 +206,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="do">############################################</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Inspections de données</span></span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="do">############################################</span></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Détails des variables des données </span></span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(dta_cons)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;&gt;&gt;&gt;&gt;&gt;&gt; 1200c8885136ccd7755fc994981930f197164b5a</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Détails des variables des données </span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(dta_cons)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>'data.frame':   1284 obs. of  6 variables:
@@ -938,10 +952,11 @@ attr(,"class")
 <span id="cb23-15"><a href="#cb23-15" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output-display">
-<div class="datatables html-widget html-fill-item" id="htmlwidget-25665e5132f09f465c5c" style="width:100%;height:auto;"></div>
-<script type="application/json" data-for="htmlwidget-25665e5132f09f465c5c">{"x":{"filter":"none","vertical":false,"caption":"<caption>Indices de dispersion des 37 descripteurs du jury (8 produits)<\/caption>","data":[["seepage","cardboardy","Moisturerelease","visualroughness","cheese2","soureddairy","awareherbs","shapeintegrity","greenherb2","degreebrown","GreenHerb","sour","uniformitycoating","oniongarlic","toastedgrain","AmountParticles","mozzarella","Crispiness","OilyGreasylips","pertisencecrisp","rawdoughy2","rawgrain","roughness","looseparticles","roughnessmass","salt2","moistureabsorp","salt","heatedoil2","astringent","heatedoil","Hardness","Oilyfilm","Cohesivenessmass","toothpack","chewstoswallow","Cohesiveness"],[0,0.19,0.83,2.5,0.25,0.16,2.5,3.5,0.99,4,2.26,0.86,5,1.36,2.19,5.44,2.55,3.91,7.88,6.33,1.99,2.75,9.619999999999999,3.45,5.14,6.75,7.55,11.42,2.19,3.39,3.76,5.2,4.63,8.35,2.71,22.17,7.04],[2.5,1.34,4.42,12,0.95,1.08,10,12,3.16,12.5,4.69,1.69,8,2.48,3.28,8.289999999999999,3.94,5.78,10.88,8.33,2.59,3.44,12.34,3.97,6.11,7.98,9.07,13.26,2.48,3.78,4.27,5.84,5.14,9.26,2.97,23.75,7.51],[2.5,1.15,3.58,9.5,0.7,0.92,7.5,8.5,2.16,8.5,2.42,0.84,3,1.12,1.08,2.85,1.39,1.87,3,2,0.6,0.6899999999999999,2.72,0.52,0.97,1.23,1.52,1.84,0.28,0.39,0.51,0.64,0.51,0.91,0.26,1.58,0.47],[1.29,0.55,2.28,6.56,0.51,0.66,6.44,7.88,1.85,8.380000000000001,3,1.14,6.5,2.06,2.75,7.21,3.33,4.9,9.720000000000001,7.52,2.29,3.19,11.07,3.77,5.73,7.35,8.380000000000001,12.37,2.33,3.58,3.93,5.48,4.8,8.779999999999999,2.8,22.79,7.2],[0.9,0.37,1.36,3.22,0.24,0.3,2.65,2.92,0.68,2.75,0.78,0.25,1.2,0.37,0.39,0.93,0.43,0.54,0.97,0.72,0.21,0.26,0.79,0.21,0.31,0.4,0.44,0.62,0.1,0.15,0.16,0.23,0.19,0.32,0.1,0.51,0.16],[70.26000000000001,68.20999999999999,59.77,49.11,46.66,45.18,41.19,37.14,36.51,32.82,26.02,22.41,18.39,17.98,14.08,12.95,12.94,11.09,9.949999999999999,9.529999999999999,8.94,8.199999999999999,7.15,5.58,5.44,5.38,5.2,5.05,4.45,4.18,4.13,4.11,3.98,3.64,3.44,2.24,2.21]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>Descripteur<\/th>\n      <th>Min<\/th>\n      <th>Max<\/th>\n      <th>Étendue<\/th>\n      <th>Moyenne<\/th>\n      <th>Écart-type<\/th>\n      <th>CV (%)<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"pageLength":10,"order":[[6,"desc"]],"columnDefs":[{"className":"dt-right","targets":[1,2,3,4,5,6]},{"name":"descripteur","targets":0},{"name":"min","targets":1},{"name":"max","targets":2},{"name":"etendue","targets":3},{"name":"moyenne","targets":4},{"name":"ecart_type","targets":5},{"name":"cv_pct","targets":6}],"autoWidth":false,"orderClasses":false,"rowCallback":"function(row, data, displayNum, displayIndex, dataIndex) {\nvar value=data[6]; $(this.api().cell(row, 6).node()).css({'background':isNaN(parseFloat(value)) || value <= 2.214293 ? '' : 'linear-gradient(90.000000deg, transparent ' + Math.max(70.264131 - value, 0)/68.049837 * 100 + '%, #c9d9f2 ' + Math.max(70.264131 - value, 0)/68.049837 * 100 + '%)','background-size':'80% 70%','background-repeat':'no-repeat','background-position':'left'});\n}"},"selection":{"mode":"multiple","selected":null,"target":"row","selectable":null}},"evals":["options.rowCallback"],"jsHooks":[]}</script>
+<div class="datatables html-widget html-fill-item" id="htmlwidget-7f1fac936fff6887bc5c" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-7f1fac936fff6887bc5c">{"x":{"filter":"none","vertical":false,"caption":"<caption>Indices de dispersion des 37 descripteurs du jury (8 produits)<\/caption>","data":[["seepage","cardboardy","Moisturerelease","visualroughness","cheese2","soureddairy","awareherbs","shapeintegrity","greenherb2","degreebrown","GreenHerb","sour","uniformitycoating","oniongarlic","toastedgrain","AmountParticles","mozzarella","Crispiness","OilyGreasylips","pertisencecrisp","rawdoughy2","rawgrain","roughness","looseparticles","roughnessmass","salt2","moistureabsorp","salt","heatedoil2","astringent","heatedoil","Hardness","Oilyfilm","Cohesivenessmass","toothpack","chewstoswallow","Cohesiveness"],[0,0.19,0.83,2.5,0.25,0.16,2.5,3.5,0.99,4,2.26,0.86,5,1.36,2.19,5.44,2.55,3.91,7.88,6.33,1.99,2.75,9.619999999999999,3.45,5.14,6.75,7.55,11.42,2.19,3.39,3.76,5.2,4.63,8.35,2.71,22.17,7.04],[2.5,1.34,4.42,12,0.95,1.08,10,12,3.16,12.5,4.69,1.69,8,2.48,3.28,8.289999999999999,3.94,5.78,10.88,8.33,2.59,3.44,12.34,3.97,6.11,7.98,9.07,13.26,2.48,3.78,4.27,5.84,5.14,9.26,2.97,23.75,7.51],[2.5,1.15,3.58,9.5,0.7,0.92,7.5,8.5,2.16,8.5,2.42,0.84,3,1.12,1.08,2.85,1.39,1.87,3,2,0.6,0.6899999999999999,2.72,0.52,0.97,1.23,1.52,1.84,0.28,0.39,0.51,0.64,0.51,0.91,0.26,1.58,0.47],[1.29,0.55,2.28,6.56,0.51,0.66,6.44,7.88,1.85,8.380000000000001,3,1.14,6.5,2.06,2.75,7.21,3.33,4.9,9.720000000000001,7.52,2.29,3.19,11.07,3.77,5.73,7.35,8.380000000000001,12.37,2.33,3.58,3.93,5.48,4.8,8.779999999999999,2.8,22.79,7.2],[0.9,0.37,1.36,3.22,0.24,0.3,2.65,2.92,0.68,2.75,0.78,0.25,1.2,0.37,0.39,0.93,0.43,0.54,0.97,0.72,0.21,0.26,0.79,0.21,0.31,0.4,0.44,0.62,0.1,0.15,0.16,0.23,0.19,0.32,0.1,0.51,0.16],[70.26000000000001,68.20999999999999,59.77,49.11,46.66,45.18,41.19,37.14,36.51,32.82,26.02,22.41,18.39,17.98,14.08,12.95,12.94,11.09,9.949999999999999,9.529999999999999,8.94,8.199999999999999,7.15,5.58,5.44,5.38,5.2,5.05,4.45,4.18,4.13,4.11,3.98,3.64,3.44,2.24,2.21]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>Descripteur<\/th>\n      <th>Min<\/th>\n      <th>Max<\/th>\n      <th>Étendue<\/th>\n      <th>Moyenne<\/th>\n      <th>Écart-type<\/th>\n      <th>CV (%)<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"pageLength":10,"order":[[6,"desc"]],"columnDefs":[{"className":"dt-right","targets":[1,2,3,4,5,6]},{"name":"descripteur","targets":0},{"name":"min","targets":1},{"name":"max","targets":2},{"name":"etendue","targets":3},{"name":"moyenne","targets":4},{"name":"ecart_type","targets":5},{"name":"cv_pct","targets":6}],"autoWidth":false,"orderClasses":false,"rowCallback":"function(row, data, displayNum, displayIndex, dataIndex) {\nvar value=data[6]; $(this.api().cell(row, 6).node()).css({'background':isNaN(parseFloat(value)) || value <= 2.214293 ? '' : 'linear-gradient(90.000000deg, transparent ' + Math.max(70.264131 - value, 0)/68.049837 * 100 + '%, #c9d9f2 ' + Math.max(70.264131 - value, 0)/68.049837 * 100 + '%)','background-size':'80% 70%','background-repeat':'no-repeat','background-position':'left'});\n}"},"selection":{"mode":"multiple","selected":null,"target":"row","selectable":null}},"evals":["options.rowCallback"],"jsHooks":[]}</script>
 </div>
 </div>
+<p>HEAD</p>
 </section>
 <section id="acp-sur-le-panel-jury" class="level2">
 <h2 class="anchored" data-anchor-id="acp-sur-le-panel-jury">ACP sur le panel jury</h2>
@@ -1202,6 +1217,7 @@ MFA                   1.031 1.727 1.832</code></pre>
 </div>
 </div>
 </div>
+<p>1200c8885136ccd7755fc994981930f197164b5a</p>
 </section>
 </section>
 

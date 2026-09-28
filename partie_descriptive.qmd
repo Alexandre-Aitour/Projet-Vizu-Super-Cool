@@ -25,7 +25,7 @@ library(patchwork)
 library(scales)
 ```
 
- HEAD
+HEAD
 
 # Importation et inspection des données
 
@@ -49,8 +49,7 @@ jury <- dta_panel
 consumers <- read_csv(chemin_cons, show_col_types = FALSE)
 ```
 
- HEAD
-# Partie conso
+HEAD \# Partie conso
 
 ## Inspection des structures et résumés
 
@@ -353,8 +352,8 @@ synth_descripteurs %>%
     backgroundPosition = "left"
   )
 ```
-HEAD
 
+HEAD
 
 ## ACP sur le panel jury
 
@@ -400,10 +399,7 @@ dta_afm <- inner_join(dta_cons_m, dta_panel, by = "Prod.ID") %>%
 
 ## AFM 1 : Décomposition par sens (modalités sensorielles)
 
-Dans cette première AFM, les consommateurs sont placés en variables supplémentaires (`num.group.sup = 1`), et les descripteurs du jury sont partitionnés en 3 groupes sensoriels :
-- **Visuel** (6 variables)
-- **Saveur** (16 variables)
-- **Texture** (15 variables)
+Dans cette première AFM, les consommateurs sont placés en variables supplémentaires (`num.group.sup = 1`), et les descripteurs du jury sont partitionnés en 3 groupes sensoriels : - **Visuel** (6 variables) - **Saveur** (16 variables) - **Texture** (15 variables)
 
 ```{r afm-sens, fig.width=9, fig.height=7}
 ############################################
@@ -473,4 +469,5 @@ fviz_mfa_var(res_afm_jury, "quanti.var", repel = TRUE, select.var = list(contrib
 # Graphe des axes partiels
 plot(res_afm_jury, choix = "axes", habillage = "group")
 ```
+
 1200c8885136ccd7755fc994981930f197164b5a
