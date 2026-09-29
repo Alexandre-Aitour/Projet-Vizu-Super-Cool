@@ -99,6 +99,15 @@ descriptive_css <- "
 .descriptive-page .accueil-stick.coupe .droite { transform: translateX(22px) rotate(12deg); }
 .descriptive-page .accueil-stick.coupe .fil { width: 70px; }
 
+/* Logo en petit à côté du nom du magasin, dans les cases à cocher */
+.descriptive-magasin img {
+    height: 20px;
+    width: 34px;
+    object-fit: contain;
+    margin-right: 0.4rem;
+    vertical-align: middle;
+}
+
 /* Message d'erreur de validation (aucune case cochée) */
 .descriptive-page .shiny-output-error-validation {
     color: var(--descriptive-croute);
@@ -166,8 +175,13 @@ onglet_descriptive <- nav_panel(
                             condition = "input.descriptive_cons_graphique == 'moyennes'",
                             checkboxGroupInput(
                                 inputId = "descriptive_cons_produits",
-                                label = "Produits à afficher :",
-                                choices = levels(dta_cons$Produit),
+                                label = "Magasins à afficher :",
+                                choiceNames = lapply(levels(dta_cons$Produit), function(m) {
+                                    span(class = "descriptive-magasin",
+                                         img(src = paste0("logos/", m, ".png"), alt = ""),
+                                         magasins_noms[[m]])
+                                }),
+                                choiceValues = levels(dta_cons$Produit),
                                 selected = levels(dta_cons$Produit)
                             ),
                             descriptive_bouton("descriptive_cons_moy_afficher")
