@@ -11,15 +11,15 @@
 # Préparation du tableau fusionné (Moyennes consommateurs + Jury)
 analyse_data_afm <- reactive({
     dta_cons_m <- dta_cons %>%
-        group_by(Prod.ID) %>%
+        group_by(Produit) %>%
         summarise(
-            cons_overall    = mean(Overall, na.rm = TRUE),
+            cons_overall    = mean(Global, na.rm = TRUE),
             cons_texture    = mean(Texture, na.rm = TRUE),
-            cons_appearance = mean(Appearance, na.rm = TRUE),
-            cons_flavor     = mean(Flavor, na.rm = TRUE)
+            cons_appearance = mean(Visuel, na.rm = TRUE),
+            cons_flavor     = mean(Goût, na.rm = TRUE)
         )
-    inner_join(dta_cons_m, dta_panel, by = "Prod.ID") %>%
-        tibble::column_to_rownames("Prod.ID")
+    inner_join(dta_cons_m, dta_panel, by = "Produit") %>%
+        tibble::column_to_rownames("Produit")
 })
 
 # Calcul de l'AFM selon le modèle choisi
