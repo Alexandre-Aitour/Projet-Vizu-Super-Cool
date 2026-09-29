@@ -209,6 +209,7 @@ onglet_analyse <- nav_panel(
             ),
             
             # Grille 2x2 des résultats
+            # Ligne 1 : Le cœur factoriel (Individus face aux Variables)
             layout_columns(
                 col_widths = c(6, 6),
                 card(
@@ -216,20 +217,21 @@ onglet_analyse <- nav_panel(
                     plotOutput("analyse_afm_ind_plot", height = "460px")
                 ),
                 card(
-                    card_header("🎨 Représentation des groupes de variables"),
-                    plotOutput("analyse_afm_group_plot", height = "460px")
+                    card_header("🎯 Cercle des corrélations des variables quantitatives"),
+                    plotOutput("analyse_afm_var_plot", height = "460px")
                 )
             ),
             
+            # Ligne 2 : Zoom sur les groupes de l'AFM (Groupes & Liaison RV)
             layout_columns(
                 col_widths = c(6, 6),
                 card(
-                    card_header("📊 Matrice des coefficients de liaison (RV)"),
-                    DTOutput("analyse_afm_rv_table")
+                    card_header("🎨 Représentation des groupes de variables"),
+                    plotOutput("analyse_afm_group_plot", height = "460px")
                 ),
                 card(
-                    card_header("🎯 Cercle des corrélations des variables quantitatives"),
-                    plotOutput("analyse_afm_var_plot", height = "460px")
+                    card_header("📊 Matrice des coefficients de liaison (RV)"),
+                    DTOutput("analyse_afm_rv_table")
                 )
             )
         )
