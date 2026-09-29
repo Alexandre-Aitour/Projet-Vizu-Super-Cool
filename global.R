@@ -34,6 +34,22 @@ colnames(dta_panel) <- c("Produit", "Régularité_de_la_forme", "Uniformité_de_
                          "rugosité de la masse", "absorption_d'humidité", "Nombre_mastications",
                          "persistance_du_croustillant", "film_gras", "particules_détachées", "collant_ aux_dents")
 
+# Chaque produit reçoit au hasard une chaîne de magasin, qui remplace son identifiant.
+# set.seed : le tirage est le même à chaque lancement, et identique pour les deux jeux de données.
+set.seed(2026)
+magasins <- setNames(
+    sample(c("super_U", "leclerc", "picard", "grand_frais", "carrefour", "lidl", "auchan", "franprix")),
+    levels(dta_cons$Produit)
+)
+dta_cons$Produit  <- factor(magasins[as.character(dta_cons$Produit)])
+dta_panel$Produit <- factor(magasins[as.character(dta_panel$Produit)])
+
+# Nom affiché de chaque magasin ; les logos sont dans www/logos/<magasin>.png
+magasins_noms <- c(
+    super_U = "Super U", leclerc = "Leclerc", picard = "Picard", grand_frais = "Grand Frais",
+    carrefour = "Carrefour", lidl = "Lidl", auchan = "Auchan", franprix = "Franprix"
+)
+
 # ==================================================================================================
 # 3. Charte graphique (reprise de la page d'accueil), commune à tous les onglets
 # ==================================================================================================
