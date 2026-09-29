@@ -219,9 +219,9 @@ accueil_css <- "
     height: var(--accueil-peek);
     flex-shrink: 0;
     display: flex;
-    align-items: flex-end;
+    align-items: center;
     justify-content: center;
-    padding-bottom: 8px;
+    padding-top: 14px;   /* le filet occupe le haut de la poignée : on centre le texte dessous */
     cursor: grab;
     touch-action: none;
     user-select: none;
@@ -279,7 +279,8 @@ accueil_css <- "
 }
 .accueil-poignee .poignee-filet path.corps { pointer-events: visiblePainted; }
 .accueil-poignee .libelle {
-    font-size: 0.85rem;
+    font-size: 1.8rem;
+    line-height: 1;
     font-weight: 600;
     color: var(--accueil-texte);
     opacity: 0.75;
@@ -648,3 +649,4 @@ onglet_accueil <- nav_panel(
         )
     )
 )
+
