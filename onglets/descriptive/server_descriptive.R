@@ -86,7 +86,7 @@ output$descriptive_cons_distribution <- renderPlot({
 # Produits choisis, figés au clic sur le bouton (rien n'est affiché avant le premier clic)
 descriptive_cons_prods <- eventReactive(input$descriptive_cons_moy_afficher, {
     validate(need(length(input$descriptive_cons_produits) > 0,
-                  "Sélectionnez au moins un produit."))
+                  "Sélectionnez au moins un magasin."))
     input$descriptive_cons_produits
 })
 
@@ -112,12 +112,17 @@ output$descriptive_cons_moyennes <- renderPlot({
             Produit = factor(Produit, levels = ordre_produits)
         )
 
+    # Titre de chaque facette : le logo du magasin au-dessus de son nom (affiché par ggtext)
+    etiquette_magasin <- function(m) {
+        sprintf("<img src='www/logos/%s.png' height='32'/><br>%s", m, magasins_noms[m])
+    }
+
     ggplot(moyennes_produit, aes(x = Dimension, y = moyenne, fill = Dimension)) +
         geom_col(width = 0.78) +
         geom_text(aes(label = sprintf("%.1f", moyenne)),
                   vjust = -0.5, size = 4, colour = mozza_couleurs[["texte"]], fontface = "bold",
                   family = mozza_police) +
-        facet_wrap(~ Produit, nrow = 1) +
+        facet_wrap(~ Produit, nrow = 1, labeller = as_labeller(etiquette_magasin)) +
         scale_fill_manual(values = palette_dim, name = NULL) +
         scale_y_continuous(limits = c(0, 9), expand = expansion(mult = c(0, 0.10))) +
         labs(
@@ -128,6 +133,7 @@ output$descriptive_cons_moyennes <- renderPlot({
         theme_mozza() +
         theme(
             panel.spacing = unit(0.6, "lines"),
+            strip.text = ggtext::element_markdown(face = "bold", halign = 0.5, lineheight = 1.3),
             panel.grid.major = element_blank(),
             axis.text = element_blank(),
             axis.ticks = element_blank(),
