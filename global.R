@@ -44,6 +44,12 @@ magasins <- setNames(
 dta_cons$Produit  <- factor(magasins[as.character(dta_cons$Produit)])
 dta_panel$Produit <- factor(magasins[as.character(dta_panel$Produit)])
 
+# Nom affiché de chaque magasin ; les logos sont dans www/logos/<magasin>.png
+magasins_noms <- c(
+    super_U = "Super U", leclerc = "Leclerc", picard = "Picard", grand_frais = "Grand Frais",
+    carrefour = "Carrefour", lidl = "Lidl", auchan = "Auchan", franprix = "Franprix"
+)
+
 # ==================================================================================================
 # 3. Charte graphique (reprise de la page d'accueil), commune à tous les onglets
 # ==================================================================================================
