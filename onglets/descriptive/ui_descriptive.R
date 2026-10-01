@@ -178,7 +178,10 @@ onglet_descriptive <- nav_panel(
                                 label = "Magasins à afficher :",
                                 choiceNames = lapply(levels(dta_cons$Produit), function(m) {
                                     span(class = "descriptive-magasin",
-                                         img(src = paste0("logos/", m, ".png"), alt = ""),
+                                         # ?v=<date de modification> : force le navigateur à recharger un logo remplacé
+                                         img(src = paste0("logos/", m, ".png?v=",
+                                                          as.integer(file.mtime(file.path("www/logos", paste0(m, ".png"))))),
+                                             alt = ""),
                                          magasins_noms[[m]])
                                 }),
                                 choiceValues = levels(dta_cons$Produit),
