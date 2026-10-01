@@ -97,6 +97,21 @@ analyse_css <- "
 .analyse-page .accueil-stick.coupe .droite { transform: translateX(22px) rotate(12deg); }
 .analyse-page .accueil-stick.coupe .fil { width: 70px; }
 
+/* Logo en petit à côté du nom du magasin, dans les cases à cocher */
+.analyse-magasin img {
+    height: 20px;
+    width: 34px;
+    object-fit: contain;
+    margin-right: 0.4rem;
+    vertical-align: middle;
+}
+
+/* Message d'erreur de validation (aucune case cochée) */
+.analyse-page .shiny-output-error-validation {
+    color: var(--analyse-croute);
+    font-weight: 600;
+}
+
 /* Table DataTables stylisée aux couleurs mozzastick */
 .analyse-page .dataTables_wrapper {
     padding: 0.5rem;
@@ -228,6 +243,39 @@ onglet_analyse <- nav_panel(
                     selected = "sens"
                 ),
                 hr(),
+                # Choix des magasins à afficher avec logo et sélection rapide
+                div(
+                    class = "d-flex justify-content-between align-items-center mb-1",
+                    tags$label(class = "control-label mb-0", "Magasins à afficher :"),
+                    div(
+                        actionLink("analyse_magasins_tous", "Tous", class = "btn btn-link btn-sm p-0 me-2 text-decoration-none", style = "font-size: 0.82rem; color: var(--analyse-orange-fonce); font-weight: 600;"),
+                        actionLink("analyse_magasins_aucun", "Aucun", class = "btn btn-link btn-sm p-0 text-decoration-none", style = "font-size: 0.82rem; color: var(--analyse-croute);")
+                    )
+                ),
+                sliderInput(
+                    inputId = "analyse_nb_magasins",
+                    label = span(style = "font-size: 0.85rem; font-weight: 500; color: #7A4B1D;", "Sélection rapide (Top N par note) :"),
+                    min = 1,
+                    max = length(levels(dta_cons$Produit)),
+                    value = length(levels(dta_cons$Produit)),
+                    step = 1,
+                    ticks = FALSE
+                ),
+                checkboxGroupInput(
+                    inputId = "analyse_magasins",
+                    label = NULL,
+                    choiceNames = lapply(levels(dta_cons$Produit), function(m) {
+                        span(class = "analyse-magasin",
+                             # ?v=<date de modification> : force le navigateur à recharger un logo remplacé
+                             img(src = paste0("logos/", m, ".png?v=",
+                                              as.integer(file.mtime(file.path("www/logos", paste0(m, ".png"))))),
+                                 alt = ""),
+                             magasins_noms[[m]])
+                    }),
+                    choiceValues = levels(dta_cons$Produit),
+                    selected = levels(dta_cons$Produit)
+                ),
+                hr(),
                 # Choix des axes factoriels à projeter
                 layout_columns(
                     col_widths = c(6, 6),
@@ -247,6 +295,11 @@ onglet_analyse <- nav_panel(
                 checkboxInput(
                     inputId = "analyse_afm_show_partial",
                     label = "Afficher les points partiels",
+                    value = TRUE
+                ),
+                checkboxInput(
+                    inputId = "analyse_afm_show_logos",
+                    label = "Afficher les logos sur le graphique",
                     value = TRUE
                 ),
                 sliderInput(
