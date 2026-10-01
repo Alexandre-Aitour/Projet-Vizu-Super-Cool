@@ -74,8 +74,13 @@ output$descriptive_cons_distribution <- renderPlot({
         ) +
         theme_mozza() +
         theme(
-            strip.text = element_text(hjust = 0),
+            # Chaque dimension dans sa propre case, comme les magasins du graphique des moyennes
             panel.spacing = unit(1.1, "lines"),
+            panel.background = element_rect(fill = mozza_couleurs[["creme"]], colour = "#F3E3D0",
+                                            linewidth = 0.8),
+            strip.background = element_rect(fill = mozza_couleurs[["creme"]], colour = "#F3E3D0",
+                                            linewidth = 0.8),
+            strip.text = element_text(hjust = 0, margin = margin(6, 8, 6, 8)),
             panel.grid.major.x = element_blank(),
             axis.title.x = element_text(margin = margin(t = 10))
         )
@@ -206,30 +211,26 @@ output$descriptive_jury_discriminant <- renderPlot({
     ggplot(donnees, aes(x = fct_reorder(descripteur, cv_pct), y = cv_pct)) +
         # Les trois bols de sauce en fond : mayo, moutarde, puis ketchup
         annotate("rect", xmin = -Inf, xmax = Inf, ymin = 0, ymax = seuils_cv[["mayo"]],
-                 fill = sauces[["mayo"]], alpha = 0.10) +
+                 fill = sauces[["mayo"]], alpha = 0.08) +
         annotate("rect", xmin = -Inf, xmax = Inf,
                  ymin = seuils_cv[["mayo"]], ymax = seuils_cv[["moutarde"]],
-                 fill = sauces[["moutarde"]], alpha = 0.14) +
+                 fill = sauces[["moutarde"]], alpha = 0.07) +
         annotate("rect", xmin = -Inf, xmax = Inf, ymin = seuils_cv[["moutarde"]], ymax = Inf,
-                 fill = sauces[["ketchup"]], alpha = 0.06) +
+                 fill = sauces[["ketchup"]], alpha = 0.10) +
         # Le bâtonnet pané...
         geom_segment(aes(xend = descripteur, y = 0, yend = cv_pct),
                      colour = mozza_couleurs[["orange"]], linewidth = 1.6, lineend = "round") +
         # ... trempé dans sa sauce
         geom_point(aes(fill = sauce, colour = sauce), shape = 21, size = 4.2, stroke = 1) +
-        geom_hline(yintercept = seuils_cv, linetype = "dashed",
-                   colour = mozza_couleurs[["croute"]], linewidth = 0.5) +
-        annotate("text", x = n_desc - 1, y = seuils_cv,
-                 label = paste0(" ", seuils_cv, " %"),
-                 vjust = -0.6, hjust = 0, size = 4,
-                 colour = mozza_couleurs[["croute"]], family = mozza_police) +
         scale_x_discrete() +
         coord_flip() +
         scale_fill_manual(values = setNames(sauces[names(sauces_noms)], sauces_noms),
                           name = NULL) +
         scale_colour_manual(values = setNames(sauces[paste0(names(sauces_noms), "_fonce")], sauces_noms),
                             name = NULL) +
-        scale_y_continuous(labels = label_percent(scale = 1, accuracy = 1),
+        # Les seuils servent de graduations : ils marquent les limites des bols de sauce
+        scale_y_continuous(breaks = sort(unique(c(0, seuils_cv, seq(0, 100, by = 20)))),
+                           labels = label_percent(scale = 1, accuracy = 1),
                            expand = expansion(mult = c(0, 0.08))) +
         labs(
             title = paste("Pouvoir discriminant des", n_desc, "descripteurs du jury"),
