@@ -74,8 +74,13 @@ output$descriptive_cons_distribution <- renderPlot({
         ) +
         theme_mozza() +
         theme(
-            strip.text = element_text(hjust = 0),
+            # Chaque dimension dans sa propre case, comme les magasins du graphique des moyennes
             panel.spacing = unit(1.1, "lines"),
+            panel.background = element_rect(fill = mozza_couleurs[["creme"]], colour = "#F3E3D0",
+                                            linewidth = 0.8),
+            strip.background = element_rect(fill = mozza_couleurs[["creme"]], colour = "#F3E3D0",
+                                            linewidth = 0.8),
+            strip.text = element_text(hjust = 0, margin = margin(6, 8, 6, 8)),
             panel.grid.major.x = element_blank(),
             axis.title.x = element_text(margin = margin(t = 10))
         )
@@ -132,8 +137,14 @@ output$descriptive_cons_moyennes <- renderPlot({
         ) +
         theme_mozza() +
         theme(
-            panel.spacing = unit(0.6, "lines"),
-            strip.text = ggtext::element_markdown(face = "bold", halign = 0.5, lineheight = 1.3),
+            # Chaque magasin dans sa propre case (fond crème + bordure), espacées entre elles
+            panel.spacing = unit(1, "lines"),
+            panel.background = element_rect(fill = mozza_couleurs[["creme"]], colour = "#F3E3D0",
+                                            linewidth = 0.8),
+            strip.background = element_rect(fill = mozza_couleurs[["creme"]], colour = "#F3E3D0",
+                                            linewidth = 0.8),
+            strip.text = ggtext::element_markdown(face = "bold", halign = 0.5, lineheight = 1.3,
+                                                  margin = margin(6, 4, 6, 4)),
             panel.grid.major = element_blank(),
             axis.text = element_blank(),
             axis.ticks = element_blank(),
@@ -143,3 +154,97 @@ output$descriptive_cons_moyennes <- renderPlot({
 
 
 # ---------------------------------------- Partie Jury
+
+# ---------- Pouvoir discriminant des descripteurs du jury (graphique sans input)
+
+# Table de synthèse : un descripteur par ligne, dispersion entre les produits
+synth_descripteurs <- dta_panel %>%
+    select(-Produit) %>%
+    pivot_longer(everything(), names_to = "descripteur", values_to = "valeur") %>%
+    group_by(descripteur) %>%
+    summarise(
+        min        = min(valeur),
+        max        = max(valeur),
+        etendue    = max - min,
+        moyenne    = mean(valeur),
+        ecart_type = sd(valeur),
+        cv_pct     = 100 * ecart_type / moyenne,
+        .groups = "drop"
+    ) %>%
+    # Noms lisibles : underscores remplacés par des espaces
+    mutate(descripteur = str_squish(str_replace_all(descripteur, "_", " "))) %>%
+    arrange(desc(cv_pct))
+
+# Piste ketchup / moutarde / mayo : chaque descripteur est un mozzastick trempé dans une sauce,
+# selon son pouvoir discriminant (CV) : mayo s'il varie peu, moutarde entre les deux, ketchup s'il discrimine.
+sauces <- c(
+    ketchup        = "#C0392B",
+    ketchup_fonce  = "#8E2318",
+    moutarde       = "#E1AD01",
+    moutarde_fonce = "#9C7600",
+    mayo           = "#F6E7A1",
+    mayo_fonce     = "#C9A93B"
+)
+
+# Noms affichés dans la légende, de la sauce la plus forte à la plus douce
+sauces_noms <- c(
+    ketchup  = "Ketchup : discriminant",
+    moutarde = "Moutarde : moyennement discriminant",
+    mayo     = "Mayo : peu discriminant"
+)
+
+output$descriptive_jury_discriminant <- renderPlot({
+    seuils_cv <- c(mayo = 10, moutarde = 20)  # seuils indicatifs
+    n_desc <- nrow(synth_descripteurs)
+
+    donnees <- synth_descripteurs %>%
+        mutate(
+            sauce = case_when(
+                cv_pct < seuils_cv[["mayo"]]     ~ "mayo",
+                cv_pct < seuils_cv[["moutarde"]] ~ "moutarde",
+                TRUE                             ~ "ketchup"
+            ),
+            sauce = factor(sauces_noms[sauce], levels = sauces_noms)
+        )
+
+    # Lollipop horizontal : CV% trié du plus stable au plus discriminant
+    ggplot(donnees, aes(x = fct_reorder(descripteur, cv_pct), y = cv_pct)) +
+        # Les trois bols de sauce en fond : mayo, moutarde, puis ketchup
+        annotate("rect", xmin = -Inf, xmax = Inf, ymin = 0, ymax = seuils_cv[["mayo"]],
+                 fill = sauces[["mayo"]], alpha = 0.08) +
+        annotate("rect", xmin = -Inf, xmax = Inf,
+                 ymin = seuils_cv[["mayo"]], ymax = seuils_cv[["moutarde"]],
+                 fill = sauces[["moutarde"]], alpha = 0.07) +
+        annotate("rect", xmin = -Inf, xmax = Inf, ymin = seuils_cv[["moutarde"]], ymax = Inf,
+                 fill = sauces[["ketchup"]], alpha = 0.10) +
+        # Le bâtonnet pané...
+        geom_segment(aes(xend = descripteur, y = 0, yend = cv_pct),
+                     colour = mozza_couleurs[["orange"]], linewidth = 1.6, lineend = "round") +
+        # ... trempé dans sa sauce
+        geom_point(aes(fill = sauce, colour = sauce), shape = 21, size = 4.2, stroke = 1) +
+        scale_x_discrete() +
+        coord_flip() +
+        scale_fill_manual(values = setNames(sauces[names(sauces_noms)], sauces_noms),
+                          name = NULL) +
+        scale_colour_manual(values = setNames(sauces[paste0(names(sauces_noms), "_fonce")], sauces_noms),
+                            name = NULL) +
+        # Les seuils servent de graduations : ils marquent les limites des bols de sauce
+        scale_y_continuous(breaks = sort(unique(c(0, seuils_cv, seq(0, 100, by = 20)))),
+                           labels = label_percent(scale = 1, accuracy = 1),
+                           expand = expansion(mult = c(0, 0.08))) +
+        labs(
+            title = paste("Pouvoir discriminant des", n_desc, "descripteurs du jury"),
+            subtitle = paste("Coefficient de variation (écart-type / moyenne) entre les",
+                             n_distinct(dta_panel$Produit), "produits"),
+            x = NULL, y = "Coefficient de variation"
+        ) +
+        theme_mozza() +
+        theme(
+            panel.grid.major.y = element_blank(),
+            axis.text.y = element_text(size = 11),
+            axis.title.x = element_text(margin = margin(t = 10)),
+            legend.position = "top",
+            legend.justification = "left",
+            legend.text = element_text(size = 12)
+        )
+})
