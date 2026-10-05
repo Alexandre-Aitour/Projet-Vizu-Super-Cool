@@ -374,16 +374,35 @@ recherche_opti_css <- "
     color: #FFFFFF;
     text-shadow: 0 3px 0 var(--orange-fonce), 0 6px 14px rgba(0, 0, 0, 0.5);
 }
-.recherche_opti-ecart {
-    margin: 0.2rem 0 1rem;
-    font-size: 0.9rem;
-    opacity: 0.8;
+/* Les deux boutons sous le nom du gagnant */
+.recherche_opti-actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.8rem;
+    margin: 0.6rem 0 0.9rem;
 }
+.recherche_opti-action {
+    position: relative;
+    font-family: inherit;
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #FFFFFF;
+    padding: 0.6rem 1.5rem;
+    border: none;
+    border-radius: 999px;
+    background: linear-gradient(135deg, var(--orange) 0%, var(--orange-fonce) 100%);
+    box-shadow: 0 5px 0 var(--croute), 0 8px 16px rgba(0, 0, 0, 0.35);
+    transition: transform 0.12s ease;
+}
+.recherche_opti-action:hover { transform: translateY(-2px) scale(1.04); }
+.recherche_opti-action:active { transform: translateY(4px); box-shadow: 0 1px 0 var(--croute); }
+
 .recherche_opti-titre-resultat, .recherche_opti-nom-gagnant,
-.recherche_opti-ecart, .recherche_opti-fermer { opacity: 0; }
+.recherche_opti-actions, .recherche_opti-fermer { opacity: 0; }
 .recherche_opti-overlay.revele .recherche_opti-titre-resultat,
 .recherche_opti-overlay.revele .recherche_opti-nom-gagnant,
-.recherche_opti-overlay.revele .recherche_opti-ecart,
+.recherche_opti-overlay.revele .recherche_opti-actions,
 .recherche_opti-overlay.revele .recherche_opti-fermer {
     animation: recherche_opti-monte 0.5s 0.55s ease forwards;
 }
@@ -398,6 +417,173 @@ recherche_opti_css <- "
     box-shadow: 0 4px 0 var(--croute);
 }
 .recherche_opti-fermer:hover { background: #FFFFFF; }
+
+/* ---------- Panneaux « Voir pourquoi ? » (ACP) et « magasin le plus proche » (carte) ---------- */
+.recherche_opti-overlay.pourquoi .recherche_opti-resultat,
+.recherche_opti-overlay.magasin .recherche_opti-resultat {
+    opacity: 0;
+    pointer-events: none;
+    transform: scale(0.9);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+.recherche_opti-panneau {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(40px);
+    transition: opacity 0.35s ease, transform 0.35s ease;
+}
+.recherche_opti-overlay.pourquoi .recherche_opti-pourquoi,
+.recherche_opti-overlay.magasin .recherche_opti-magasin {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0);
+}
+.recherche_opti-carte-panneau {
+    width: min(920px, 100%);
+    max-height: 100%;
+    overflow-y: auto;
+    padding: 1.2rem 1.4rem 1rem;
+    background: #FFF6EC;
+    color: var(--texte);
+    border: 5px solid var(--texte);
+    border-radius: 26px;
+    box-shadow: 0 10px 0 var(--texte), 0 20px 40px rgba(0, 0, 0, 0.5);
+}
+.recherche_opti-panneau-entete {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 0.4rem;
+}
+.recherche_opti-panneau-entete h3 {
+    margin: 0;
+    font-weight: 700;
+    color: var(--orange-fonce);
+}
+.recherche_opti-retour, .recherche_opti-ok {
+    flex-shrink: 0;
+    font-family: inherit;
+    font-weight: 600;
+    color: var(--texte);
+    background: var(--fromage);
+    border: none;
+    border-radius: 999px;
+    padding: 0.35rem 1.1rem;
+    box-shadow: 0 3px 0 var(--croute);
+}
+.recherche_opti-retour:hover, .recherche_opti-ok:hover { background: var(--orange); color: #FFFFFF; }
+.recherche_opti-acp-intro {
+    margin: 0 0 0.6rem;
+    color: var(--croute);
+}
+/* Mode d'emploi du graphique : 3 pastilles colorées */
+.recherche_opti-lecture {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem 1.4rem;
+    justify-content: center;
+    margin: 0.6rem 0 0;
+    padding: 0;
+    list-style: none;
+    font-size: 0.92rem;
+}
+.recherche_opti-lecture li { display: flex; align-items: center; gap: 0.45rem; }
+.recherche_opti-pastille {
+    flex-shrink: 0;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+}
+
+/* Carte + encart d'informations côte à côte (l'un sous l'autre sur téléphone) */
+.recherche_opti-magasin-grille {
+    display: grid;
+    grid-template-columns: minmax(0, 1.7fr) minmax(220px, 1fr);
+    gap: 1.1rem;
+    align-items: stretch;
+}
+.recherche_opti-carte-cadre {
+    border: 4px solid var(--texte);
+    border-radius: 18px;
+    overflow: hidden;
+    min-height: 440px;
+}
+.recherche_opti-carte-cadre .leaflet-container { font-family: inherit; }
+.recherche_opti-infos {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    text-align: center;
+}
+.recherche_opti-infos-logo {
+    width: 140px;
+    height: 70px;
+    margin: 0 auto;
+    padding: 8px 12px;
+    background: #FFFFFF;
+    border: 3px solid var(--orange-fonce);
+    border-radius: 14px;
+}
+.recherche_opti-infos-logo img { width: 100%; height: 100%; object-fit: contain; }
+.recherche_opti-infos h4 { margin: 0.2rem 0 0; font-weight: 700; color: var(--texte); }
+.recherche_opti-infos-adresse { margin: 0; color: var(--croute); font-size: 0.95rem; }
+.recherche_opti-infos-statut { margin: 0.6rem 0; color: var(--croute); font-weight: 600; }
+.recherche_opti-infos-chiffres {
+    display: flex;
+    justify-content: center;
+    gap: 0.8rem;
+    margin: 0.3rem 0;
+}
+.recherche_opti-infos-chiffres > div {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 0.5rem 0.4rem;
+    background: var(--fromage);
+    border-radius: 14px;
+}
+.recherche_opti-infos-chiffres .valeur { font-size: 1.5rem; font-weight: 700; color: var(--orange-fonce); }
+.recherche_opti-infos-chiffres .unite { font-size: 0.8rem; color: var(--croute); }
+.recherche_opti-lien-gmaps {
+    display: inline-block;
+    align-self: center;
+    text-decoration: none;
+}
+.recherche_opti-lien-gmaps:hover { color: #FFFFFF; }
+.recherche_opti-ville {
+    margin-top: auto;
+    padding-top: 0.6rem;
+    border-top: 2px dashed #F3E3D0;
+    text-align: left;
+}
+.recherche_opti-ville .form-group { margin-bottom: 0.4rem; width: 100%; }
+.recherche_opti-ville label { font-size: 0.9rem; color: var(--croute); }
+.recherche_opti-ville .ligne { display: flex; gap: 0.5rem; align-items: flex-end; }
+.recherche_opti-ville .ligne .form-group { flex: 1; margin: 0; }
+.recherche_opti-mention { margin: 0.7rem 0 0; font-size: 0.75rem; color: var(--croute); opacity: 0.8; }
+
+/* Marqueurs de la carte : le mozzastick de l'utilisateur et le logo du magasin sur une carte blanche */
+.recherche_opti-pin-moi { filter: drop-shadow(0 3px 4px rgba(0, 0, 0, 0.45)); }
+.recherche_opti-pin-magasin {
+    padding: 3px 6px;
+    background: #FFFFFF;
+    border: 3px solid var(--orange-fonce);
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.35);
+    box-sizing: content-box;
+}
+
+@media (max-width: 768px) {
+    .recherche_opti-magasin-grille { grid-template-columns: 1fr; }
+    .recherche_opti-carte-cadre { min-height: 300px; }
+}
 
 /* Confettis en papier projetés par l'explosion */
 .recherche_opti-confetti {
@@ -573,14 +759,61 @@ $(function() {
 
     function fermer() {
         if (animation) cancelAnimationFrame(animation);
-        overlay.classList.remove('ouvert', 'revele');
+        overlay.classList.remove('ouvert', 'revele', 'pourquoi', 'magasin');
         overlay.setAttribute('aria-hidden', 'true');
         overlay.querySelectorAll('.recherche_opti-confetti').forEach(function(c) { c.remove(); });
         document.getElementById('recherche_opti_go').focus();
     }
     overlay.querySelector('.recherche_opti-fermer').addEventListener('click', fermer);
+
+    // Ouvre un panneau (« pourquoi » = ACP, « magasin » = carte) par-dessus le résultat.
+    // Shiny ne dessine une sortie qu'une fois visible : l'événement 'shown' la prévient qu'elle
+    // vient d'apparaître, et 'resize' (après l'animation) recale la carte à la bonne taille.
+    var boutonOrigine = null;
+    function ouvrirPanneau(nom, idSortie, bouton) {
+        boutonOrigine = bouton;
+        overlay.classList.add(nom);
+        $('#' + idSortie).trigger('shown');
+        setTimeout(function() { $(window).trigger('resize'); }, 400);
+        overlay.querySelector('.recherche_opti-' + nom + ' .recherche_opti-retour').focus();
+    }
+    function fermerPanneau() {
+        overlay.classList.remove('pourquoi', 'magasin');
+        if (boutonOrigine) boutonOrigine.focus();
+    }
+    overlay.querySelectorAll('.recherche_opti-retour').forEach(function(b) {
+        b.addEventListener('click', fermerPanneau);
+    });
+
+    overlay.querySelector('.recherche_opti-voir-pourquoi').addEventListener('click', function() {
+        ouvrirPanneau('pourquoi', 'recherche_opti_acp', this);
+    });
+
+    // « Voir le magasin le plus proche » : on demande la position au navigateur (l'utilisateur doit
+    // accepter) et on l'envoie au server, qui cherche le magasin et l'itinéraire.
+    overlay.querySelector('.recherche_opti-voir-magasin').addEventListener('click', function() {
+        ouvrirPanneau('magasin', 'recherche_opti_carte', this);
+        function refus() { Shiny.setInputValue('recherche_opti_position_refus', Date.now(), {priority: 'event'}); }
+        if (!navigator.geolocation) { refus(); return; }
+        navigator.geolocation.getCurrentPosition(function(pos) {
+            Shiny.setInputValue('recherche_opti_position',
+                {lat: pos.coords.latitude, lon: pos.coords.longitude}, {priority: 'event'});
+        }, refus, {timeout: 10000, maximumAge: 600000});
+    });
+    // Entrée dans le champ ville = clic sur OK. Shiny attend 250 ms avant d'envoyer un texte tapé :
+    // on envoie la ville tout de suite pour que le server l'ait déjà au moment du clic.
+    $(document).on('keydown', '#recherche_opti_ville', function(e) {
+        if (e.key !== 'Enter') return;
+        e.preventDefault();
+        Shiny.setInputValue('recherche_opti_ville', this.value);
+        $('#recherche_opti_ville_go').click();
+    });
+
     $(document).on('keydown', function(e) {
-        if (e.key === 'Escape' && overlay.classList.contains('ouvert')) fermer();
+        if (e.key !== 'Escape' || !overlay.classList.contains('ouvert')) return;
+        // Échap ramène d'abord d'un panneau vers le résultat, puis ferme la pop-up
+        if (overlay.classList.contains('pourquoi') || overlay.classList.contains('magasin')) fermerPanneau();
+        else fermer();
     });
 
     // Confettis en papier projetés depuis le centre
@@ -649,10 +882,9 @@ $(function() {
         overlay.querySelector('.recherche_opti-gagnant-carte img').src = 'logos/' + msg.magasin + '.png';
         overlay.querySelector('.recherche_opti-gagnant-carte img').alt = msg.nom;
         overlay.querySelector('.recherche_opti-nom-gagnant').textContent = msg.nom;
-        overlay.querySelector('.recherche_opti-ecart').textContent =
-            'Écart total avec vos notes : ' + msg.ecart + ' (le plus petit des 8 produits)';
+        overlay.querySelectorAll('.recherche_opti-acp-nom').forEach(function(n) { n.textContent = msg.nom; });
 
-        overlay.classList.remove('revele');
+        overlay.classList.remove('revele', 'pourquoi', 'magasin');
         overlay.classList.add('ouvert');
         overlay.setAttribute('aria-hidden', 'false');
         tourner(index, function() {
@@ -733,8 +965,74 @@ recherche_opti_popup <- function() {
             ),
             p(class = "recherche_opti-titre-resultat", "✨ Votre produit parfait ✨"),
             p(class = "recherche_opti-nom-gagnant"),
-            p(class = "recherche_opti-ecart"),
+            div(
+                class = "recherche_opti-actions",
+                tags$button(type = "button", class = "recherche_opti-action recherche_opti-voir-pourquoi",
+                            "🔍 Voir pourquoi ?"),
+                tags$button(type = "button", class = "recherche_opti-action recherche_opti-voir-magasin",
+                            "📍 Voir le magasin le plus proche")
+            ),
             tags$button(type = "button", class = "recherche_opti-fermer", "Fermer")
+        ),
+        # Panneau « Voir pourquoi ? » : illustration visuelle par ACP
+        # (le choix du produit, lui, reste la plus petite somme des |écarts|)
+        div(
+            class = "recherche_opti-panneau recherche_opti-pourquoi",
+            div(
+                class = "recherche_opti-carte-panneau",
+                div(
+                    class = "recherche_opti-panneau-entete",
+                    h3("Pourquoi ", span(class = "recherche_opti-acp-nom"), " ?"),
+                    tags$button(type = "button", class = "recherche_opti-retour", "← Retour")
+                ),
+                p(class = "recherche_opti-acp-intro",
+                  "Cette ACP place les 8 produits et votre produit idéal sur une même carte, à partir
+                   des 5 descripteurs : deux produits proches sur la carte ont des profils proches."),
+                plotOutput("recherche_opti_acp", height = "520px"),
+                tags$ul(
+                    class = "recherche_opti-lecture",
+                    tags$li(span(class = "recherche_opti-pastille", style = "background:#E8913A"),
+                            "Le mozzastick : votre produit idéal"),
+                    tags$li(span(class = "recherche_opti-pastille",
+                                 style = "background:#FFFFFF; border:3px solid #E8913A"),
+                            "Contour orange : votre produit parfait"),
+                    tags$li(span(class = "recherche_opti-pastille", style = "background:#8B4A12"),
+                            "Flèches : un produit placé vers une flèche est fort sur ce descripteur")
+                )
+            )
+        ),
+        # Panneau « Voir le magasin le plus proche » : carte Leaflet + encart d'informations
+        div(
+            class = "recherche_opti-panneau recherche_opti-magasin",
+            div(
+                class = "recherche_opti-carte-panneau",
+                div(
+                    class = "recherche_opti-panneau-entete",
+                    h3("Votre ", span(class = "recherche_opti-acp-nom"), " le plus proche"),
+                    tags$button(type = "button", class = "recherche_opti-retour", "← Retour")
+                ),
+                div(
+                    class = "recherche_opti-magasin-grille",
+                    div(class = "recherche_opti-carte-cadre",
+                        leaflet::leafletOutput("recherche_opti_carte", height = "440px")),
+                    div(
+                        class = "recherche_opti-infos",
+                        uiOutput("recherche_opti_magasin_infos"),
+                        div(
+                            class = "recherche_opti-ville",
+                            div(
+                                class = "ligne",
+                                textInput("recherche_opti_ville", "Pas là où vous êtes ? Entrez une ville :",
+                                          placeholder = "ex. Rennes"),
+                                actionButton("recherche_opti_ville_go", "OK", class = "recherche_opti-ok")
+                            )
+                        )
+                    )
+                ),
+                p(class = "recherche_opti-mention",
+                  "Votre position sert uniquement à ce calcul (elle est transmise au service d'itinéraire OSRM).
+                   Magasins : All the Places et © contributeurs OpenStreetMap.")
+            )
         )
     )
 }
