@@ -204,7 +204,8 @@ onglet_descriptive <- nav_panel(
             # ---------------------------------------- Partie Jury
             nav_panel(
                 "Jury",
-                p("À compléter.")
+                # ---------- Graphique sans input : pouvoir discriminant des descripteurs
+                plotOutput("descriptive_jury_discriminant", height = "800px")
             )
         )
     )
