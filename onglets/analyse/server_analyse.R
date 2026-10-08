@@ -1,13 +1,23 @@
 # ==================================================================================================
 # Onglet : Analyse Factorielle
 # Préfixe des identifiants : analyse_
-# Logique et thème harmonisés avec onglets/descriptive et global.R
+# Harmonisé avec global.R, descriptive et recherche_opti
 # Visualisations interactives avec plotly (zoom au trackpad, pan, infobulles, axes dynamiques)
 # ==================================================================================================
 
 # ----------------------------------------------------------------------------------------------------
-# 1. Calculs réactifs AFM
+# 1. Préparation des données & calculs réactifs AFM
 # ----------------------------------------------------------------------------------------------------
+
+# Nettoyage et mise en forme lisible des descripteurs sensoriels
+clean_desc_names <- function(names_vec) {
+    names_vec <- str_replace_all(names_vec, "_", " ")
+    names_vec <- str_replace_all(names_vec, "pâte crue", "Pâte crue")
+    names_vec <- str_replace_all(names_vec, "collant  aux dents", "Collant aux dents")
+    names_vec <- str_squish(names_vec)
+    names_vec <- str_to_sentence(names_vec)
+    names_vec
+}
 
 # Ordre des magasins par appréciation globale décroissante (pour le Top N)
 magasins_par_note <- reactive({
@@ -36,17 +46,22 @@ observeEvent(input$analyse_magasins_aucun, {
     updateCheckboxGroupInput(session, "analyse_magasins", selected = character(0))
 })
 
-# Préparation du tableau fusionné (Moyennes consommateurs + Jury)
+# Tableau fusionné (Moyennes consommateurs + Jury de descripteurs nettoyés)
 analyse_data_afm <- reactive({
     dta_cons_m <- dta_cons %>%
         group_by(Produit) %>%
         summarise(
-            cons_overall    = mean(Global, na.rm = TRUE),
-            cons_texture    = mean(Texture, na.rm = TRUE),
-            cons_appearance = mean(Visuel, na.rm = TRUE),
-            cons_flavor     = mean(Goût, na.rm = TRUE)
+            `Appréciation globale` = mean(Global, na.rm = TRUE),
+            `Texture globale`      = mean(Texture, na.rm = TRUE),
+            `Aspect visuel`        = mean(Visuel, na.rm = TRUE),
+            `Goût global`          = mean(Goût, na.rm = TRUE)
         )
-    inner_join(dta_cons_m, dta_panel, by = "Produit") %>%
+    
+    # Nettoyage soigné des descripteurs du jury
+    dta_panel_clean <- dta_panel
+    colnames(dta_panel_clean)[-1] <- clean_desc_names(colnames(dta_panel)[-1])
+    
+    inner_join(dta_cons_m, dta_panel_clean, by = "Produit") %>%
         tibble::column_to_rownames("Produit")
 })
 
@@ -63,8 +78,10 @@ analyse_params <- eventReactive(input$analyse_afm_afficher, {
     
     list(
         type         = input$analyse_afm_type,
-        show_partial = input$analyse_afm_show_partial,
-        show_logos   = isTRUE(input$analyse_afm_show_logos),
+        show_partial    = isTRUE(input$analyse_afm_show_partial),
+        show_logos      = isTRUE(input$analyse_afm_show_logos),
+        show_ind_labels = isTRUE(input$analyse_afm_show_ind_labels),
+        show_cons       = isTRUE(input$analyse_afm_show_cons),
         top_contrib  = input$analyse_afm_top_contrib,
         dim_x        = dx,
         dim_y        = dy,
@@ -72,7 +89,7 @@ analyse_params <- eventReactive(input$analyse_afm_afficher, {
     )
 })
 
-# Calcul du modèle AFM selon le choix validé
+# Calcul du modèle AFM
 analyse_res_afm <- reactive({
     p <- analyse_params()
     df <- analyse_data_afm()
@@ -100,10 +117,100 @@ analyse_res_afm <- reactive({
 })
 
 # ----------------------------------------------------------------------------------------------------
-# 2. Sorties graphiques interactives (Plotly) et tabulaires de l'AFM
+# 2. Cartes d'indicateurs KPI (Value Boxes)
 # ----------------------------------------------------------------------------------------------------
 
-# Carte des individus (produits) : moyens et partiels avec logos et mise en valeur du champion
+output$analyse_afm_kpis <- renderUI({
+    req(input$analyse_afm_afficher)
+    res <- analyse_res_afm()
+    p <- analyse_params()
+    
+    # 1. Variance expliquée par le plan factoriel sélectionné
+    eig <- res$eig
+    var_x <- round(eig[p$dim_x, 2], 1)
+    var_y <- round(eig[p$dim_y, 2], 1)
+    var_cum <- round(var_x + var_y, 1)
+    
+    # 2. Produit champion parmi la sélection
+    best_prod_df <- dta_cons %>%
+        filter(Produit %in% p$magasins) %>%
+        group_by(Produit) %>%
+        summarise(note_moy = mean(Global, na.rm = TRUE), .groups = "drop") %>%
+        slice_max(note_moy, n = 1)
+    champ_nom <- if (nrow(best_prod_df) > 0) magasins_noms[[as.character(best_prod_df$Produit[1])]] else "-"
+    champ_note <- if (nrow(best_prod_df) > 0) sprintf("%.2f/9", best_prod_df$note_moy[1]) else "-"
+    
+    # 3. Groupe le plus déterminant (plus fort RV avec Consommateurs)
+    rv_mat <- res$group$RV
+    top_grp_nom <- "Saveur"
+    top_grp_rv  <- "0.00"
+    if ("Consommateurs" %in% rownames(rv_mat)) {
+        sens_rvs <- rv_mat["Consommateurs", setdiff(colnames(rv_mat), c("Consommateurs", "MFA"))]
+        if (length(sens_rvs) > 0) {
+            max_idx <- which.max(sens_rvs)
+            top_grp_nom <- names(sens_rvs)[max_idx]
+            top_grp_rv  <- sprintf("%.3f", sens_rvs[max_idx])
+        }
+    }
+    
+    div(
+        class = "analyse-kpi-grid",
+        
+        # KPI 1 : Inertie captée
+        div(
+            class = "analyse-kpi-card",
+            div(class = "analyse-kpi-icon", "📈"),
+            div(
+                class = "analyse-kpi-info",
+                div(class = "analyse-kpi-titre", "Information captée"),
+                div(class = "analyse-kpi-valeur", paste0(var_cum, "%")),
+                div(class = "analyse-kpi-sub", sprintf("Dim %d (%s%%) + Dim %d (%s%%)", p$dim_x, var_x, p$dim_y, var_y))
+            )
+        ),
+        
+        # KPI 2 : Champion
+        div(
+            class = "analyse-kpi-card",
+            div(class = "analyse-kpi-icon", "🏆"),
+            div(
+                class = "analyse-kpi-info",
+                div(class = "analyse-kpi-titre", "Mozzarella favorite"),
+                div(class = "analyse-kpi-valeur", champ_nom),
+                div(class = "analyse-kpi-sub", paste("Note moyenne :", champ_note))
+            )
+        ),
+        
+        # KPI 3 : Moteur sensoriel n°1
+        div(
+            class = "analyse-kpi-card",
+            div(class = "analyse-kpi-icon", "👅"),
+            div(
+                class = "analyse-kpi-info",
+                div(class = "analyse-kpi-titre", "Moteur du succès"),
+                div(class = "analyse-kpi-valeur", top_grp_nom),
+                div(class = "analyse-kpi-sub", paste("Liaison RV =", top_grp_rv))
+            )
+        ),
+        
+        # KPI 4 : Descripteurs analysés
+        div(
+            class = "analyse-kpi-card",
+            div(class = "analyse-kpi-icon", "🧀"),
+            div(
+                class = "analyse-kpi-info",
+                div(class = "analyse-kpi-titre", "Descripteurs du panel"),
+                div(class = "analyse-kpi-valeur", paste(p$top_contrib, "/ 37")),
+                div(class = "analyse-kpi-sub", "Descripteurs les plus discriminants")
+            )
+        )
+    )
+})
+
+# ----------------------------------------------------------------------------------------------------
+# 3. Sorties graphiques interactives (Plotly)
+# ----------------------------------------------------------------------------------------------------
+
+# --- A. Projection des individus (Produits & points partiels)
 output$analyse_afm_ind_plot <- renderPlotly({
     req(input$analyse_afm_afficher)
     res <- analyse_res_afm()
@@ -111,27 +218,38 @@ output$analyse_afm_ind_plot <- renderPlotly({
     
     selected_magasins <- p$magasins
     partial_arg <- if (isTRUE(p$show_partial)) "all" else NULL
+    geom_ind_choice <- if (isTRUE(p$show_ind_labels)) c("point", "text") else "point"
     
     p_ind <- fviz_mfa_ind(
         res,
         axes = c(p$dim_x, p$dim_y),
         select.ind = list(name = selected_magasins),
         partial = partial_arg,
+        geom = geom_ind_choice,
         repel = FALSE,
         pointsize = 3.5,
-        labelsize = 4.5
+        labelsize = 4.2
     ) + 
         theme_mozza() +
         labs(
-            title = if (isTRUE(p$show_partial)) "Carte des mozzarellas (Moyens & Partiels)" else "Carte des mozzarellas (Points moyens)"
+            title = if (isTRUE(p$show_partial)) "Carte des mozzarellas (Moyens & Partiels)" else "Carte des mozzarellas (Points moyens)",
+            x = paste0("Dimension ", p$dim_x, " (", round(res$eig[p$dim_x, 2], 1), "%)"),
+            y = paste0("Dimension ", p$dim_y, " (", round(res$eig[p$dim_y, 2], 1), "%)")
         )
     
-    # Remplacer les identifiants bruts par les vrais noms de magasins
-    if (!is.null(p_ind$data$name)) {
-        p_ind$data$name <- unname(magasins_noms[p_ind$data$name])
+    # Noms réels de magasins & infobulles propres
+    if (isTRUE(p$show_ind_labels)) {
+        if (!is.null(p_ind$data$name)) {
+            p_ind$data$name <- unname(magasins_noms[p_ind$data$name])
+        }
+    } else {
+        if (length(p_ind$layers) >= 1 && !is.null(p_ind$layers[[1]]$data$name)) {
+            p_ind$layers[[1]]$data$name <- unname(magasins_noms[p_ind$layers[[1]]$data$name])
+            p_ind$layers[[1]]$mapping <- aes(x = x, y = y, text = name)
+        }
     }
     
-    # Identification et mise en valeur du produit favori des consommateurs parmi la sélection
+    # Marqueur étoile sur le champion sélectionné
     best_prod_df <- dta_cons %>%
         filter(Produit %in% selected_magasins) %>%
         group_by(Produit) %>%
@@ -163,19 +281,19 @@ output$analyse_afm_ind_plot <- renderPlotly({
                 annotate(
                     "text", 
                     x = champ_x, 
-                    y = champ_y + 0.35, 
+                    y = champ_y + 0.32, 
                     label = paste0("★ Favori : ", best_nom, " (", best_note, "/9)"), 
                     color = mozza_couleurs[["croute"]], 
                     fontface = "bold", 
                     family = mozza_police, 
-                    size = 3.5
+                    size = 3.6
                 )
         }
     }
     
-    plt <- ggplotly(p_ind)
+    plt <- ggplotly(p_ind, tooltip = c("x", "y", "text"))
     
-    # Intégration des logos officiels des magasins sur le graphique Plotly
+    # Intégration des logos officiels des magasins
     if (isTRUE(p$show_logos) && length(selected_magasins) > 0) {
         coords <- as.data.frame(res$ind$coord)
         dim_x_name <- paste0("Dim.", p$dim_x)
@@ -220,49 +338,102 @@ output$analyse_afm_ind_plot <- renderPlotly({
     plt %>% config(scrollZoom = TRUE, displaylogo = FALSE)
 })
 
-# Cercle des corrélations des variables quantitatives
+# --- B. Cercle des corrélations des variables quantitatives (AVEC NOMS DE VARIABLES VISIBLES)
 output$analyse_afm_var_plot <- renderPlotly({
     req(input$analyse_afm_afficher)
+    res <- analyse_res_afm()
     p <- analyse_params()
     
+    # IMPORTANT : repel = FALSE pour que plotly affiche les textes (geom_text) sans les supprimer
     p_var <- fviz_mfa_var(
-        analyse_res_afm(), 
+        res, 
         "quanti.var", 
         axes = c(p$dim_x, p$dim_y),
-        repel = TRUE, 
+        repel = FALSE, 
         select.var = list(contrib = p$top_contrib),
         col.var = "contrib",
-        gradient.cols = c(mozza_couleurs[["fromage"]], mozza_couleurs[["orange"]], mozza_couleurs[["croute"]])
+        gradient.cols = c("#F8B063", "#E8913A", "#8B4A12"),
+        labelsize = 3.8
     ) + 
         theme_mozza() + 
         labs(
             title = paste0("Cercle des corrélations (Axes ", p$dim_x, " & ", p$dim_y, ")"),
-            color = "Contribution"
+            x = paste0("Dimension ", p$dim_x, " (", round(res$eig[p$dim_x, 2], 1), "%)"),
+            y = paste0("Dimension ", p$dim_y, " (", round(res$eig[p$dim_y, 2], 1), "%)"),
+            color = "Contrib (%)"
         )
+    
+    # Projection des variables de satisfaction consommateurs (en rouge vif tomate avec ★)
+    if (isTRUE(p$show_cons) && !is.null(res$quanti.var.sup)) {
+        coord_sup <- as.data.frame(res$quanti.var.sup$coord)
+        dim_x_col <- paste0("Dim.", p$dim_x)
+        dim_y_col <- paste0("Dim.", p$dim_y)
+        
+        if (all(c(dim_x_col, dim_y_col) %in% colnames(coord_sup))) {
+            coord_sup_sub <- data.frame(
+                name = rownames(coord_sup),
+                x = coord_sup[, dim_x_col],
+                y = coord_sup[, dim_y_col],
+                stringsAsFactors = FALSE
+            )
+            p_var <- p_var +
+                geom_segment(
+                    data = coord_sup_sub,
+                    aes(x = 0, y = 0, xend = x, yend = y),
+                    arrow = arrow(length = unit(0.22, "cm")),
+                    color = "#C0392B",
+                    linewidth = 0.9,
+                    linetype = "dashed",
+                    inherit.aes = FALSE
+                ) +
+                geom_text(
+                    data = coord_sup_sub,
+                    aes(x = x, y = y, label = paste0("★ ", name)),
+                    color = "#C0392B",
+                    fontface = "bold",
+                    size = 4,
+                    inherit.aes = FALSE
+                )
+        }
+    }
     
     ggplotly(p_var) %>%
         config(scrollZoom = TRUE, displaylogo = FALSE)
 })
 
-# Graphe des groupes de variables
+# --- C. Graphe des groupes de variables
 output$analyse_afm_group_plot <- renderPlotly({
     req(input$analyse_afm_afficher)
+    res <- analyse_res_afm()
     p <- analyse_params()
     
+    # Palette chaude cohérente avec le thème Mozza : Consommateurs, Visuel, Saveur, Texture
+    mozza_group_palette <- c(
+        "Consommateurs" = "#E8913A",
+        "Visuel"        = "#8B4A12",
+        "Saveur"        = "#C0392B",
+        "Texture"       = "#7A8B3A",
+        "Jury"          = "#8B4A12"
+    )
+    
     p_group <- fviz_mfa_var(
-        analyse_res_afm(), 
+        res, 
         "group",
         axes = c(p$dim_x, p$dim_y),
-        palette = c(mozza_couleurs[["orange_fonce"]], "#C0392B", "#4A90E2", "#7A8B3A")
+        palette = unname(mozza_group_palette)
     ) + 
         theme_mozza() + 
-        labs(title = paste0("Projection des groupes (Axes ", p$dim_x, " & ", p$dim_y, ")"))
+        labs(
+            title = paste0("Projection des groupes (Axes ", p$dim_x, " & ", p$dim_y, ")"),
+            x = paste0("Dimension ", p$dim_x, " (", round(res$eig[p$dim_x, 2], 1), "%)"),
+            y = paste0("Dimension ", p$dim_y, " (", round(res$eig[p$dim_y, 2], 1), "%)")
+        )
     
     ggplotly(p_group) %>%
         config(scrollZoom = TRUE, displaylogo = FALSE)
 })
 
-# Matrice des coefficients RV
+# --- D. Matrice des coefficients RV
 output$analyse_afm_rv_table <- renderDT({
     req(input$analyse_afm_afficher)
     rv_mat <- round(analyse_res_afm()$group$RV, 3)
@@ -284,11 +455,61 @@ output$analyse_afm_rv_table <- renderDT({
             columns = seq_len(ncol(rv_mat)),
             backgroundColor = styleInterval(c(0.3, 0.6), c("#FFFFFF", "#FFF9F2", "#FFECCC")),
             color = mozza_couleurs[["texte"]],
-            fontWeight = "500"
+            fontWeight = "600"
         )
 })
 
-# Synthèse sensorielle automatique ("Ce qu'il faut retenir")
+# --- E. Éboulis des valeurs propres (Variance expliquée par dimension)
+output$analyse_afm_scree_plot <- renderPlotly({
+    req(input$analyse_afm_afficher)
+    res <- analyse_res_afm()
+    
+    p_scree <- fviz_screeplot(
+        res, 
+        addlabels = TRUE, 
+        barfill = "#E8913A", 
+        barcolor = "#8B4A12",
+        linecolor = "#C0392B", 
+        ylim = c(0, 50)
+    ) +
+        theme_mozza() +
+        labs(
+            title = "Variance expliquée par dimension (Éboulis)", 
+            x = "Dimensions factorielles", 
+            y = "% de variance expliquée"
+        )
+    
+    ggplotly(p_scree) %>%
+        config(scrollZoom = TRUE, displaylogo = FALSE)
+})
+
+# --- F. Top descripteurs contribuant aux axes
+output$analyse_afm_contrib_plot <- renderPlotly({
+    req(input$analyse_afm_afficher)
+    res <- analyse_res_afm()
+    p <- analyse_params()
+    
+    p_contrib <- fviz_contrib(
+        res, 
+        choice = "quanti.var", 
+        axes = p$dim_x, 
+        top = 10,
+        fill = "#E8913A", 
+        color = "#8B4A12"
+    ) +
+        theme_mozza() +
+        labs(
+            title = paste0("Top 10 descripteurs contribuant à l'Axe ", p$dim_x), 
+            y = "Contribution (%)", 
+            x = "Descripteurs"
+        ) +
+        theme(axis.text.x = element_text(angle = 40, hjust = 1))
+    
+    ggplotly(p_contrib) %>%
+        config(scrollZoom = TRUE, displaylogo = FALSE)
+})
+
+# --- G. Synthèse sensorielle automatique ("Ce qu'il faut retenir")
 output$analyse_afm_synthese <- renderUI({
     req(input$analyse_afm_afficher)
     res <- analyse_res_afm()
@@ -310,7 +531,7 @@ output$analyse_afm_synthese <- renderUI({
                             as.integer(file.mtime(file.path("www/logos", paste0(best_id, ".png")))))
         p(
             style = "margin-top: 0.6rem; padding-top: 0.5rem; border-top: 1px dashed var(--analyse-orange); font-size: 0.92rem;",
-            tags$img(src = logo_path, height = "22px", style = "vertical-align: middle; margin-right: 8px;"),
+            tags$img(src = logo_path, height = "24px", style = "vertical-align: middle; margin-right: 8px;"),
             strong("Bâtonnet champion parmi la sélection : "),
             span(style = "color: var(--analyse-orange-fonce); font-weight: 700;", best_nom),
             sprintf(" (note globale moyenne de %0.2f/9)", best_note)
@@ -325,14 +546,14 @@ output$analyse_afm_synthese <- renderUI({
         tagList(
             div(class = "synthese-titre", icon("lightbulb"), " Ce qu'il faut retenir (Synthèse sensorielle) :"),
             p(
-                "Le groupe le plus fortement corrélé à l'appréciation des consommateurs est la ",
+                "Le groupe sensoriel le plus fortement corrélé à l'appréciation des consommateurs est la ",
                 strong("Saveur"), sprintf(" (RV = %0.3f)", rv_saveur), ", suivi de la ",
                 strong("Texture"), sprintf(" (RV = %0.3f)", rv_texture), ". L'aspect ",
                 strong("Visuel"), sprintf(" a un impact plus modéré (RV = %0.3f)", rv_visuel), "."
             ),
             p(
                 style = "margin-top: 0.4rem; font-size: 0.88rem; color: #7A4B1D;",
-                "👉 La saveur et la texture sont les deux dimensions déterminantes pour prédire le succès hédonique d'une mozzarella."
+                "👉 La saveur et la texture sont les deux dimensions déterminantes pour le succès hédonique d'un bâtonnet de mozzarella. Les descripteurs orientés dans la même direction que la flèche « ★ Appréciation globale » constituent les leviers clés d'optimisation."
             ),
             favori_ui
         )
