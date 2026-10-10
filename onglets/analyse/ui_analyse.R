@@ -337,7 +337,7 @@ onglet_analyse <- nav_panel(
         # Bannière explicative d'accueil (harmonisée avec recherche_opti)
         div(
             class = "analyse-intro",
-            h3("🔬 Décryptage Factoriel Multi-Blocs (AFM)"),
+            h3("Décryptage Factoriel Multi-Blocs (AFM)"),
             p("Croisez le profilage sensoriel des experts (37 descripteurs visuels, gustatifs et de texture) avec les préférences réelles des consommateurs pour identifier la recette et le positionnement idéal de chaque mozzarella.")
         ),
 
@@ -423,7 +423,7 @@ onglet_analyse <- nav_panel(
                 ),
                 checkboxInput(
                     inputId = "analyse_afm_show_cons",
-                    label = "Projeter l'appréciation consommateurs (★)",
+                    label = "Projeter l'appréciation consommateurs",
                     value = TRUE
                 ),
                 checkboxInput(
@@ -440,7 +440,7 @@ onglet_analyse <- nav_panel(
                 condition = "!input.analyse_afm_afficher",
                 div(
                     class = "analyse-placeholder-card",
-                    span(class = "icone-fromage", "🧀"),
+                    span(class = "icone-fromage", icon("diagram-project")),
                     h3("Prêt pour l'Analyse Factorielle ?"),
                     p("Choisissez vos dimensions et paramètres dans le panneau de gauche, puis cliquez sur le bâtonnet « Afficher » pour révéler les cartographies interactives.")
                 )
@@ -460,16 +460,16 @@ onglet_analyse <- nav_panel(
                         
                         # --- SOUS-ONGLET 1 : Cartographie factorielle & Corrélations
                         nav_panel(
-                            title = "🥖 Cartographie & Corrélations",
+                            title = "Cartographie & Corrélations",
                             icon = icon("crosshairs"),
                             layout_columns(
                                 col_widths = c(6, 6),
                                 card(
-                                    card_header("🥖 Projection des mozzarellas (Moyens & Partiels)"),
+                                    card_header("Projection des mozzarellas (Moyens & Partiels)"),
                                     plotlyOutput("analyse_afm_ind_plot", height = "500px")
                                 ),
                                 card(
-                                    card_header("🎯 Cercle des corrélations des descripteurs"),
+                                    card_header("Cercle des corrélations des descripteurs"),
                                     plotlyOutput("analyse_afm_var_plot", height = "500px")
                                 )
                             ),
@@ -481,20 +481,20 @@ onglet_analyse <- nav_panel(
 
                         # --- SOUS-ONGLET 2 : Groupes sensoriels & Liaisons (RV)
                         nav_panel(
-                            title = "🎨 Groupes & Liaisons RV",
+                            title = "Groupes & Liaisons RV",
                             icon = icon("layer-group"),
                             layout_columns(
                                 col_widths = c(6, 6),
                                 card(
-                                    card_header("🎨 Projection synthétique des groupes de variables"),
+                                    card_header("Projection synthétique des groupes de variables"),
                                     plotlyOutput("analyse_afm_group_plot", height = "460px")
                                 ),
                                 card(
-                                    card_header("📊 Matrice des coefficients de liaison (RV)"),
+                                    card_header("Matrice des coefficients de liaison (RV)"),
                                     DTOutput("analyse_afm_rv_table"),
                                     p(
                                         style = "margin-top: 12px; font-size: 0.84rem; color: var(--analyse-croute);",
-                                        "💡 ", strong("Coefficient RV :"), " mesure la corrélation globale entre deux blocs de mesures (0 = indépendants, 1 = structure sensorielle identique)."
+                                        strong("Coefficient RV :"), " mesure la corrélation globale entre deux blocs de mesures (0 = indépendants, 1 = structure sensorielle identique)."
                                     )
                                 )
                             )
@@ -502,16 +502,16 @@ onglet_analyse <- nav_panel(
 
                         # --- SOUS-ONGLET 3 : Inertie & Contributions
                         nav_panel(
-                            title = "📊 Inertie & Contributions",
+                            title = "Inertie & Contributions",
                             icon = icon("chart-column"),
                             layout_columns(
                                 col_widths = c(6, 6),
                                 card(
-                                    card_header("📉 Éboulis des valeurs propres (Inertie expliquée)"),
+                                    card_header("Éboulis des valeurs propres (Inertie expliquée)"),
                                     plotlyOutput("analyse_afm_scree_plot", height = "460px")
                                 ),
                                 card(
-                                    card_header("🏆 Top descripteurs contribuant aux axes"),
+                                    card_header("Top descripteurs contribuant aux axes"),
                                     plotlyOutput("analyse_afm_contrib_plot", height = "460px")
                                 )
                             )

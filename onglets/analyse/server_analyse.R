@@ -160,7 +160,7 @@ output$analyse_afm_kpis <- renderUI({
         # KPI 1 : Inertie captée
         div(
             class = "analyse-kpi-card",
-            div(class = "analyse-kpi-icon", "📈"),
+            div(class = "analyse-kpi-icon", icon("chart-line")),
             div(
                 class = "analyse-kpi-info",
                 div(class = "analyse-kpi-titre", "Information captée"),
@@ -172,7 +172,7 @@ output$analyse_afm_kpis <- renderUI({
         # KPI 2 : Champion
         div(
             class = "analyse-kpi-card",
-            div(class = "analyse-kpi-icon", "🏆"),
+            div(class = "analyse-kpi-icon", icon("award")),
             div(
                 class = "analyse-kpi-info",
                 div(class = "analyse-kpi-titre", "Mozzarella favorite"),
@@ -184,7 +184,7 @@ output$analyse_afm_kpis <- renderUI({
         # KPI 3 : Moteur sensoriel n°1
         div(
             class = "analyse-kpi-card",
-            div(class = "analyse-kpi-icon", "👅"),
+            div(class = "analyse-kpi-icon", icon("bullseye")),
             div(
                 class = "analyse-kpi-info",
                 div(class = "analyse-kpi-titre", "Moteur du succès"),
@@ -196,7 +196,7 @@ output$analyse_afm_kpis <- renderUI({
         # KPI 4 : Descripteurs analysés
         div(
             class = "analyse-kpi-card",
-            div(class = "analyse-kpi-icon", "🧀"),
+            div(class = "analyse-kpi-icon", icon("sliders")),
             div(
                 class = "analyse-kpi-info",
                 div(class = "analyse-kpi-titre", "Descripteurs du panel"),
@@ -305,6 +305,9 @@ output$analyse_afm_ind_plot <- renderPlotly({
             champ_x <- coords[best_id, dim_x_name]
             champ_y <- coords[best_id, dim_y_name]
             
+            y_span_all <- max(diff(range(coords[intersect(selected_magasins, rownames(coords)), dim_y_name], na.rm = TRUE)), 1.5)
+            offset_y <- if (isTRUE(p$show_logos)) (y_span_all * 0.20 + 0.25) else 0.32
+            
             p_ind <- p_ind +
                 annotate(
                     "point", 
@@ -317,8 +320,8 @@ output$analyse_afm_ind_plot <- renderPlotly({
                 annotate(
                     "text", 
                     x = champ_x, 
-                    y = champ_y + 0.32, 
-                    label = paste0("★ Favori : ", best_nom, " (", best_note, "/9)"), 
+                    y = champ_y + offset_y, 
+                    label = paste0("Favori : ", best_nom, " (", best_note, "/9)"), 
                     color = mozza_couleurs[["croute"]], 
                     fontface = "bold", 
                     family = mozza_police, 
@@ -419,8 +422,8 @@ output$analyse_afm_ind_plot <- renderPlotly({
             y_vals <- coords[valid_prods, dim_y_name]
             x_span <- max(diff(range(x_vals, na.rm = TRUE)), 1.5)
             y_span <- max(diff(range(y_vals, na.rm = TRUE)), 1.5)
-            sizex  <- x_span * 0.12
-            sizey  <- y_span * 0.12
+            sizex  <- x_span * 0.20
+            sizey  <- y_span * 0.20
             
             images_list <- lapply(valid_prods, function(m) {
                 logo_file <- file.path("www/logos", paste0(m, ".png"))
@@ -432,7 +435,7 @@ output$analyse_afm_ind_plot <- renderPlotly({
                     xref    = "x",
                     yref    = "y",
                     x       = coords[m, dim_x_name],
-                    y       = coords[m, dim_y_name] + sizey * 0.5,
+                    y       = coords[m, dim_y_name] + sizey * 0.15,
                     sizex   = sizex,
                     sizey   = sizey,
                     sizing  = "contain",
@@ -501,7 +504,7 @@ output$analyse_afm_var_plot <- renderPlotly({
             color = "Contrib (%)"
         )
     
-    # Projection des variables de satisfaction consommateurs (en rouge vif tomate avec ★)
+    # Projection des variables de satisfaction consommateurs
     if (isTRUE(p$show_cons) && !is.null(res$quanti.var.sup)) {
         coord_sup <- as.data.frame(res$quanti.var.sup$coord)
         dim_x_col <- paste0("Dim.", p$dim_x)
@@ -526,7 +529,7 @@ output$analyse_afm_var_plot <- renderPlotly({
                 ) +
                 geom_text(
                     data = coord_sup_sub,
-                    aes(x = x, y = y, label = paste0("★ ", name)),
+                    aes(x = x, y = y, label = name),
                     color = "#C0392B",
                     fontface = "bold",
                     size = 4,
@@ -696,7 +699,7 @@ output$analyse_afm_synthese <- renderUI({
             ),
             p(
                 style = "margin-top: 0.4rem; font-size: 0.88rem; color: #7A4B1D;",
-                "👉 La saveur et la texture sont les deux dimensions déterminantes pour le succès hédonique d'un bâtonnet de mozzarella. Les descripteurs orientés dans la même direction que la flèche « ★ Appréciation globale » constituent les leviers clés d'optimisation."
+                "La saveur et la texture sont les deux dimensions déterminantes pour le succès hédonique d'un bâtonnet de mozzarella. Les descripteurs orientés dans la même direction que la flèche « Appréciation globale » constituent les leviers clés d'optimisation."
             ),
             favori_ui
         )
@@ -710,7 +713,7 @@ output$analyse_afm_synthese <- renderUI({
             ),
             p(
                 style = "margin-top: 0.4rem; font-size: 0.88rem; color: #7A4B1D;",
-                "👉 Cela confirme une corrélation notable entre les mesures d'experts et l'appréciation hédonique réelle du consommateur."
+                "Cela confirme une corrélation notable entre les mesures d'experts et l'appréciation hédonique réelle du consommateur."
             ),
             favori_ui
         )
