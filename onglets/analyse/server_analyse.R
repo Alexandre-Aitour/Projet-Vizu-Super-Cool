@@ -82,6 +82,7 @@ analyse_params <- eventReactive(input$analyse_afm_afficher, {
         show_logos      = isTRUE(input$analyse_afm_show_logos),
         show_ind_labels = isTRUE(input$analyse_afm_show_ind_labels),
         show_cons       = isTRUE(input$analyse_afm_show_cons),
+        show_legend     = isTRUE(input$analyse_afm_show_legend),
         top_contrib  = input$analyse_afm_top_contrib,
         dim_x        = dx,
         dim_y        = dy,
@@ -159,7 +160,7 @@ output$analyse_afm_kpis <- renderUI({
         # KPI 1 : Inertie captée
         div(
             class = "analyse-kpi-card",
-            div(class = "analyse-kpi-icon", "📈"),
+            div(class = "analyse-kpi-icon", icon("chart-line")),
             div(
                 class = "analyse-kpi-info",
                 div(class = "analyse-kpi-titre", "Information captée"),
@@ -171,7 +172,7 @@ output$analyse_afm_kpis <- renderUI({
         # KPI 2 : Champion
         div(
             class = "analyse-kpi-card",
-            div(class = "analyse-kpi-icon", "🏆"),
+            div(class = "analyse-kpi-icon", icon("award")),
             div(
                 class = "analyse-kpi-info",
                 div(class = "analyse-kpi-titre", "Mozzarella favorite"),
@@ -183,7 +184,7 @@ output$analyse_afm_kpis <- renderUI({
         # KPI 3 : Moteur sensoriel n°1
         div(
             class = "analyse-kpi-card",
-            div(class = "analyse-kpi-icon", "👅"),
+            div(class = "analyse-kpi-icon", icon("bullseye")),
             div(
                 class = "analyse-kpi-info",
                 div(class = "analyse-kpi-titre", "Moteur du succès"),
@@ -195,7 +196,7 @@ output$analyse_afm_kpis <- renderUI({
         # KPI 4 : Descripteurs analysés
         div(
             class = "analyse-kpi-card",
-            div(class = "analyse-kpi-icon", "🧀"),
+            div(class = "analyse-kpi-icon", icon("sliders")),
             div(
                 class = "analyse-kpi-info",
                 div(class = "analyse-kpi-titre", "Descripteurs du panel"),
@@ -232,15 +233,50 @@ output$analyse_afm_ind_plot <- renderPlotly({
     ) + 
         theme_mozza() +
         labs(
-            title = if (isTRUE(p$show_partial)) "Carte des mozzarellas (Moyens & Partiels)" else "Carte des mozzarellas (Points moyens)",
+            title = NULL,
             x = paste0("Dimension ", p$dim_x, " (", round(res$eig[p$dim_x, 2], 1), "%)"),
             y = paste0("Dimension ", p$dim_y, " (", round(res$eig[p$dim_y, 2], 1), "%)")
         )
+    
+    # Palette chaude harmonisée pour les groupes de variables
+    mozza_group_palette <- c(
+        "Visuel"        = "#8B4A12",
+        "Saveur"        = "#C0392B",
+        "Texture"       = "#7A8B3A",
+        "Consommateurs" = "#E8913A",
+        "Jury"          = "#8B4A12"
+    )
+    grp_names_known <- if (p$type == "sens") c("Visuel", "Saveur", "Texture") else c("Consommateurs", "Jury")
+    
+    # Nettoyage des niveaux de groupes partiels (suppression du préfixe magasin généré par FactoMineR/factoextra)
+    if (isTRUE(p$show_partial)) {
+        for (l_idx in seq_along(p_ind$layers)) {
+            lyr <- p_ind$layers[[l_idx]]
+            if (!is.null(lyr$data) && "group.name" %in% colnames(lyr$data)) {
+                clean_grp <- rep(NA_character_, nrow(lyr$data))
+                for (g in grp_names_known) {
+                    clean_grp[grepl(paste0(g, "$"), lyr$data$group.name)] <- g
+                }
+                lyr$data$group.name <- factor(clean_grp, levels = grp_names_known)
+                p_ind$layers[[l_idx]]$data <- lyr$data
+            }
+        }
+        p_ind <- p_ind + 
+            scale_colour_manual(values = mozza_group_palette, name = "Bloc sensoriel") +
+            scale_linetype_manual(values = rep("dashed", length(grp_names_known)), guide = "none")
+    }
     
     # Noms réels de magasins & infobulles propres
     if (isTRUE(p$show_ind_labels)) {
         if (!is.null(p_ind$data$name)) {
             p_ind$data$name <- unname(magasins_noms[p_ind$data$name])
+        }
+        for (l_idx in seq_along(p_ind$layers)) {
+            if (!is.null(p_ind$layers[[l_idx]]$data) && "name" %in% colnames(p_ind$layers[[l_idx]]$data)) {
+                if (inherits(p_ind$layers[[l_idx]]$geom, "GeomText")) {
+                    p_ind$layers[[l_idx]]$data$name <- unname(magasins_noms[p_ind$layers[[l_idx]]$data$name])
+                }
+            }
         }
     } else {
         if (length(p_ind$layers) >= 1 && !is.null(p_ind$layers[[1]]$data$name)) {
@@ -269,6 +305,9 @@ output$analyse_afm_ind_plot <- renderPlotly({
             champ_x <- coords[best_id, dim_x_name]
             champ_y <- coords[best_id, dim_y_name]
             
+            y_span_all <- max(diff(range(coords[intersect(selected_magasins, rownames(coords)), dim_y_name], na.rm = TRUE)), 1.5)
+            offset_y <- if (isTRUE(p$show_logos)) (y_span_all * 0.20 + 0.25) else 0.32
+            
             p_ind <- p_ind +
                 annotate(
                     "point", 
@@ -281,8 +320,8 @@ output$analyse_afm_ind_plot <- renderPlotly({
                 annotate(
                     "text", 
                     x = champ_x, 
-                    y = champ_y + 0.32, 
-                    label = paste0("★ Favori : ", best_nom, " (", best_note, "/9)"), 
+                    y = champ_y + offset_y, 
+                    label = paste0("Favori : ", best_nom, " (", best_note, "/9)"), 
                     color = mozza_couleurs[["croute"]], 
                     fontface = "bold", 
                     family = mozza_police, 
@@ -291,7 +330,85 @@ output$analyse_afm_ind_plot <- renderPlotly({
         }
     }
     
-    plt <- ggplotly(p_ind, tooltip = c("x", "y", "text"))
+    plt <- ggplotly(p_ind)
+    
+    # Libellés clairs et sobres pour la légende
+    grp_labels <- c(
+        "Visuel"        = "Visuel",
+        "Saveur"        = "Saveur",
+        "Texture"       = "Texture",
+        "Consommateurs" = "Consommateurs",
+        "Jury"          = "Jury"
+    )
+    
+    # 1. Trace des points moyens des mozzarellas (barycentres)
+    if (length(plt$x$data) >= 1) {
+        plt$x$data[[1]]$name <- "Point moyen"
+        plt$x$data[[1]]$legendgroup <- "Point moyen"
+        plt$x$data[[1]]$showlegend <- isTRUE(p$show_legend) && isTRUE(p$show_partial)
+        
+        prods_order <- p_ind$data$name
+        if (!is.null(prods_order) && length(prods_order) == length(plt$x$data[[1]]$x)) {
+            notes_vec <- dta_cons %>%
+                filter(Produit %in% prods_order) %>%
+                group_by(Produit) %>%
+                summarise(m = round(mean(Global, na.rm = TRUE), 2), .groups = "drop") %>%
+                deframe()
+            labels_mag <- unname(magasins_noms[as.character(prods_order)])
+            notes_val  <- unname(notes_vec[as.character(prods_order)])
+            plt$x$data[[1]]$text <- sprintf(
+                "<b>%s</b> (Point moyen)<br>Dim %d : %.2f<br>Dim %d : %.2f<br>Note globale : %.2f/9",
+                labels_mag, p$dim_x, plt$x$data[[1]]$x, p$dim_y, plt$x$data[[1]]$y, notes_val
+            )
+            plt$x$data[[1]]$hoverinfo <- "text"
+        }
+    }
+    
+    # 2. Nettoyage des traces plotly : fusion par groupe, masquage des lignes dans la légende
+    for (i in seq_along(plt$x$data)) {
+        if (i == 1) next
+        tr <- plt$x$data[[i]]
+        raw_name <- tr$name
+        
+        clean_grp <- NA_character_
+        for (g in grp_names_known) {
+            if (grepl(g, raw_name)) clean_grp <- g
+        }
+        
+        if (!is.na(clean_grp)) {
+            display_name <- unname(grp_labels[clean_grp])
+            plt$x$data[[i]]$legendgroup <- clean_grp
+            plt$x$data[[i]]$name <- display_name
+            
+            if (identical(tr$mode, "lines")) {
+                # Segments partiels : liés au groupe sans polluer la légende ni afficher d'infobulle brute
+                plt$x$data[[i]]$showlegend <- FALSE
+                plt$x$data[[i]]$hoverinfo <- "none"
+            } else if (identical(tr$mode, "markers")) {
+                # Points partiels : une seule entrée par bloc sensoriel dans la légende
+                plt$x$data[[i]]$showlegend <- isTRUE(p$show_legend)
+                
+                # Infobulle enrichie et soignée
+                for (lyr in p_ind$layers) {
+                    if (!is.null(lyr$data) && "group.name" %in% colnames(lyr$data) && 
+                        inherits(lyr$geom, "GeomPoint")) {
+                        lyr_sub <- lyr$data[lyr$data$group.name == clean_grp, ]
+                        if (nrow(lyr_sub) == length(tr$x)) {
+                            labels_mag <- unname(magasins_noms[as.character(lyr_sub$name)])
+                            plt$x$data[[i]]$text <- sprintf(
+                                "<b>%s</b> — %s<br>Dim %d : %.2f<br>Dim %d : %.2f",
+                                labels_mag, clean_grp, p$dim_x, tr$x, p$dim_y, tr$y
+                            )
+                            plt$x$data[[i]]$hoverinfo <- "text"
+                        }
+                    }
+                }
+            }
+        } else {
+            # Lignes d'axes (hline, vline), annotations ou textes
+            plt$x$data[[i]]$showlegend <- FALSE
+        }
+    }
     
     # Intégration des logos officiels des magasins
     if (isTRUE(p$show_logos) && length(selected_magasins) > 0) {
@@ -305,8 +422,8 @@ output$analyse_afm_ind_plot <- renderPlotly({
             y_vals <- coords[valid_prods, dim_y_name]
             x_span <- max(diff(range(x_vals, na.rm = TRUE)), 1.5)
             y_span <- max(diff(range(y_vals, na.rm = TRUE)), 1.5)
-            sizex  <- x_span * 0.12
-            sizey  <- y_span * 0.12
+            sizex  <- x_span * 0.20
+            sizey  <- y_span * 0.20
             
             images_list <- lapply(valid_prods, function(m) {
                 logo_file <- file.path("www/logos", paste0(m, ".png"))
@@ -318,7 +435,7 @@ output$analyse_afm_ind_plot <- renderPlotly({
                     xref    = "x",
                     yref    = "y",
                     x       = coords[m, dim_x_name],
-                    y       = coords[m, dim_y_name] + sizey * 0.5,
+                    y       = coords[m, dim_y_name] + sizey * 0.15,
                     sizex   = sizex,
                     sizey   = sizey,
                     sizing  = "contain",
@@ -335,7 +452,31 @@ output$analyse_afm_ind_plot <- renderPlotly({
         }
     }
     
-    plt %>% config(scrollZoom = TRUE, displaylogo = FALSE)
+    # Mise en page de la légende : compacte, verticale à droite et centrée pour éviter tout conflit avec la barre plotly et l'axe X
+    if (isTRUE(p$show_legend) && isTRUE(p$show_partial)) {
+        plt <- plt %>% layout(
+            legend = list(
+                orientation = "v",
+                x = 1.02,
+                xanchor = "left",
+                y = 0.5,
+                yanchor = "middle",
+                bgcolor = "rgba(255, 255, 255, 0.9)",
+                bordercolor = "#F3E3D0",
+                borderwidth = 1,
+                font = list(family = mozza_police, size = 11, color = mozza_couleurs[["texte"]])
+            )
+        )
+    } else {
+        plt <- plt %>% layout(showlegend = FALSE)
+    }
+    
+    plt %>% config(
+        scrollZoom = TRUE, 
+        displaylogo = FALSE,
+        displayModeBar = "hover",
+        modeBarButtonsToRemove = c("lasso2d", "select2d", "hoverClosestCartesian", "hoverCompareCartesian", "toggleSpikelines")
+    )
 })
 
 # --- B. Cercle des corrélations des variables quantitatives (AVEC NOMS DE VARIABLES VISIBLES)
@@ -363,7 +504,7 @@ output$analyse_afm_var_plot <- renderPlotly({
             color = "Contrib (%)"
         )
     
-    # Projection des variables de satisfaction consommateurs (en rouge vif tomate avec ★)
+    # Projection des variables de satisfaction consommateurs
     if (isTRUE(p$show_cons) && !is.null(res$quanti.var.sup)) {
         coord_sup <- as.data.frame(res$quanti.var.sup$coord)
         dim_x_col <- paste0("Dim.", p$dim_x)
@@ -388,7 +529,7 @@ output$analyse_afm_var_plot <- renderPlotly({
                 ) +
                 geom_text(
                     data = coord_sup_sub,
-                    aes(x = x, y = y, label = paste0("★ ", name)),
+                    aes(x = x, y = y, label = name),
                     color = "#C0392B",
                     fontface = "bold",
                     size = 4,
@@ -398,7 +539,12 @@ output$analyse_afm_var_plot <- renderPlotly({
     }
     
     ggplotly(p_var) %>%
-        config(scrollZoom = TRUE, displaylogo = FALSE)
+        config(
+            scrollZoom = TRUE, 
+            displaylogo = FALSE,
+            displayModeBar = "hover",
+            modeBarButtonsToRemove = c("lasso2d", "select2d", "hoverClosestCartesian", "hoverCompareCartesian", "toggleSpikelines")
+        )
 })
 
 # --- C. Graphe des groupes de variables
@@ -553,7 +699,7 @@ output$analyse_afm_synthese <- renderUI({
             ),
             p(
                 style = "margin-top: 0.4rem; font-size: 0.88rem; color: #7A4B1D;",
-                "👉 La saveur et la texture sont les deux dimensions déterminantes pour le succès hédonique d'un bâtonnet de mozzarella. Les descripteurs orientés dans la même direction que la flèche « ★ Appréciation globale » constituent les leviers clés d'optimisation."
+                "La saveur et la texture sont les deux dimensions déterminantes pour le succès hédonique d'un bâtonnet de mozzarella. Les descripteurs orientés dans la même direction que la flèche « Appréciation globale » constituent les leviers clés d'optimisation."
             ),
             favori_ui
         )
@@ -567,7 +713,7 @@ output$analyse_afm_synthese <- renderUI({
             ),
             p(
                 style = "margin-top: 0.4rem; font-size: 0.88rem; color: #7A4B1D;",
-                "👉 Cela confirme une corrélation notable entre les mesures d'experts et l'appréciation hédonique réelle du consommateur."
+                "Cela confirme une corrélation notable entre les mesures d'experts et l'appréciation hédonique réelle du consommateur."
             ),
             favori_ui
         )
