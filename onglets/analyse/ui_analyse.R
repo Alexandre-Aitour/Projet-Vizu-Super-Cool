@@ -426,6 +426,11 @@ onglet_analyse <- nav_panel(
                     label = "Projeter l'appréciation consommateurs (★)",
                     value = TRUE
                 ),
+                checkboxInput(
+                    inputId = "analyse_afm_show_legend",
+                    label = "Afficher la légende",
+                    value = TRUE
+                ),
                 hr(),
                 analyse_bouton("analyse_afm_afficher")
             ),

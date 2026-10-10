@@ -82,6 +82,7 @@ analyse_params <- eventReactive(input$analyse_afm_afficher, {
         show_logos      = isTRUE(input$analyse_afm_show_logos),
         show_ind_labels = isTRUE(input$analyse_afm_show_ind_labels),
         show_cons       = isTRUE(input$analyse_afm_show_cons),
+        show_legend     = isTRUE(input$analyse_afm_show_legend),
         top_contrib  = input$analyse_afm_top_contrib,
         dim_x        = dx,
         dim_y        = dy,
@@ -232,15 +233,50 @@ output$analyse_afm_ind_plot <- renderPlotly({
     ) + 
         theme_mozza() +
         labs(
-            title = if (isTRUE(p$show_partial)) "Carte des mozzarellas (Moyens & Partiels)" else "Carte des mozzarellas (Points moyens)",
+            title = NULL,
             x = paste0("Dimension ", p$dim_x, " (", round(res$eig[p$dim_x, 2], 1), "%)"),
             y = paste0("Dimension ", p$dim_y, " (", round(res$eig[p$dim_y, 2], 1), "%)")
         )
+    
+    # Palette chaude harmonisée pour les groupes de variables
+    mozza_group_palette <- c(
+        "Visuel"        = "#8B4A12",
+        "Saveur"        = "#C0392B",
+        "Texture"       = "#7A8B3A",
+        "Consommateurs" = "#E8913A",
+        "Jury"          = "#8B4A12"
+    )
+    grp_names_known <- if (p$type == "sens") c("Visuel", "Saveur", "Texture") else c("Consommateurs", "Jury")
+    
+    # Nettoyage des niveaux de groupes partiels (suppression du préfixe magasin généré par FactoMineR/factoextra)
+    if (isTRUE(p$show_partial)) {
+        for (l_idx in seq_along(p_ind$layers)) {
+            lyr <- p_ind$layers[[l_idx]]
+            if (!is.null(lyr$data) && "group.name" %in% colnames(lyr$data)) {
+                clean_grp <- rep(NA_character_, nrow(lyr$data))
+                for (g in grp_names_known) {
+                    clean_grp[grepl(paste0(g, "$"), lyr$data$group.name)] <- g
+                }
+                lyr$data$group.name <- factor(clean_grp, levels = grp_names_known)
+                p_ind$layers[[l_idx]]$data <- lyr$data
+            }
+        }
+        p_ind <- p_ind + 
+            scale_colour_manual(values = mozza_group_palette, name = "Bloc sensoriel") +
+            scale_linetype_manual(values = rep("dashed", length(grp_names_known)), guide = "none")
+    }
     
     # Noms réels de magasins & infobulles propres
     if (isTRUE(p$show_ind_labels)) {
         if (!is.null(p_ind$data$name)) {
             p_ind$data$name <- unname(magasins_noms[p_ind$data$name])
+        }
+        for (l_idx in seq_along(p_ind$layers)) {
+            if (!is.null(p_ind$layers[[l_idx]]$data) && "name" %in% colnames(p_ind$layers[[l_idx]]$data)) {
+                if (inherits(p_ind$layers[[l_idx]]$geom, "GeomText")) {
+                    p_ind$layers[[l_idx]]$data$name <- unname(magasins_noms[p_ind$layers[[l_idx]]$data$name])
+                }
+            }
         }
     } else {
         if (length(p_ind$layers) >= 1 && !is.null(p_ind$layers[[1]]$data$name)) {
@@ -291,7 +327,85 @@ output$analyse_afm_ind_plot <- renderPlotly({
         }
     }
     
-    plt <- ggplotly(p_ind, tooltip = c("x", "y", "text"))
+    plt <- ggplotly(p_ind)
+    
+    # Libellés clairs et sobres pour la légende
+    grp_labels <- c(
+        "Visuel"        = "Visuel",
+        "Saveur"        = "Saveur",
+        "Texture"       = "Texture",
+        "Consommateurs" = "Consommateurs",
+        "Jury"          = "Jury"
+    )
+    
+    # 1. Trace des points moyens des mozzarellas (barycentres)
+    if (length(plt$x$data) >= 1) {
+        plt$x$data[[1]]$name <- "Point moyen"
+        plt$x$data[[1]]$legendgroup <- "Point moyen"
+        plt$x$data[[1]]$showlegend <- isTRUE(p$show_legend) && isTRUE(p$show_partial)
+        
+        prods_order <- p_ind$data$name
+        if (!is.null(prods_order) && length(prods_order) == length(plt$x$data[[1]]$x)) {
+            notes_vec <- dta_cons %>%
+                filter(Produit %in% prods_order) %>%
+                group_by(Produit) %>%
+                summarise(m = round(mean(Global, na.rm = TRUE), 2), .groups = "drop") %>%
+                deframe()
+            labels_mag <- unname(magasins_noms[as.character(prods_order)])
+            notes_val  <- unname(notes_vec[as.character(prods_order)])
+            plt$x$data[[1]]$text <- sprintf(
+                "<b>%s</b> (Point moyen)<br>Dim %d : %.2f<br>Dim %d : %.2f<br>Note globale : %.2f/9",
+                labels_mag, p$dim_x, plt$x$data[[1]]$x, p$dim_y, plt$x$data[[1]]$y, notes_val
+            )
+            plt$x$data[[1]]$hoverinfo <- "text"
+        }
+    }
+    
+    # 2. Nettoyage des traces plotly : fusion par groupe, masquage des lignes dans la légende
+    for (i in seq_along(plt$x$data)) {
+        if (i == 1) next
+        tr <- plt$x$data[[i]]
+        raw_name <- tr$name
+        
+        clean_grp <- NA_character_
+        for (g in grp_names_known) {
+            if (grepl(g, raw_name)) clean_grp <- g
+        }
+        
+        if (!is.na(clean_grp)) {
+            display_name <- unname(grp_labels[clean_grp])
+            plt$x$data[[i]]$legendgroup <- clean_grp
+            plt$x$data[[i]]$name <- display_name
+            
+            if (identical(tr$mode, "lines")) {
+                # Segments partiels : liés au groupe sans polluer la légende ni afficher d'infobulle brute
+                plt$x$data[[i]]$showlegend <- FALSE
+                plt$x$data[[i]]$hoverinfo <- "none"
+            } else if (identical(tr$mode, "markers")) {
+                # Points partiels : une seule entrée par bloc sensoriel dans la légende
+                plt$x$data[[i]]$showlegend <- isTRUE(p$show_legend)
+                
+                # Infobulle enrichie et soignée
+                for (lyr in p_ind$layers) {
+                    if (!is.null(lyr$data) && "group.name" %in% colnames(lyr$data) && 
+                        inherits(lyr$geom, "GeomPoint")) {
+                        lyr_sub <- lyr$data[lyr$data$group.name == clean_grp, ]
+                        if (nrow(lyr_sub) == length(tr$x)) {
+                            labels_mag <- unname(magasins_noms[as.character(lyr_sub$name)])
+                            plt$x$data[[i]]$text <- sprintf(
+                                "<b>%s</b> — %s<br>Dim %d : %.2f<br>Dim %d : %.2f",
+                                labels_mag, clean_grp, p$dim_x, tr$x, p$dim_y, tr$y
+                            )
+                            plt$x$data[[i]]$hoverinfo <- "text"
+                        }
+                    }
+                }
+            }
+        } else {
+            # Lignes d'axes (hline, vline), annotations ou textes
+            plt$x$data[[i]]$showlegend <- FALSE
+        }
+    }
     
     # Intégration des logos officiels des magasins
     if (isTRUE(p$show_logos) && length(selected_magasins) > 0) {
@@ -335,7 +449,31 @@ output$analyse_afm_ind_plot <- renderPlotly({
         }
     }
     
-    plt %>% config(scrollZoom = TRUE, displaylogo = FALSE)
+    # Mise en page de la légende : compacte, verticale à droite et centrée pour éviter tout conflit avec la barre plotly et l'axe X
+    if (isTRUE(p$show_legend) && isTRUE(p$show_partial)) {
+        plt <- plt %>% layout(
+            legend = list(
+                orientation = "v",
+                x = 1.02,
+                xanchor = "left",
+                y = 0.5,
+                yanchor = "middle",
+                bgcolor = "rgba(255, 255, 255, 0.9)",
+                bordercolor = "#F3E3D0",
+                borderwidth = 1,
+                font = list(family = mozza_police, size = 11, color = mozza_couleurs[["texte"]])
+            )
+        )
+    } else {
+        plt <- plt %>% layout(showlegend = FALSE)
+    }
+    
+    plt %>% config(
+        scrollZoom = TRUE, 
+        displaylogo = FALSE,
+        displayModeBar = "hover",
+        modeBarButtonsToRemove = c("lasso2d", "select2d", "hoverClosestCartesian", "hoverCompareCartesian", "toggleSpikelines")
+    )
 })
 
 # --- B. Cercle des corrélations des variables quantitatives (AVEC NOMS DE VARIABLES VISIBLES)
@@ -398,7 +536,12 @@ output$analyse_afm_var_plot <- renderPlotly({
     }
     
     ggplotly(p_var) %>%
-        config(scrollZoom = TRUE, displaylogo = FALSE)
+        config(
+            scrollZoom = TRUE, 
+            displaylogo = FALSE,
+            displayModeBar = "hover",
+            modeBarButtonsToRemove = c("lasso2d", "select2d", "hoverClosestCartesian", "hoverCompareCartesian", "toggleSpikelines")
+        )
 })
 
 # --- C. Graphe des groupes de variables
