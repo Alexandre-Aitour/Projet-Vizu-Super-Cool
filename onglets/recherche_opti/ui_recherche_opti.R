@@ -15,7 +15,7 @@ recherche_opti_css <- "
     --recherche_opti-texte: #4A2C0F;
     --recherche_opti-croute: #8B4A12;
     --recherche_opti-bordure: #F3E3D0;
-    min-height: calc(100vh - 80px);
+    min-height: 100vh;
     margin: -1rem;
     padding: 1.5rem;
     background: var(--recherche_opti-creme);
@@ -47,7 +47,7 @@ recherche_opti_css <- "
 /* ---------- Espace explicatif ---------- */
 .recherche_opti-intro {
     max-width: 700px;
-    margin: 0 auto 2.2rem;
+    margin: 0 auto 1.6rem;
     padding: 1.1rem 1.4rem;
     background: linear-gradient(135deg, #FFFDF8 0%, #FFF4E3 100%);
     border-left: 4px solid var(--recherche_opti-orange-fonce);
@@ -65,13 +65,57 @@ recherche_opti_css <- "
     line-height: 1.5;
 }
 
-/* ---------- Les 5 curseurs mozzastick, centrés ---------- */
+/* ---------- Les 5 curseurs mozzastick en étoile autour du bouton ---------- */
+/* Pentagone : une branche en haut, deux sur les côtés, deux en bas resserrées vers le centre */
 .recherche_opti-curseurs {
-    max-width: 640px;
+    position: relative;
+    max-width: 1100px;
     margin: 0 auto;
-    display: flex;
-    flex-direction: column;
-    gap: 2.3rem;
+    display: grid;
+    grid-template-columns: 1fr 240px 1fr;
+    grid-template-areas:
+        '.  b1 . '
+        'b2 go b3'
+        'b4 go b5';
+    row-gap: 1.4rem;
+    column-gap: 1rem;
+    align-items: center;
+}
+.recherche_opti-branche { width: 100%; max-width: 340px; }
+.recherche_opti-branche.b1 { grid-area: b1; justify-self: center; width: 340px; max-width: 90vw; }
+.recherche_opti-branche.b2 { grid-area: b2; justify-self: start; }
+.recherche_opti-branche.b3 { grid-area: b3; justify-self: end; }
+.recherche_opti-branche.b4 { grid-area: b4; justify-self: end; }
+.recherche_opti-branche.b5 { grid-area: b5; justify-self: start; }
+
+/* Auréole de fromage derrière le bouton central */
+.recherche_opti-curseurs::before {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 58%;
+    width: 520px;
+    height: 520px;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(252, 235, 178, 0.75) 0%, rgba(252, 235, 178, 0.25) 45%,
+                                rgba(252, 235, 178, 0) 70%);
+    pointer-events: none;
+    z-index: 0;
+}
+.recherche_opti-curseurs > * { position: relative; z-index: 1; }
+
+/* Sur écran étroit : les curseurs les uns sous les autres, le bouton en dessous */
+@media (max-width: 900px) {
+    .recherche_opti-curseurs {
+        grid-template-columns: 1fr;
+        grid-template-areas: 'b1' 'b2' 'b3' 'b4' 'b5' 'go';
+        row-gap: 2rem;
+        max-width: 420px;
+    }
+    .recherche_opti-branche.b1, .recherche_opti-branche.b2, .recherche_opti-branche.b3,
+    .recherche_opti-branche.b4, .recherche_opti-branche.b5 { justify-self: center; }
+    .recherche_opti-curseurs::before { display: none; }
 }
 
 .recherche_opti-slider-titre {
@@ -181,20 +225,24 @@ recherche_opti_css <- "
     100% { transform: translate(var(--dx), var(--dy)) rotate(var(--rot)); opacity: 0; }
 }
 
-/* ---------- Bouton « Votre produit parfait », tout en bas ---------- */
+/* ---------- Bouton « Votre produit parfait », au centre de l'étoile ---------- */
 .recherche_opti-bas {
+    grid-area: go;
     display: flex;
     justify-content: center;
-    margin: 3.2rem 0 1.5rem;
+    align-items: center;
 }
 .recherche_opti-go {
+    width: 190px;
+    height: 190px;
     font-family: inherit;
-    font-size: 1.3rem;
+    font-size: 1.25rem;
     font-weight: 700;
+    line-height: 1.2;
     color: #FFFFFF;
-    padding: 0.8rem 2.4rem;
+    padding: 0.8rem;
     border: none;
-    border-radius: 999px;
+    border-radius: 50%;
     background: linear-gradient(135deg, var(--recherche_opti-orange) 0%, var(--recherche_opti-orange-fonce) 100%);
     box-shadow: 0 6px 0 var(--recherche_opti-croute), 0 10px 20px rgba(120, 60, 10, 0.30);
     transition: transform 0.12s ease, box-shadow 0.12s ease;
@@ -1073,10 +1121,10 @@ recherche_opti_curseurs_config <- list(
          min = "Discret", max = "Prononcé"),
     list(id = "recherche_opti_note_rugosite", titre = "Rugosité visuelle",
          min = "Surface lisse", max = "Surface très rugueuse"),
-    list(id = "recherche_opti_note_humidite", titre = "Libération d'humidité",
-         min = "Sec en bouche", max = "Très humide"),
+    list(id = "recherche_opti_note_humidite", titre = "Fondant en bouche",
+         min = "Sec en bouche", max = "Très fondant"),
     list(id = "recherche_opti_note_croustillant", titre = "Croustillant",
-         min = "Fondant", max = "Très croustillant")
+         min = "Mou", max = "Très croustillant")
 )
 
 onglet_recherche_opti <- nav_panel(
@@ -1099,9 +1147,9 @@ onglet_recherche_opti <- nav_panel(
         # En-tête
         div(
             class = "recherche_opti-entete",
-            img(src = "accueil_stick.png", class = "gauche", alt = ""),
+            nav_stick("analyse", "Analyse Factorielle", "gauche"),
             h2("Recherche optimale"),
-            img(src = "accueil_stick.png", class = "droite", alt = "")
+            nav_stick("accueil", "Accueil", "droite")
         ),
 
         # Espace explicatif
@@ -1113,18 +1161,19 @@ onglet_recherche_opti <- nav_panel(
                de nos 8 produits colle le plus à vos goûts.")
         ),
 
-        # Les 5 curseurs mozzastick, centrés
+        # Les 5 curseurs mozzastick en étoile autour du bouton qui lance la roulette
         div(
             class = "recherche_opti-curseurs",
-            lapply(recherche_opti_curseurs_config, function(cfg) {
-                recherche_opti_slider(cfg$id, cfg$titre, cfg$min, cfg$max)
-            })
-        ),
-
-        # Bouton final : lance la roulette
-        div(
-            class = "recherche_opti-bas",
-            actionButton("recherche_opti_go", "🏆 Votre produit parfait", class = "recherche_opti-go")
+            lapply(seq_along(recherche_opti_curseurs_config), function(i) {
+                cfg <- recherche_opti_curseurs_config[[i]]
+                div(class = paste0("recherche_opti-branche b", i),
+                    recherche_opti_slider(cfg$id, cfg$titre, cfg$min, cfg$max))
+            }),
+            div(
+                class = "recherche_opti-bas",
+                actionButton("recherche_opti_go", HTML("🏆<br>Votre produit<br>parfait"),
+                             class = "recherche_opti-go")
+            )
         ),
 
         recherche_opti_popup()
