@@ -15,7 +15,7 @@ descriptive_css <- "
     --descriptive-texte: #4A2C0F;
     --descriptive-croute: #8B4A12;
     --descriptive-bordure: #F3E3D0;
-    min-height: calc(100vh - 80px);
+    min-height: 100vh;
     margin: -1rem;
     padding: 1.5rem;
     background: var(--descriptive-creme);
@@ -140,9 +140,9 @@ onglet_descriptive <- nav_panel(
         # En-tête
         div(
             class = "descriptive-entete",
-            img(src = "accueil_stick.png", class = "gauche", alt = ""),
+            nav_stick("accueil", "Accueil", "gauche"),
             h2("Analyse descriptive"),
-            img(src = "accueil_stick.png", class = "droite", alt = "")
+            nav_stick("analyse", "Analyse Factorielle", "droite")
         ),
 
         navset_card_tab(

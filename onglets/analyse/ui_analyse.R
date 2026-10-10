@@ -14,7 +14,7 @@ analyse_css <- "
     --analyse-texte: #4A2C0F;
     --analyse-croute: #8B4A12;
     --analyse-bordure: #F3E3D0;
-    min-height: calc(100vh - 80px);
+    min-height: 100vh;
     margin: -1rem;
     padding: 1.5rem;
     background: var(--analyse-creme);
@@ -329,9 +329,9 @@ onglet_analyse <- nav_panel(
         # En-tête : le titre entre deux mozzasticks
         div(
             class = "analyse-entete",
-            img(src = "accueil_stick.png", class = "gauche", alt = ""),
+            nav_stick("descriptive", "Analyse descriptive", "gauche"),
             h2("Analyse Factorielle"),
-            img(src = "accueil_stick.png", class = "droite", alt = "")
+            nav_stick("recherche_opti", "Produit Optimal", "droite")
         ),
 
         # Bannière explicative d'accueil (harmonisée avec recherche_opti)

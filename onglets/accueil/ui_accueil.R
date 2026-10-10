@@ -14,7 +14,7 @@ accueil_css <- "
     --accueil-texte: #4A2C0F;
     --accueil-peek: 64px;
     flex: 1;
-    min-height: calc(100vh - 80px);
+    min-height: 100vh;
     background: var(--accueil-creme);
     display: flex;
     align-items: center;
@@ -279,12 +279,31 @@ accueil_css <- "
 }
 .accueil-poignee .poignee-filet path.corps { pointer-events: visiblePainted; }
 .accueil-poignee .libelle {
-    font-size: 1.8rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-family: 'Fredoka', 'Arial Rounded MT Bold', sans-serif;
+    font-size: 1.05rem;
     line-height: 1;
     font-weight: 600;
-    color: var(--accueil-texte);
-    opacity: 0.75;
+    letter-spacing: 0.5px;
+    color: #8B4A12;
 }
+.accueil-poignee .libelle .fleche {
+    font-size: 1.1rem;
+    line-height: 0.6;
+    color: var(--accueil-orange-fonce);
+    animation: accueil-invite 1.6s ease-in-out infinite;
+    transition: transform 0.3s ease;
+}
+@keyframes accueil-invite {
+    0%, 100% { translate: 0 0; }
+    50%      { translate: 0 -4px; }
+}
+.accueil-poignee .quand-ouvert { display: none; }
+.accueil-tiroir.ouvert .accueil-poignee .quand-ouvert { display: inline; }
+.accueil-tiroir.ouvert .accueil-poignee .quand-ferme { display: none; }
+.accueil-tiroir.ouvert .accueil-poignee .fleche { transform: rotate(180deg); }
 
 /* Miettes qui tombent de la poignée pendant qu'on la tire (texture prise dans la même image) */
 .accueil-miette-tiroir {
@@ -304,12 +323,236 @@ accueil_css <- "
 
 .accueil-contenu {
     overflow-y: auto;
-    padding: 1.5rem 2rem 2rem;
-    max-width: 900px;
+    padding: 2rem 2rem 3rem;
     margin: 0 auto;
     width: 100%;
+    max-width: 960px;
+    color: var(--accueil-texte);
+    font-family: 'Fredoka', 'Arial Rounded MT Bold', sans-serif;
 }
-.accueil-contenu h2 { color: var(--accueil-orange-fonce); }
+.accueil-contenu h3 {
+    margin: 2rem 0 0.9rem;
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: var(--accueil-orange-fonce);
+}
+.accueil-contenu h4 {
+    margin: 0 0 0.4rem;
+    font-size: 1.1rem;
+    font-weight: 700;
+}
+
+/* La question du projet */
+.accueil-question { text-align: center; max-width: 760px; margin: 0 auto; }
+.accueil-surtitre {
+    display: inline-block;
+    padding: 0.15rem 0.8rem;
+    border-radius: 999px;
+    background: var(--accueil-creme);
+    color: #8B4A12;
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+.accueil-question h2 {
+    margin: 0.6rem 0 0.8rem;
+    font-size: 1.7rem;
+    font-weight: 700;
+    line-height: 1.25;
+    color: var(--accueil-orange-fonce);
+}
+.accueil-question p { font-size: 1.05rem; line-height: 1.55; margin: 0; }
+
+/* Chiffres clés */
+.accueil-chiffres {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 0.8rem;
+    margin-top: 1.6rem;
+}
+.accueil-chiffre {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0.8rem;
+    border-radius: 16px;
+    background: var(--accueil-creme);
+    border: 1px solid #F3E3D0;
+}
+.accueil-chiffre strong { font-size: 2rem; line-height: 1.1; color: var(--accueil-orange-fonce); }
+.accueil-chiffre span { font-size: 0.9rem; color: #8B4A12; }
+
+/* Les deux jeux de données */
+.accueil-donnees {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+    gap: 1rem;
+}
+.accueil-carte {
+    min-width: 0;
+    padding: 1rem 1.1rem;
+    border-radius: 18px;
+    border: 1px solid #F3E3D0;
+    box-shadow: 0 6px 18px rgba(120, 60, 10, 0.08);
+    background: #FFFFFF;
+}
+.accueil-carte > p { font-size: 0.95rem; line-height: 1.45; }
+.accueil-table-cadre { overflow-x: auto; border-radius: 10px; border: 1px solid #F3E3D0; }
+.accueil-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+.accueil-table th {
+    padding: 0.4rem 0.55rem;
+    background: var(--accueil-orange);
+    color: #FFFFFF;
+    font-weight: 600;
+    white-space: nowrap;
+    text-align: left;
+}
+.accueil-table td {
+    padding: 0.35rem 0.55rem;
+    border-top: 1px solid #F3E3D0;
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+}
+.accueil-table tbody tr:nth-child(even) td { background: var(--accueil-creme); }
+.accueil-legende { margin: 0.45rem 0 0; font-size: 0.8rem !important; color: #8B4A12; }
+.accueil-note { margin: 0.8rem 0 0; font-size: 0.85rem; font-style: italic; color: #8B4A12; }
+
+/* Titres de section numérotés */
+.accueil-section {
+    display: flex;
+    align-items: baseline;
+    gap: 0.6rem;
+}
+.accueil-section .num {
+    font-family: 'Pacifico', 'Brush Script MT', cursive;
+    font-size: 1.5rem;
+    font-weight: 400;
+    color: var(--accueil-orange);
+}
+
+/* L'idée globale : deux sources réunies, puis le produit idéal */
+.accueil-schema {
+    display: grid;
+    grid-template-columns: 1fr auto 1.1fr auto 1fr;
+    align-items: center;
+    gap: 0.7rem;
+}
+.accueil-schema .sources { display: flex; flex-direction: column; gap: 0.6rem; }
+.accueil-bulle {
+    padding: 0.7rem 0.9rem;
+    border-radius: 16px;
+    border: 1px solid #F3E3D0;
+    background: #FFFFFF;
+    font-size: 0.92rem;
+    line-height: 1.35;
+}
+.accueil-bulle strong { display: block; font-size: 1rem; }
+.accueil-bulle.centre { background: var(--accueil-creme); border-color: var(--accueil-orange); }
+.accueil-bulle.fin {
+    background: var(--accueil-orange-fonce);
+    border-color: var(--accueil-orange-fonce);
+    color: #FFFFFF;
+}
+.accueil-schema .lien { font-size: 1.5rem; color: var(--accueil-orange-fonce); text-align: center; }
+@media (max-width: 720px) {
+    .accueil-schema { grid-template-columns: 1fr; }
+    .accueil-schema .lien { transform: rotate(90deg); }
+}
+
+/* Le parcours */
+.accueil-etapes {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    gap: 1rem;
+}
+.accueil-etape {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    padding: 1rem 1.1rem;
+    text-align: left;
+    font: inherit;
+    color: inherit;
+    border-radius: 18px;
+    border: 1px solid #F3E3D0;
+    background: linear-gradient(135deg, #FFFDF8 0%, #FFF4E3 100%);
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.accueil-etape:hover { transform: translateY(-4px); box-shadow: 0 10px 20px rgba(120, 60, 10, 0.12); }
+.accueil-etape:focus-visible { outline: 3px dashed var(--accueil-orange-fonce); outline-offset: 4px; }
+.accueil-etape-num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+    background: var(--accueil-orange-fonce);
+    color: #FFFFFF;
+    font-weight: 700;
+}
+.accueil-etape strong { font-size: 1.1rem; }
+.accueil-etape span { font-size: 0.92rem; line-height: 1.4; }
+.accueil-etape .accueil-etape-lien { margin-top: auto; font-weight: 600; color: var(--accueil-orange-fonce); }
+
+/* ---------- Titre de l'accueil, en haut au centre ---------- */
+.accueil-page { position: relative; }
+.accueil-titre {
+    position: absolute;
+    top: 1.5rem;
+    left: 0;
+    right: 0;
+    margin: 0;
+    padding: 0 1rem;
+    text-align: center;
+    font-family: 'Pacifico', 'Brush Script MT', cursive;
+    font-size: clamp(2rem, 5.5vw, 3.4rem);
+    font-weight: 400;
+    line-height: 1.3;
+    color: var(--accueil-orange-fonce);
+    text-shadow: 0 2px 0 #FCEBB2, 0 5px 10px rgba(139, 74, 18, 0.22);
+}
+
+/* ---------- Mozzasticks de navigation autour du titre de chaque onglet ---------- */
+.nav-stick {
+    position: relative;
+    height: 56px;
+    aspect-ratio: 555 / 151;
+    padding: 0;
+    border: none;
+    background: url('accueil_stick.png') center / 100% 100% no-repeat;
+    cursor: pointer;
+    filter: drop-shadow(0 6px 6px rgba(120, 60, 10, 0.30));
+    transition: transform 0.2s ease, filter 0.2s ease;
+}
+.nav-stick.gauche { transform: rotate(-8deg); }
+.nav-stick.droite { transform: rotate(8deg); }
+.nav-stick.gauche:hover { transform: rotate(-8deg) translateX(-6px) scale(1.05); }
+.nav-stick.droite:hover { transform: rotate(8deg) translateX(6px) scale(1.05); }
+.nav-stick:hover { filter: drop-shadow(0 10px 10px rgba(120, 60, 10, 0.35)); }
+.nav-stick:focus-visible {
+    outline: 3px dashed #E8913A;
+    outline-offset: 6px;
+    border-radius: 30px;
+}
+.nav-stick .nav-stick-libelle {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.35rem;
+    padding: 0 12%;
+    font-family: 'Fredoka', 'Arial Rounded MT Bold', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 700;
+    line-height: 1.05;
+    color: #FFF9E4;
+    text-shadow: 0 0 2px #8B4A12, 0 1px 0 #8B4A12, 0 2px 4px rgba(60, 30, 5, 0.6);
+    pointer-events: none;
+}
 "
 
 # --------------------------------------------------------------------------------------------------
@@ -502,6 +745,19 @@ $(function() {
         setTimeout(function() { stick.classList.remove('coupe'); }, 1500);
     });
 });
+
+// ---------- Mozzasticks de navigation des en-têtes ----------
+$(document).on('click', '.nav-stick', function() {
+    Shiny.setInputValue('nav_aller', this.dataset.cible, {priority: 'event'});
+    window.scrollTo(0, 0);
+});
+
+// Étapes du parcours dans la fenêtre de présentation : on referme la fenêtre puis on change d'onglet
+$(document).on('click', '.accueil-etape', function() {
+    document.getElementById('accueil_tiroir').classList.remove('ouvert');
+    Shiny.setInputValue('nav_aller', this.dataset.cible, {priority: 'event'});
+    window.scrollTo(0, 0);
+});
 "
 
 # Filet de mozzarella étiré (SVG) : épais et crémeux aux bords, fin et un peu tombant au milieu,
@@ -566,6 +822,25 @@ accueil_titre_fromage <- function(titre) {
     )
 }
 
+# Mozzastick de navigation posé à gauche ou à droite du titre d'un onglet :
+# un clic envoie input$nav_aller = cible (valeur du nav_panel) au serveur
+nav_stick <- function(cible, libelle, cote = c("gauche", "droite")) {
+    cote <- match.arg(cote)
+    tags$button(
+        type = "button",
+        class = paste("nav-stick", cote),
+        `data-cible` = cible,
+        `aria-label` = libelle,
+        title = libelle,
+        span(
+            class = "nav-stick-libelle",
+            if (cote == "gauche") "←",
+            span(libelle),
+            if (cote == "droite") "→"
+        )
+    )
+}
+
 # Filtre SVG « gluant » (défini une seule fois) : flou + seuil pour souder gouttes et lettres
 accueil_filtre_gluant <- HTML('
 <svg width="0" height="0" style="position: absolute;" aria-hidden="true">
@@ -577,6 +852,61 @@ accueil_filtre_gluant <- HTML('
   </filter>
 </svg>')
 
+# --------------------------------------------------------------------------------------------------
+# Contenu de la fenêtre de présentation
+# --------------------------------------------------------------------------------------------------
+
+# Un chiffre clé
+accueil_chiffre <- function(valeur, libelle) {
+    div(class = "accueil-chiffre", strong(valeur), span(libelle))
+}
+
+# Une étape du parcours : cliquer dessus ouvre l'onglet correspondant
+accueil_etape <- function(numero, cible, titre, texte) {
+    tags$button(
+        type = "button",
+        class = "accueil-etape",
+        `data-cible` = cible,
+        span(class = "accueil-etape-num", numero),
+        strong(titre),
+        span(texte),
+        span(class = "accueil-etape-lien", "Y aller →")
+    )
+}
+
+# Petit tableau HTML (extrait de données)
+accueil_tableau <- function(df) {
+    div(
+        class = "accueil-table-cadre",
+        tags$table(
+            class = "accueil-table",
+            tags$thead(tags$tr(lapply(names(df), tags$th))),
+            tags$tbody(lapply(seq_len(nrow(df)), function(i) {
+                tags$tr(lapply(df[i, ], function(v) tags$td(as.character(v))))
+            }))
+        )
+    )
+}
+
+# Extrait consommateurs : les notes de deux consommateurs sur trois produits
+accueil_extrait_conso <- dta_cons %>%
+    filter(Consommateurs %in% unique(Consommateurs)[1:2]) %>%
+    group_by(Consommateurs) %>%
+    slice_head(n = 3) %>%
+    ungroup() %>%
+    transmute(Consommateur = Consommateurs, Produit = magasins_noms[as.character(Produit)],
+              Global, Visuel, Goût, Texture) %>%
+    accueil_tableau()
+
+# Extrait jury : quelques descripteurs parlants, pour 4 produits
+accueil_extrait_jury <- dta_panel %>%
+    slice_head(n = 4) %>%
+    transmute(Produit = magasins_noms[as.character(Produit)],
+              Croustillant = croustillant, Dureté = dureté, Salé = salé,
+              Gras = Aspect_gras, Mozzarella = mozzarella, Grillé = Arôme_grillé) %>%
+    mutate(across(where(is.numeric), ~ format(round(.x, 1), nsmall = 1))) %>%
+    accueil_tableau()
+
 onglet_accueil <- nav_panel(
     title = "Accueil",
     value = "accueil",
@@ -585,7 +915,7 @@ onglet_accueil <- nav_panel(
     tags$head(
         tags$link(
             rel = "stylesheet",
-            href = "https://fonts.googleapis.com/css2?family=Fredoka:wght@700&display=swap"
+            href = "https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Pacifico&display=swap"
         ),
         tags$style(HTML(accueil_css)),
         tags$script(HTML(accueil_js))
@@ -594,6 +924,8 @@ onglet_accueil <- nav_panel(
     div(
         class = "accueil-page",
         accueil_filtre_gluant,
+
+        h1(class = "accueil-titre", "Mozzarella Sensory Analysis"),
 
         # Les 3 boutons mozzasticks au centre
         div(
@@ -627,23 +959,96 @@ onglet_accueil <- nav_panel(
                 </svg>'),
                 div(class = "poignee-moitie gauche"),
                 div(class = "poignee-moitie droite"),
-                span(class = "libelle", "SWIP-UP")
+                span(
+                    class = "libelle",
+                    span(class = "fleche", "︿"),
+                    span(class = "quand-ferme", "Découvrir le projet"),
+                    span(class = "quand-ouvert", "Refermer")
+                )
             ),
             div(
                 class = "accueil-contenu",
-                h2("Présentation du projet"),
-                p("À compléter : contexte de l'étude sensorielle sur les mozzarellas."),
-                h4("Les données"),
-                tags$ul(
-                    tags$li("161 consommateurs"),
-                    tags$li("8 produits évalués"),
-                    tags$li("37 descripteurs du jury")
+
+                # La question du projet
+                div(
+                    class = "accueil-question",
+                    span(class = "accueil-surtitre", "Le projet"),
+                    h2("Ce que disent les experts suffit-il à prédire ce qu'aiment les consommateurs ?"),
+                    p("Huit mozzarella sticks ont été goûtés deux fois : par un jury entraîné, qui les a
+                       décrits avec précision, et par des consommateurs, qui ont simplement dit s'ils les
+                       aimaient. L'application relie ces deux regards pour comprendre ce qui fait un bon
+                       mozzastick, et trouver celui qui vous correspond.")
                 ),
-                h4("Les onglets"),
-                tags$ul(
-                    tags$li(strong("Analyse descriptive"), " : à compléter."),
-                    tags$li(strong("Produit Optimal"), " : à compléter."),
-                    tags$li(strong("Analyse Factorielle"), " : à compléter.")
+
+                # Les chiffres clés
+                div(
+                    class = "accueil-chiffres",
+                    accueil_chiffre(8, "produits goûtés"),
+                    accueil_chiffre(n_distinct(dta_cons$Consommateurs), "consommateurs"),
+                    accueil_chiffre(ncol(dta_panel) - 1, "descripteurs du jury"),
+                    accueil_chiffre(4, "notes d'appréciation")
+                ),
+
+                # Les deux jeux de données, avec un extrait de chacun
+                h3(class = "accueil-section", span(class = "num", "1"), "Deux regards sur les mêmes produits"),
+                div(
+                    class = "accueil-donnees",
+                    div(
+                        class = "accueil-carte",
+                        h4("🙋 Les consommateurs"),
+                        p("Chaque consommateur note chaque produit de 1 (je déteste) à 9 (j'adore) :
+                           une note globale, puis l'aspect, le goût et la texture."),
+                        accueil_extrait_conso,
+                        p(class = "accueil-legende",
+                          sprintf("Extrait : %s lignes au total, une par consommateur et par produit.",
+                                  format(nrow(dta_cons), big.mark = " ")))
+                    ),
+                    div(
+                        class = "accueil-carte",
+                        h4("🔬 Le jury entraîné"),
+                        p("Des dégustateurs formés mesurent l'intensité de 37 caractéristiques
+                           (forme, panure, croustillant, goût de fromage...). On garde la moyenne par produit."),
+                        accueil_extrait_jury,
+                        p(class = "accueil-legende",
+                          "Extrait : 6 descripteurs sur 37, intensités moyennes du jury.")
+                    )
+                ),
+                p(class = "accueil-note",
+                  "Les 8 produits sont anonymes dans l'étude : chacun est associé ici à une enseigne
+                   tirée au hasard, pour les rendre plus faciles à reconnaître."),
+
+                # Le parcours dans l'application
+                h3(class = "accueil-section", span(class = "num", "2"), "L'idée : relier les deux"),
+                div(
+                    class = "accueil-schema",
+                    div(
+                        class = "sources",
+                        div(class = "accueil-bulle", strong("Le jury"), "décrit comment est chaque produit"),
+                        div(class = "accueil-bulle", strong("Les consommateurs"), "disent s'il leur plaît")
+                    ),
+                    span(class = "lien", "→"),
+                    div(class = "accueil-bulle centre",
+                        strong("On les croise"),
+                        "pour voir quelles caractéristiques (croustillant, goût de fromage...)
+                         vont avec les meilleures notes"),
+                    span(class = "lien", "→"),
+                    div(class = "accueil-bulle fin",
+                        strong("Votre produit idéal"),
+                        "on en déduit le mozzastick qui vous correspond")
+                ),
+
+                h3(class = "accueil-section", span(class = "num", "3"), "Le parcours"),
+                div(
+                    class = "accueil-etapes",
+                    accueil_etape(1, "descriptive", "Analyse descriptive",
+                                  "Qui aime quoi ? Les notes des consommateurs et les profils du jury,
+                                   produit par produit."),
+                    accueil_etape(2, "analyse", "Analyse Factorielle",
+                                  "Une AFM superpose les deux jeux de données pour voir quelles
+                                   caractéristiques vont avec l'appréciation."),
+                    accueil_etape(3, "recherche_opti", "Produit Optimal",
+                                  "Réglez votre mozzastick idéal avec 5 curseurs : l'application trouve
+                                   le produit le plus proche et le magasin où l'acheter.")
                 )
             )
         )

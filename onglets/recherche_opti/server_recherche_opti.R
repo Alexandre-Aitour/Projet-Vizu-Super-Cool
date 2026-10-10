@@ -7,6 +7,12 @@
 recherche_opti_descripteurs <- c("Aspect_gras", "mozzarella", "rugosité visuelle",
                                  "libération_d'humidité", "croustillant")
 
+# Noms affichés des descripteurs (graphique « Pourquoi »)
+recherche_opti_noms <- c(Aspect_gras = "Aspect gras", mozzarella = "Goût mozzarella",
+                         `rugosité visuelle` = "Rugosité visuelle",
+                         `libération_d'humidité` = "Fondant en bouche",
+                         croustillant = "Croustillant")
+
 # Matrice des profils produits : 8 produits (lignes) x 5 descripteurs (colonnes)
 data_recherche_opti <- dta_panel[, c("Produit", recherche_opti_descripteurs)] %>%
     column_to_rownames("Produit") %>%
@@ -105,7 +111,7 @@ output$recherche_opti_acp <- renderPlot({
 
     # Flèches des descripteurs, agrandies pour occuper le nuage des produits
     etirement <- 0.85 * max(abs(c(produits$x, produits$y, moi$x, moi$y)))
-    variables <- data.frame(nom = gsub("_", " ", rownames(acp$var$coord)),
+    variables <- data.frame(nom = recherche_opti_noms[rownames(acp$var$coord)],
                             x = acp$var$coord[, 1] * etirement,
                             y = acp$var$coord[, 2] * etirement)
 
