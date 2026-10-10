@@ -1,11 +1,10 @@
 # ==================================================================================================
-# Onglet : Analyse Factorielle
+# Onglet : Analyse Factorielle (AFM)
 # Préfixe des identifiants : analyse_
 # ==================================================================================================
 
 # --------------------------------------------------------------------------------------------------
-# Style de l'onglet, repris de la charte de l'accueil et de l'onglet descriptif
-# (limité aux classes analyse-* pour ne pas toucher les autres onglets)
+# Style de l'onglet, harmonisé avec l'accueil, descriptive et recherche_opti
 # --------------------------------------------------------------------------------------------------
 analyse_css <- "
 .analyse-page {
@@ -29,7 +28,7 @@ analyse_css <- "
     align-items: center;
     justify-content: center;
     gap: 1.2rem;
-    margin-bottom: 1.2rem;
+    margin-bottom: 0.8rem;
 }
 .analyse-entete h2 {
     margin: 0;
@@ -44,24 +43,128 @@ analyse_css <- "
 .analyse-entete img.gauche { transform: rotate(-8deg); }
 .analyse-entete img.droite { transform: rotate(8deg) scaleX(-1); }
 
-/* ---------- Carte et composants ---------- */
+/* ---------- Espace explicatif / bannière d'introduction ---------- */
+.analyse-intro {
+    max-width: 820px;
+    margin: 0 auto 1.5rem;
+    padding: 1rem 1.4rem;
+    background: linear-gradient(135deg, #FFFDF8 0%, #FFF4E3 100%);
+    border-left: 4px solid var(--analyse-orange-fonce);
+    border-radius: 14px;
+    box-shadow: 0 2px 8px rgba(120, 60, 10, 0.06);
+    text-align: center;
+}
+.analyse-intro h3 {
+    margin: 0 0 0.35rem;
+    color: var(--analyse-orange-fonce);
+    font-size: 1.2rem;
+    font-weight: 700;
+}
+.analyse-intro p {
+    margin: 0;
+    line-height: 1.45;
+    font-size: 0.92rem;
+    color: var(--analyse-texte);
+}
+
+/* ---------- Cartes et conteneurs ---------- */
 .analyse-page .card {
     border: 1px solid var(--analyse-bordure);
     border-radius: 18px;
-    box-shadow: 0 6px 18px rgba(120, 60, 10, 0.10);
+    box-shadow: 0 6px 18px rgba(120, 60, 10, 0.08);
     overflow: hidden;
     background: #FFFFFF;
     transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.25s ease;
 }
 .analyse-page .card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 12px 24px rgba(120, 60, 10, 0.15);
+    transform: translateY(-3px);
+    box-shadow: 0 10px 22px rgba(120, 60, 10, 0.12);
 }
 .analyse-page .card-header {
     background: #FFFFFF;
     border-bottom: 1px solid var(--analyse-bordure);
     font-weight: 600;
     color: var(--analyse-orange-fonce);
+    font-size: 1.02rem;
+}
+
+/* ---------- Onglets secondaires (navset_card_tab) ---------- */
+.analyse-page .nav-tabs {
+    border-bottom: 2px solid var(--analyse-bordure);
+    margin-bottom: 1.2rem;
+    background: transparent;
+}
+.analyse-page .nav-tabs .nav-link {
+    color: var(--analyse-croute);
+    font-weight: 600;
+    font-size: 0.98rem;
+    border: none;
+    padding: 0.75rem 1.4rem;
+    border-radius: 12px 12px 0 0;
+    transition: all 0.2s ease;
+}
+.analyse-page .nav-tabs .nav-link:hover {
+    color: var(--analyse-orange-fonce);
+    background: rgba(248, 176, 99, 0.15);
+}
+.analyse-page .nav-tabs .nav-link.active {
+    color: var(--analyse-orange-fonce);
+    background: #FFFFFF;
+    border-bottom: 3px solid var(--analyse-orange-fonce);
+    box-shadow: 0 -2px 6px rgba(120, 60, 10, 0.04);
+}
+
+/* ---------- Cartes d'indicateurs KPI (Value Boxes) ---------- */
+.analyse-kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1.25rem;
+}
+.analyse-kpi-card {
+    background: #FFFFFF;
+    border: 1px solid var(--analyse-bordure);
+    border-radius: 14px;
+    padding: 0.9rem 1.1rem;
+    box-shadow: 0 4px 12px rgba(120, 60, 10, 0.06);
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.analyse-kpi-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px rgba(120, 60, 10, 0.10);
+}
+.analyse-kpi-icon {
+    font-size: 2.1rem;
+    line-height: 1;
+}
+.analyse-kpi-info {
+    flex: 1;
+    min-width: 0;
+}
+.analyse-kpi-titre {
+    font-size: 0.76rem;
+    font-weight: 600;
+    color: var(--analyse-croute);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 0.15rem;
+}
+.analyse-kpi-valeur {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--analyse-orange-fonce);
+    line-height: 1.2;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.analyse-kpi-sub {
+    font-size: 0.76rem;
+    color: var(--analyse-texte);
+    opacity: 0.8;
 }
 
 /* ---------- Panneau latéral des inputs ---------- */
@@ -86,7 +189,7 @@ analyse_css <- "
     box-shadow: 0 0 0 0.2rem rgba(248, 176, 99, 0.35);
 }
 
-/* ---------- Bouton Afficher : le mozzastick de l'accueil ---------- */
+/* ---------- Bouton Afficher mozzastick ---------- */
 .analyse-page .accueil-stick {
     width: 220px;
     max-width: 100%;
@@ -96,6 +199,21 @@ analyse_css <- "
 .analyse-page .accueil-stick.coupe .gauche { transform: translateX(-22px) rotate(-12deg); }
 .analyse-page .accueil-stick.coupe .droite { transform: translateX(22px) rotate(12deg); }
 .analyse-page .accueil-stick.coupe .fil { width: 70px; }
+
+/* Logo à côté du magasin */
+.analyse-magasin img {
+    height: 20px;
+    width: 34px;
+    object-fit: contain;
+    margin-right: 0.4rem;
+    vertical-align: middle;
+}
+
+/* Message d'erreur de validation */
+.analyse-page .shiny-output-error-validation {
+    color: var(--analyse-croute);
+    font-weight: 600;
+}
 
 /* Table DataTables stylisée aux couleurs mozzastick */
 .analyse-page .dataTables_wrapper {
@@ -112,10 +230,10 @@ analyse_css <- "
     background-color: #FFF9F2 !important;
 }
 
-/* ---------- Encadré de synthèse automatique ---------- */
+/* ---------- Encadré de synthèse sensorielle ---------- */
 .analyse-synthese-box {
     margin-top: 1.1rem;
-    padding: 1rem 1.25rem;
+    padding: 1.1rem 1.3rem;
     background: linear-gradient(135deg, #FFFDF8 0%, #FFF4E3 100%);
     border-left: 4px solid var(--analyse-orange-fonce);
     border-radius: 12px;
@@ -125,10 +243,10 @@ analyse_css <- "
     font-weight: 700;
     color: var(--analyse-orange-fonce);
     font-size: 1.05rem;
-    margin-bottom: 0.4rem;
+    margin-bottom: 0.45rem;
     display: flex;
     align-items: center;
-    gap: 0.4rem;
+    gap: 0.45rem;
 }
 .analyse-synthese-box p {
     margin: 0;
@@ -137,11 +255,11 @@ analyse_css <- "
     color: var(--analyse-texte);
 }
 
-/* ---------- Animation d'apparition des graphiques ---------- */
+/* ---------- Animation d'apparition ---------- */
 @keyframes mozza-apparition {
     0% {
         opacity: 0;
-        transform: translateY(22px) scale(0.98);
+        transform: translateY(18px) scale(0.99);
     }
     100% {
         opacity: 1;
@@ -150,7 +268,7 @@ analyse_css <- "
 }
 
 .analyse-resultats-anim {
-    animation: mozza-apparition 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    animation: mozza-apparition 0.55s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 /* Écran d'attente avant le clic sur Afficher */
@@ -216,16 +334,55 @@ onglet_analyse <- nav_panel(
             img(src = "accueil_stick.png", class = "droite", alt = "")
         ),
 
+        # Bannière explicative d'accueil (harmonisée avec recherche_opti)
+        div(
+            class = "analyse-intro",
+            h3("🔬 Décryptage Factoriel Multi-Blocs (AFM)"),
+            p("Croisez le profilage sensoriel des experts (37 descripteurs visuels, gustatifs et de texture) avec les préférences réelles des consommateurs pour identifier la recette et le positionnement idéal de chaque mozzarella.")
+        ),
+
         layout_sidebar(
             sidebar = sidebar(
                 radioButtons(
                     inputId = "analyse_afm_type",
                     label = "Modèle d'AFM :",
                     choices = c(
-                        "Décomposition par sens" = "sens",
-                        "Globale (Jury vs Consommateurs)" = "jury"
+                        "Décomposition par sens (Saveur, Visuel, Texture)" = "sens",
+                        "Globale (Jury d'experts vs Consommateurs)" = "jury"
                     ),
                     selected = "sens"
+                ),
+                hr(),
+                # Choix des magasins à afficher avec logo et sélection rapide
+                div(
+                    class = "d-flex justify-content-between align-items-center mb-1",
+                    tags$label(class = "control-label mb-0", "Magasins à afficher :"),
+                    div(
+                        actionLink("analyse_magasins_tous", "Tous", class = "btn btn-link btn-sm p-0 me-2 text-decoration-none", style = "font-size: 0.82rem; color: var(--analyse-orange-fonce); font-weight: 600;"),
+                        actionLink("analyse_magasins_aucun", "Aucun", class = "btn btn-link btn-sm p-0 text-decoration-none", style = "font-size: 0.82rem; color: var(--analyse-croute);")
+                    )
+                ),
+                sliderInput(
+                    inputId = "analyse_nb_magasins",
+                    label = span(style = "font-size: 0.85rem; font-weight: 500; color: #7A4B1D;", "Sélection rapide (Top N par note) :"),
+                    min = 1,
+                    max = length(levels(dta_cons$Produit)),
+                    value = length(levels(dta_cons$Produit)),
+                    step = 1,
+                    ticks = FALSE
+                ),
+                checkboxGroupInput(
+                    inputId = "analyse_magasins",
+                    label = NULL,
+                    choiceNames = lapply(levels(dta_cons$Produit), function(m) {
+                        span(class = "analyse-magasin",
+                             img(src = paste0("logos/", m, ".png?v=",
+                                              as.integer(file.mtime(file.path("www/logos", paste0(m, ".png"))))),
+                                 alt = ""),
+                             magasins_noms[[m]])
+                    }),
+                    choiceValues = levels(dta_cons$Produit),
+                    selected = levels(dta_cons$Produit)
                 ),
                 hr(),
                 # Choix des axes factoriels à projeter
@@ -244,15 +401,30 @@ onglet_analyse <- nav_panel(
                         selected = 2
                     )
                 ),
-                checkboxInput(
-                    inputId = "analyse_afm_show_partial",
-                    label = "Afficher les points partiels",
-                    value = TRUE
-                ),
                 sliderInput(
                     inputId = "analyse_afm_top_contrib",
                     label = "Descripteurs affichés :",
                     min = 5, max = 37, value = 15, step = 1
+                ),
+                checkboxInput(
+                    inputId = "analyse_afm_show_partial",
+                    label = "Points partiels (par groupe)",
+                    value = TRUE
+                ),
+                checkboxInput(
+                    inputId = "analyse_afm_show_logos",
+                    label = "Logos des magasins sur la carte",
+                    value = TRUE
+                ),
+                checkboxInput(
+                    inputId = "analyse_afm_show_ind_labels",
+                    label = "Noms des magasins sur la carte",
+                    value = FALSE
+                ),
+                checkboxInput(
+                    inputId = "analyse_afm_show_cons",
+                    label = "Projeter l'appréciation consommateurs (★)",
+                    value = TRUE
                 ),
                 hr(),
                 analyse_bouton("analyse_afm_afficher")
@@ -265,42 +437,78 @@ onglet_analyse <- nav_panel(
                     class = "analyse-placeholder-card",
                     span(class = "icone-fromage", "🧀"),
                     h3("Prêt pour l'Analyse Factorielle ?"),
-                    p("Choisissez vos dimensions et paramètres, puis cliquez sur le bâtonnet « Afficher » pour générer les projections multidimensionnelles.")
+                    p("Choisissez vos dimensions et paramètres dans le panneau de gauche, puis cliquez sur le bâtonnet « Afficher » pour révéler les cartographies interactives.")
                 )
             ),
 
-            # 2. Résultats avec graphiques interactifs (zoom trackpad, survol)
+            # 2. Résultats structurés en onglets avec indicateurs KPI
             conditionalPanel(
                 condition = "input.analyse_afm_afficher",
                 div(
                     class = "analyse-resultats-anim",
                     
-                    # Ligne 1 : Le cœur factoriel (Individus face aux Variables)
-                    layout_columns(
-                        col_widths = c(6, 6),
-                        card(
-                            card_header("🥖 Projection des mozzarellas (Moyens & Partiels)"),
-                            plotlyOutput("analyse_afm_ind_plot", height = "460px")
-                        ),
-                        card(
-                            card_header("🎯 Cercle des corrélations des descripteurs"),
-                            plotlyOutput("analyse_afm_var_plot", height = "460px")
-                        )
-                    ),
+                    # Ligne des 4 KPI essentiels en haut
+                    uiOutput("analyse_afm_kpis"),
 
-                    # Ligne 2 : Zoom sur les groupes de l'AFM (Groupes & Liaison RV)
-                    layout_columns(
-                        col_widths = c(6, 6),
-                        card(
-                            card_header("🎨 Représentation des groupes de variables"),
-                            plotlyOutput("analyse_afm_group_plot", height = "460px")
-                        ),
-                        card(
-                            card_header("📊 Matrice des coefficients de liaison (RV)"),
-                            DTOutput("analyse_afm_rv_table"),
+                    # Organisation propre en sous-onglets (navset_card_tab)
+                    navset_card_tab(
+                        
+                        # --- SOUS-ONGLET 1 : Cartographie factorielle & Corrélations
+                        nav_panel(
+                            title = "🥖 Cartographie & Corrélations",
+                            icon = icon("crosshairs"),
+                            layout_columns(
+                                col_widths = c(6, 6),
+                                card(
+                                    card_header("🥖 Projection des mozzarellas (Moyens & Partiels)"),
+                                    plotlyOutput("analyse_afm_ind_plot", height = "500px")
+                                ),
+                                card(
+                                    card_header("🎯 Cercle des corrélations des descripteurs"),
+                                    plotlyOutput("analyse_afm_var_plot", height = "500px")
+                                )
+                            ),
                             div(
                                 class = "analyse-synthese-box",
                                 uiOutput("analyse_afm_synthese")
+                            )
+                        ),
+
+                        # --- SOUS-ONGLET 2 : Groupes sensoriels & Liaisons (RV)
+                        nav_panel(
+                            title = "🎨 Groupes & Liaisons RV",
+                            icon = icon("layer-group"),
+                            layout_columns(
+                                col_widths = c(6, 6),
+                                card(
+                                    card_header("🎨 Projection synthétique des groupes de variables"),
+                                    plotlyOutput("analyse_afm_group_plot", height = "460px")
+                                ),
+                                card(
+                                    card_header("📊 Matrice des coefficients de liaison (RV)"),
+                                    DTOutput("analyse_afm_rv_table"),
+                                    p(
+                                        style = "margin-top: 12px; font-size: 0.84rem; color: var(--analyse-croute);",
+                                        "💡 ", strong("Coefficient RV :"), " mesure la corrélation globale entre deux blocs de mesures (0 = indépendants, 1 = structure sensorielle identique)."
+                                    )
+                                )
+                            )
+                        ),
+
+                        # --- SOUS-ONGLET 3 : Inertie & Contributions
+                        nav_panel(
+                            title = "📊 Inertie & Contributions",
+                            icon = icon("chart-column"),
+                            layout_columns(
+                                col_widths = c(6, 6),
+                                card(
+                                    card_header("📉 Éboulis des valeurs propres (Inertie expliquée)"),
+                                    plotlyOutput("analyse_afm_scree_plot", height = "460px")
+                                ),
+                                card(
+                                    card_header("🏆 Top descripteurs contribuant aux axes"),
+                                    plotlyOutput("analyse_afm_contrib_plot", height = "460px")
+                                )
                             )
                         )
                     )
