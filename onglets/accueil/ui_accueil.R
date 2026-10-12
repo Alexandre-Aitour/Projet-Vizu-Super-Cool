@@ -973,7 +973,7 @@ onglet_accueil <- nav_panel(
                 div(
                     class = "accueil-question",
                     span(class = "accueil-surtitre", "Le projet"),
-                    h2("Ce que disent les experts suffit-il à prédire ce qu'aiment les consommateurs ?"),
+                    h2("Comment les notes du jury et des consommateurs permettent-elles de retrouver votre mozzastick idéal ?"),
                     p("Huit mozzarella sticks ont été goûtés deux fois : par un jury entraîné, qui les a
                        décrits avec précision, et par des consommateurs, qui ont simplement dit s'ils les
                        aimaient. L'application relie ces deux regards pour comprendre ce qui fait un bon

@@ -803,10 +803,13 @@ $(function() {
     document.body.appendChild(overlay); // hors de l'onglet, pour couvrir toute la page
     var anneau = overlay.querySelector('.recherche_opti-anneau');
     var cartes = overlay.querySelectorAll('.recherche_opti-carte');
+    var jingle = document.getElementById('recherche_opti-jingle');
     var animation = null;
 
     function fermer() {
         if (animation) cancelAnimationFrame(animation);
+        jingle.pause();
+        jingle.currentTime = 0;
         overlay.classList.remove('ouvert', 'revele', 'pourquoi', 'magasin');
         overlay.setAttribute('aria-hidden', 'true');
         overlay.querySelectorAll('.recherche_opti-confetti').forEach(function(c) { c.remove(); });
@@ -888,8 +891,13 @@ $(function() {
     function tourner(indexGagnant, apresArret) {
         var pas = 360 / cartes.length;
         var moinsDeMouvement = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-        var duree = moinsDeMouvement ? 1200 : 6500;
-        var total = 360 * (moinsDeMouvement ? 1 : 7) + indexGagnant * pas;
+        // Le logo apparaît toujours 6 s après le début du jingle (le reste du jingle, la
+        // célébration finale, continue de jouer pendant l'explosion), quelle que soit sa durée.
+        var pause = 150; // petit silence entre l'arrêt de la roulette et l'explosion
+        var duree = Math.max(400, 6000 - pause);
+        // Rythme calé sur l'allure d'origine (7 tours en 6,5 s, soit ~930 ms par tour)
+        var tours = moinsDeMouvement ? 1 : Math.max(2, Math.round(duree / 930));
+        var total = 360 * tours + indexGagnant * pas;
         var a = 0.6; // 60 % du temps à accélérer, 40 % à freiner
         var debut = null, anglePrec = 0, tempsPrec = 0;
 
@@ -918,7 +926,7 @@ $(function() {
             });
 
             if (t < 1) { animation = requestAnimationFrame(image); }
-            else { setTimeout(apresArret, 500); }
+            else { setTimeout(apresArret, pause); }
         }
         animation = requestAnimationFrame(image);
     }
@@ -935,6 +943,11 @@ $(function() {
         overlay.classList.remove('revele', 'pourquoi', 'magasin');
         overlay.classList.add('ouvert');
         overlay.setAttribute('aria-hidden', 'false');
+
+        // Le jingle démarre avec la roulette ; le logo n'apparaît que 6 s après (voir tourner()),
+        // pour que la célébration finale du jingle tombe pendant l'explosion.
+        jingle.currentTime = 0;
+        jingle.play();
         tourner(index, function() {
             overlay.classList.add('revele');
             lancerConfettis();
@@ -986,6 +999,7 @@ recherche_opti_popup <- function() {
         `aria-modal` = "true",
         `aria-label` = "Votre produit parfait",
         `aria-hidden` = "true",
+        tags$audio(id = "recherche_opti-jingle", src = "drum-roll.mp3", preload = "auto"),
         div(
             class = "recherche_opti-scene",
             div(class = "recherche_opti-fleche"),
